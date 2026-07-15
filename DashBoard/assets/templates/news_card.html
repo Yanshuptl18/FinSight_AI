@@ -1,0 +1,11 @@
+<div class='headline-card' style='border-left: {border_left};'>
+    <div style='display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;'>
+        <div style='font-size: 1.05rem; font-weight: 600; color: var(--text-bright); line-height: 1.4;'>{headline}</div>
+        <div style='font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; margin-left: 16px; font-family: monospace;'>{date_str}</div>
+    </div>
+    <div style='display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.85rem;'>
+        {entities_html}
+        <span style='background: {s_bg}; color: {s_color}; padding: 4px 10px; border-radius: 20px; font-weight: 600; border: 1px solid {s_color};'>{sentiment}</span>
+        <span style='color: var(--accent); font-weight: 600; margin-left: auto;'>AI Confidence: {conf}</span>
+    </div>
+</div>

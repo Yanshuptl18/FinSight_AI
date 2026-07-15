@@ -1,0 +1,35 @@
+<style>
+.ql-card {{
+    flex: 1; min-width: 250px;
+    background: var(--card-bg);
+    border-radius: 12px; padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}}
+.ql-card:hover {{
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}}
+.ql-title {{ font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }}
+.ql-desc {{ font-size: 0.9rem; color: var(--text-primary); line-height: 1.5; }}
+.ql-1 {{ border: 1px solid rgba(77, 166, 255, 0.2); }}
+.ql-1 .ql-title {{ color: var(--accent); }}
+.ql-2 {{ border: 1px solid rgba(255, 187, 51, 0.2); }}
+.ql-2 .ql-title {{ color: #ffbb33; }}
+.ql-3 {{ border: 1px solid rgba(255, 68, 68, 0.2); }}
+.ql-3 .ql-title {{ color: #ff4444; }}
+</style>
+<div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+    <div class="ql-card ql-1">
+        <div class="ql-title">Executive Dashboard</div>
+        <div class="ql-desc">High-level overview of market intelligence, sentiment, and trending entities. Start here for the daily brief.</div>
+    </div>
+    <div class="ql-card ql-2">
+        <div class="ql-title">Topic & Event Intelligence</div>
+        <div class="ql-desc">Track major macroeconomic events, thematic trends (e.g. AI, ESG), and their cascading impacts.</div>
+    </div>
+    <div class="ql-card ql-3">
+        <div class="ql-title">Sector & Company Networks</div>
+        <div class="ql-desc">Deep dive into supply chain relationships and competitor ecosystems via interactive Knowledge Graphs.</div>
+    </div>
+</div>

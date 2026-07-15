@@ -1,0 +1,467 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,600,0,0&display=swap');
+
+/* FinSight AI Premium Dashboard Theme */
+
+/* General Background and Text */
+.stApp {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', 'Roboto', sans-serif;
+}
+
+/* Base Headers */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-bright);
+    font-weight: 600;
+}
+
+/* ===== ENHANCED SIDEBAR STYLING ===== */
+/* Sidebar Background */
+section[data-testid="stSidebar"] {
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Animated Neon Boundary Keyframes */
+@keyframes neonBoundary {
+    0% { box-shadow: 0 0 0 0 var(--accent), inset 0 0 0 0 var(--accent); border-color: rgba(255, 255, 255, 0.2); }
+    50% { box-shadow: 0 0 12px 2px var(--accent), inset 0 0 4px 1px var(--accent); border-color: var(--accent); }
+    100% { box-shadow: 0 0 0 0 var(--accent), inset 0 0 0 0 var(--accent); border-color: rgba(255, 255, 255, 0.2); }
+}
+
+/* Animated Neon Boundary Keyframes */
+@keyframes neonBoundary {
+    0% { box-shadow: 0 0 0 0 var(--accent), inset 0 0 0 0 var(--accent); border-color: rgba(255, 255, 255, 0.2); }
+    50% { box-shadow: 0 0 12px 2px var(--accent), inset 0 0 4px 1px var(--accent); border-color: var(--accent); }
+    100% { box-shadow: 0 0 0 0 var(--accent), inset 0 0 0 0 var(--accent); border-color: rgba(255, 255, 255, 0.2); }
+}
+
+/* Sidebar Navigation Items */
+[data-testid="stSidebarNav"] a,
+[data-testid="stSidebar"] a {
+    border-radius: 8px;
+    margin: 6px 12px;
+    padding: 10px 14px;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    color: var(--sidebar-link-text) !important;
+    background: var(--sidebar-link-bg) !important;
+    border: 1px solid var(--sidebar-link-border);
+    opacity: 0.85;
+    position: relative;
+    overflow: hidden;
+    font-weight: 500;
+}
+
+/* Create a sliding background sweep effect on hover */
+[data-testid="stSidebarNav"] a::before,
+[data-testid="stSidebar"] a::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: all 0.5s ease;
+    z-index: 0;
+}
+
+[data-testid="stSidebarNav"] a:hover::before,
+[data-testid="stSidebar"] a:hover::before {
+    left: 100%;
+}
+
+/* Sidebar Links Hover Effect */
+[data-testid="stSidebarNav"] a:hover,
+[data-testid="stSidebar"] a:hover {
+    color: var(--sidebar-link-hover-text) !important;
+    transform: translateX(4px);
+    opacity: 1;
+    background: var(--sidebar-link-hover-bg) !important;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Ensure text is above the pseudo element and inherits correct color */
+[data-testid="stSidebarNav"] a span,
+[data-testid="stSidebar"] a span {
+    position: relative;
+    z-index: 1;
+    color: inherit !important;
+}
+
+/* Active Sidebar Link */
+[data-testid="stSidebarNav"] a[aria-current="page"],
+[data-testid="stSidebar"] a[aria-current="page"],
+[data-testid="stSidebar"] a[data-active="true"] {
+    background: var(--sidebar-link-active-bg) !important;
+    color: var(--sidebar-link-active-text) !important;
+    font-weight: 700;
+    opacity: 1;
+    border-left: 0;
+    animation: neonBoundary 2s infinite;
+}
+
+/* Make sure Streamlit icons are visible */
+[data-testid="stSidebarNav"] svg,
+[data-testid="stSidebar"] svg {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+/* ===== CUSTOM COMPONENTS ===== */
+/* Metric Cards */
+div[data-testid="stMetricValue"] {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* Glassmorphism containers */
+.css-1r6slb0, .css-1y4p8pa, [data-testid="stVerticalBlock"] > div > div > div[data-testid="stVerticalBlock"] {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Add a subtle hover to layout cards */
+.css-1r6slb0, .css-1y4p8pa, div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: var(--card-bg) !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+    padding: 20px !important;
+    backdrop-filter: blur(10px);
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3) !important;
+    border-color: var(--accent) !important;
+}
+
+/* Button overrides */
+.stButton > button,
+[data-testid="stDownloadButton"] > button,
+[data-testid="stFormSubmitButton"] > button {
+    background: var(--accent) !important;
+    color: var(--btn-text) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0.9;
+}
+
+.stButton > button:hover,
+[data-testid="stDownloadButton"] > button:hover,
+[data-testid="stFormSubmitButton"] > button:hover {
+    opacity: 1;
+    border-color: var(--btn-text) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.stButton > button p,
+[data-testid="stDownloadButton"] > button p,
+[data-testid="stFormSubmitButton"] > button p {
+    color: var(--btn-text) !important;
+}
+
+/* Dataframe borders */
+[data-testid="stDataFrame"] {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Animated Scanline for Chart Containers */
+div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"]) {
+    position: relative;
+    overflow: hidden;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"])::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scanline 3s linear infinite;
+}
+
+@keyframes scanline {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Premium Headline Cards */
+.headline-card {
+    background: var(--card-bg); 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; 
+    padding: 16px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    transition: all 0.3s ease;
+}
+.headline-card:hover {
+    transform: translateX(8px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border-color: var(--accent);
+}
+
+/* AI Insight Box with Scanline */
+.ai-insight-box { 
+    background: var(--card-bg); 
+    border: 1px solid var(--accent); 
+    border-radius: 12px; 
+    padding: 24px; 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); 
+    position: relative; 
+    overflow: hidden; 
+} 
+.ai-insight-box::before { 
+    content: ""; 
+    position: absolute; 
+    top: 0; left: -100%; 
+    width: 100%; height: 3px; 
+    background: linear-gradient(90deg, transparent, var(--accent), transparent); 
+    animation: scanline 3s linear infinite; 
+}
+
+/* KPI Cards */
+.kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.kpi-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--accent);
+    border-radius: 4px 0 0 4px;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border-color: var(--accent);
+}
+.kpi-card:hover::before {
+    opacity: 1;
+    box-shadow: 0 0 15px var(--accent);
+}
+
+/* ===== STREAMLIT NATIVE WIDGET OVERRIDES ===== */
+/* These force Streamlit's own widgets to respect our theme CSS variables */
+
+/* Selectbox / Dropdown */
+[data-baseweb="select"] > div,
+[data-baseweb="select"] > div:hover {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+[data-baseweb="select"] span,
+[data-baseweb="select"] svg {
+    color: var(--text-primary) !important;
+    fill: var(--text-primary) !important;
+}
+
+/* Dropdown menu popup */
+[data-baseweb="popover"] [data-baseweb="menu"],
+[data-baseweb="menu"] {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+[data-baseweb="option"] {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+[data-baseweb="option"]:hover {
+    background-color: var(--accent) !important;
+    color: var(--btn-text) !important;
+}
+
+/* Text Input / Search Box */
+[data-baseweb="input"] > div,
+[data-baseweb="input"] input,
+[data-baseweb="textarea"] > div,
+[data-baseweb="textarea"] textarea,
+[data-baseweb="base-input"] {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+[data-baseweb="input"] input::placeholder,
+[data-baseweb="textarea"] textarea::placeholder {
+    color: var(--text-primary) !important;
+    opacity: 0.6;
+}
+
+/* Number Input */
+[data-baseweb="number-input"] > div {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Slider and Checkbox Overrides */
+[data-baseweb="slider"] > div > div > div > div {
+    background-color: var(--accent) !important;
+}
+
+/* Custom Navigation Group Headers (New Architecture) */
+.custom-nav-group {
+    border-radius: 8px;
+    margin: 15px 12px 5px 12px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-right: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.custom-nav-group:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+.custom-nav-group .material-symbols-rounded {
+    font-size: 22px;
+    opacity: 1;
+    font-weight: normal;
+    color: inherit;
+}
+
+/* Make sure the links inside the groups are not affected by this button style */
+
+/* Tab bar */
+[data-baseweb="tab-list"] {
+    background-color: var(--bg-secondary) !important;
+    border-bottom: 2px solid var(--border-color) !important;
+}
+[data-baseweb="tab"] {
+    color: var(--text-primary) !important;
+}
+[aria-selected="true"][data-baseweb="tab"] {
+    color: var(--accent) !important;
+    border-bottom: 2px solid var(--accent) !important;
+}
+
+/* Radio / Checkbox label text */
+[data-testid="stRadio"] label,
+[data-testid="stCheckbox"] label {
+    color: var(--text-primary) !important;
+}
+
+/* Multiselect tags */
+[data-baseweb="tag"] {
+    background-color: var(--accent) !important;
+    color: var(--btn-text) !important;
+}
+
+/* Expander */
+[data-testid="stExpander"] details summary {
+    color: var(--text-primary) !important;
+}
+
+/* General label text for all widgets */
+[data-testid="stWidgetLabel"] label,
+[data-testid="stWidgetLabel"] p {
+    color: var(--text-primary) !important;
+}
+
+/* Info/success/warning/error boxes */
+[data-testid="stAlertContainer"] {
+    border-color: var(--border-color) !important;
+}
+
+/* Ultra-Premium Dynamic Sidebar Logo (SVG Icon + Initials) */
+[data-testid="stSidebarNav"] {
+    position: relative;
+    padding-top: 105px !important; /* Make room for the absolute positioned logo */
+}
+
+[data-testid="stSidebarNav"]::before {
+    /* The Cybernetic Hexagon Icon */
+    content: "";
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    width: 42px; /* Slightly larger */
+    height: 42px;
+    background-color: var(--accent); /* Dynamically colored by theme! */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7.77v8.46L12 22l10-5.77V7.77L12 2zm0 4.5l5 2.89v5.77L12 18l-5-2.89V9.39l5-2.89zM12 12l-4.5-2.6M12 12l4.5-2.6M12 12v5.5' stroke='black' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7.77v8.46L12 22l10-5.77V7.77L12 2zm0 4.5l5 2.89v5.77L12 18l-5-2.89V9.39l5-2.89zM12 12l-4.5-2.6M12 12l4.5-2.6M12 12v5.5' stroke='black' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    filter: drop-shadow(0 0 10px rgba(var(--accent-rgb, 0,150,255), 0.6)); /* Stronger glow */
+}
+
+[data-testid="stSidebarNav"]::after {
+    /* The Custom Designed Tech Monogram */
+    content: "FS";
+    position: absolute;
+    top: 18px; /* Moved up to align perfectly with the hexagon */
+    left: 72px; 
+    font-family: 'Inter', 'Arial Black', system-ui, -apple-system, sans-serif;
+    font-size: 3.2rem; /* Much bolder and larger */
+    font-weight: 900;
+    letter-spacing: -2.5px; /* Tighter, more modern kerning */
+    line-height: 1;
+    padding-right: 12px; /* CRITICAL: Expands bounding box so the 'S' doesn't get clipped on the right! */
+    /* A sophisticated, elegant tech skew */
+    transform: skewX(-10deg); /* More aggressive slant for a stylish tech feel */
+    /* A stunning premium gradient blending the bright text into the active theme accent */
+    background: linear-gradient(135deg, var(--text-bright) 0%, var(--text-primary) 40%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); /* Deep professional shadow */
+}
+
+/* Premium Animated Boundary for all Charts */
+[data-testid="stPlotlyChart"] {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color); /* Visible boundary structure */
+    border-radius: 12px;
+    padding: 0 !important; /* CRITICAL: Any padding here forces Streamlit's fixed-width canvases to clip! */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    /* Soft, continuous pulsing animation using the theme's accent color */
+    animation: chartNeonPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes chartNeonPulse {
+    0% {
+        border-color: var(--border-color);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        border-color: var(--accent);
+        box-shadow: 0 0 15px var(--accent);
+    }
+    100% {
+        border-color: var(--border-color);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+}
