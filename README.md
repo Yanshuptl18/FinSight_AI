@@ -17,6 +17,8 @@ The platform enables users to explore financial news, discover hidden relationsh
 
 ---
 
+---
+
 # Dashboard Preview
 
 FinSight AI provides a modern and interactive dashboard for exploring financial intelligence, market trends, knowledge graphs, semantic search, and recommendation analytics.
@@ -27,7 +29,9 @@ FinSight AI provides a modern and interactive dashboard for exploring financial 
 
 The sidebar provides quick access to all major modules of the platform.
 
-<img width="908" height="407" alt="Dashboard Navigation" src="https://github.com/user-attachments/assets/7f5b6d08-754e-4ec9-af73-44ced25000cb" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/7f5b6d08-754e-4ec9-af73-44ced25000cb" width="100%">
+</p>
 
 ---
 
@@ -35,9 +39,13 @@ The sidebar provides quick access to all major modules of the platform.
 
 The Executive Dashboard provides a high-level overview of market activity, financial intelligence, key performance indicators, and real-time analytics.
 
-<img width="908" height="384" alt="Executive Dashboard 1" src="https://github.com/user-attachments/assets/80a66e3e-34c1-4373-86d3-0da031f8342d" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/80a66e3e-34c1-4373-86d3-0da031f8342d" width="100%">
+</p>
 
-<img width="911" height="400" alt="Executive Dashboard 2" src="https://github.com/user-attachments/assets/32561da1-030a-4f67-be32-d64a13a2f7ee" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/32561da1-030a-4f67-be32-d64a13a2f7ee" width="100%">
+</p>
 
 ---
 
@@ -45,7 +53,9 @@ The Executive Dashboard provides a high-level overview of market activity, finan
 
 Explore and filter financial news articles using advanced search, metadata filters, and sentiment information.
 
-<img width="922" height="385" alt="News Explorer" src="https://github.com/user-attachments/assets/9a200cd4-4560-45a3-a9a6-d14c3a40a75f" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/9a200cd4-4560-45a3-a9a6-d14c3a40a75f" width="100%">
+</p>
 
 ---
 
@@ -53,9 +63,13 @@ Explore and filter financial news articles using advanced search, metadata filte
 
 Analyze individual companies with detailed profiles, news activity, event distribution, recommendations, and trend analysis.
 
-<img width="922" height="432" alt="Company Explorer 1" src="https://github.com/user-attachments/assets/1a6e4343-c877-4165-be04-304f20720d06" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/1a6e4343-c877-4165-be04-304f20720d06" width="100%">
+</p>
 
-<img width="746" height="403" alt="Company Explorer 2" src="https://github.com/user-attachments/assets/204601ad-e3c0-4cb1-9139-0b540a861719" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/204601ad-e3c0-4cb1-9139-0b540a861719" width="100%">
+</p>
 
 ---
 
@@ -63,9 +77,13 @@ Analyze individual companies with detailed profiles, news activity, event distri
 
 Explore discovered financial topics, representative headlines, semantic clusters, and topic-level analytics.
 
-<img width="916" height="422" alt="Topic Intelligence 1" src="https://github.com/user-attachments/assets/f23752b4-3360-4c19-b003-9eb75d72d6a6" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/f23752b4-3360-4c19-b003-9eb75d72d6a6" width="100%">
+</p>
 
-<img width="753" height="370" alt="Topic Intelligence 2" src="https://github.com/user-attachments/assets/b789e93e-bfb9-4236-920c-c0ac77b2cd3f" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/b789e93e-bfb9-4236-920c-c0ac77b2cd3f" width="100%">
+</p>
 
 ---
 
@@ -73,7 +91,9 @@ Explore discovered financial topics, representative headlines, semantic clusters
 
 Analyze classified financial events, confidence scores, event distributions, and historical event trends.
 
-<img width="899" height="384" alt="Event Intelligence" src="https://github.com/user-attachments/assets/9e44043f-2049-48fa-8996-ca1298356d69" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/9e44043f-2049-48fa-8996-ca1298356d69" width="100%">
+</p>
 
 ---
 
@@ -81,7 +101,9 @@ Analyze classified financial events, confidence scores, event distributions, and
 
 View sector rankings, lifecycle analysis, intelligence scores, recommendations, and sector-level insights.
 
-<img width="909" height="396" alt="Sector Intelligence" src="https://github.com/user-attachments/assets/a32f947e-a0b4-4f1d-ba45-65c52e5386f2" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/a32f947e-a0b4-4f1d-ba45-65c52e5386f2" width="100%">
+</p>
 
 ---
 
@@ -89,7 +111,9 @@ View sector rankings, lifecycle analysis, intelligence scores, recommendations, 
 
 Interactively explore relationships between companies, sectors, topics, publishers, and financial events.
 
-<img width="908" height="379" alt="Knowledge Graph" src="https://github.com/user-attachments/assets/56eebd79-235b-4675-b6b3-35b800ba8e8e" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/56eebd79-235b-4675-b6b3-35b800ba8e8e" width="100%">
+</p>
 
 ---
 
@@ -97,7 +121,9 @@ Interactively explore relationships between companies, sectors, topics, publishe
 
 Visualize how financial events propagate across companies, industries, and market sectors.
 
-<img width="896" height="374" alt="Event Propagation" src="https://github.com/user-attachments/assets/dbe78f9b-867b-4423-9c7f-8982f0c9a5b8" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/dbe78f9b-867b-4423-9c7f-8982f0c9a5b8" width="100%">
+</p>
 
 ---
 
@@ -105,7 +131,9 @@ Visualize how financial events propagate across companies, industries, and marke
 
 Explore similarity relationships between sectors using an interactive network graph.
 
-<img width="911" height="416" alt="Sector Network" src="https://github.com/user-attachments/assets/ded8eeb9-7e34-4df0-be87-fc882c0fa514" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/ded8eeb9-7e34-4df0-be87-fc882c0fa514" width="100%">
+</p>
 
 ---
 
@@ -113,7 +141,9 @@ Explore similarity relationships between sectors using an interactive network gr
 
 Analyze historical trends through an interactive timeline of financial news and market events.
 
-<img width="909" height="430" alt="Timeline Explorer" src="https://github.com/user-attachments/assets/130ae369-b4e3-4ff4-9b72-be21a92171e1" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/130ae369-b4e3-4ff4-9b72-be21a92171e1" width="100%">
+</p>
 
 ---
 
@@ -121,7 +151,9 @@ Analyze historical trends through an interactive timeline of financial news and 
 
 Perform AI-powered semantic searches across companies, sectors, topics, publishers, and financial events.
 
-<img width="923" height="413" alt="Semantic Search" src="https://github.com/user-attachments/assets/704eeab2-a44b-44c7-a772-ec7d6b7ddd26" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/704eeab2-a44b-44c7-a772-ec7d6b7ddd26" width="100%">
+</p>
 
 ---
 
@@ -129,7 +161,9 @@ Perform AI-powered semantic searches across companies, sectors, topics, publishe
 
 Receive intelligent investment recommendations generated from sector intelligence, risk analysis, lifecycle modeling, and recommendation scoring.
 
-<img width="926" height="413" alt="Recommendation Center" src="https://github.com/user-attachments/assets/39574b59-baf9-40af-94cf-3decec4f7914" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/39574b59-baf9-40af-94cf-3decec4f7914" width="100%">
+</p>
 
 ---
 
@@ -137,7 +171,9 @@ Receive intelligent investment recommendations generated from sector intelligenc
 
 Download processed datasets and analytical outputs in multiple formats for further analysis.
 
-<img width="911" height="422" alt="Download Center" src="https://github.com/user-attachments/assets/19881d19-8f9b-4a6b-831c-f8de24b332b3" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/19881d19-8f9b-4a6b-831c-f8de24b332b3" width="100%">
+</p>
 
 ---
 
@@ -145,7 +181,9 @@ Download processed datasets and analytical outputs in multiple formats for furth
 
 Customize dashboard appearance, preferences, themes, and application behavior.
 
-<img width="930" height="361" alt="Settings" src="https://github.com/user-attachments/assets/0441f5ae-d4a8-4fa6-b87a-5c02f390552d" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/0441f5ae-d4a8-4fa6-b87a-5c02f390552d" width="100%">
+</p>
 
 ---
 
@@ -153,7 +191,9 @@ Customize dashboard appearance, preferences, themes, and application behavior.
 
 Project overview, architecture, technology stack, datasets, and author information.
 
-<img width="911" height="411" alt="About" src="https://github.com/user-attachments/assets/96080bcc-62cc-4585-9d66-58c520892b1b" />
+<p align="center">
+<img src="https://github.com/user-attachments/assets/96080bcc-62cc-4585-9d66-58c520892b1b" width="100%">
+</p>
 
 ---
 
