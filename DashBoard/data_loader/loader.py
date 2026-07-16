@@ -10,8 +10,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from config import MODEL_PATH, DATA_PATH
 except ImportError:
-    MODEL_PATH = "../models"
-    DATA_PATH = "../data"
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    MODEL_PATH = os.path.join(BASE_DIR, "models")
+    DATA_PATH = os.path.join(BASE_DIR, "data")
 
 # Google Drive IDs for the real data
 DATA_DRIVE_IDS = {

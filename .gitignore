@@ -1,4 +1,5 @@
 data/
+!data/company_network_edges.parquet
 models/
 __pycache__/
 *.pyc
