@@ -41,6 +41,39 @@ Instead of displaying raw news, FinSight AI automatically extracts entities, ide
 
 FinSight AI combines **Data Engineering**, **Machine Learning**, **Natural Language Processing**, **Graph Analytics**, and **Interactive Visualization** into a single platform, helping users explore financial markets through AI-driven insights and powerful analytics.
 
+# Table of Contents
+
+- [Live Demo](#live-demo)
+- [Dashboard Preview](#dashboard-preview)
+  - [Dashboard Navigation](#dashboard-navigation)
+  - [Executive Dashboard](#executive-dashboard)
+  - [News Explorer](#news-explorer)
+  - [Company Explorer](#company-explorer)
+  - [Topic Intelligence](#topic-intelligence)
+  - [Event Intelligence](#event-intelligence)
+  - [Sector Intelligence](#sector-intelligence)
+  - [Knowledge Graph](#knowledge-graph)
+  - [Event Propagation](#event-propagation)
+  - [Sector Network](#sector-network)
+  - [Timeline Explorer](#timeline-explorer)
+  - [Semantic Search](#semantic-search)
+  - [Recommendation Center](#recommendation-center)
+  - [Download Center](#download-center)
+  - [Settings](#settings)
+  - [About](#about)
+- [Key Features](#key-features)
+- [Dashboard Modules](#dashboard-modules)
+- [AI Pipeline](#ai-pipeline)
+- [Project Architecture](#project-architecture)
+- [Machine Learning & AI Models](#machine-learning--ai-models)
+- [Dataset](#dataset)
+- [Technologies Used](#technologies-used)
+- [Project Scale](#project-scale)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [Author](#author)
+- [License](#license)
+- 
 # Live Demo
 
 **Dashboard**
@@ -442,29 +475,6 @@ FinSight AI combines modern Data Science, Machine Learning, NLP, Graph Analytics
 - **15 End-to-End AI Processing Notebooks**
 - **10+ AI, ML & NLP Models Integrated**
 
-# Folder Structure
-
-```text
-FinSight_AI
-│
-├── DashBoard
-├── data
-│   ├── raw
-│   ├── interim
-│   ├── processed
-│   ├── embeddings
-│   ├── entities
-│   ├── topics
-│   ├── clusters
-│   └── sector
-│
-├── models
-├── notebooks
-├── reports
-├── assets
-└── README.md
-```
-
 ---
 
 # Installation
@@ -472,7 +482,7 @@ FinSight_AI
 Clone the repository
 
 ```bash
-git clone https://github.com/your-username/FinSight_AI.git
+git clone https://github.com/Yanshuptl18/FinSight_AI.git
 
 cd FinSight_AI
 ```
@@ -499,17 +509,6 @@ The dashboard will automatically load the processed datasets and open in your de
 
 ---
 
-# Future Enhancements
-
-- Real-time financial news integration
-- LLM-powered financial assistant
-- Company-level intelligence engine
-- Interactive graph analytics
-- AI-generated investigation reports
-- Portfolio recommendation system
-- Market anomaly detection
-
----
 
 # Author
 
@@ -521,7 +520,7 @@ IIIT Vadodara – International Campus Diu
 
 GitHub: https://github.com/Yanshuptl18
 
-LinkedIn: https://linkedin.com/in/your-linkedin
+LinkedIn: www.linkedin.com/in/yanshu-patel-165b2b297
 
 ---
 
