@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
-from data_loader.loader import load_mock_news_data
+from data_loader.loader import load_news_data
 from components.utils import load_css, render_page_header, render_template
 
 load_css()
 
 render_page_header(" News Intelligence Explorer", "Advanced filtering and semantic search for market news.")
 
-news_df = load_mock_news_data()
+news_df = load_news_data()
 
 from components.charts import create_kpi_card
 

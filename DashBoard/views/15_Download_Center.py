@@ -9,6 +9,18 @@ from components.charts import create_kpi_card
 
 load_css()
 
+def update_download_metrics(size_bytes, gen_time, is_report=True):
+    if is_report:
+        st.session_state.reports_generated += 1
+    st.session_state.data_exported += size_bytes / (1024 * 1024)
+    
+    if 'gen_count' not in st.session_state:
+        st.session_state.gen_count = 0
+    total_time = (st.session_state.avg_gen_time * st.session_state.gen_count) + gen_time
+    st.session_state.gen_count += 1
+    st.session_state.avg_gen_time = total_time / st.session_state.gen_count
+
+
 st.markdown("""
 <style>
 /* Target the innermost stVerticalBlock or stVerticalBlockBorderWrapper that contains our marker */
@@ -77,6 +89,9 @@ class PDFReport(FPDF):
         self.cell(0, 10, f"Page {self.page_no()}", align='C')
 
 def generate_professional_pdf(report_type="Executive Summary", sectors=None):
+    from data_loader.loader import load_company_analytics
+    analytics_df = load_company_analytics()
+    
     if sectors is None:
         sectors = ["Technology"]
         
@@ -106,13 +121,17 @@ def generate_professional_pdf(report_type="Executive Summary", sectors=None):
         pdf.cell(0, 10, "1. Macro Overview", new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("Helvetica", "", 11)
         pdf.set_text_color(40, 40, 40)
+        
+        # Dynamic metrics
+        avg_bullish = analytics_df['Bullish'].mean() if not analytics_df.empty and 'Bullish' in analytics_df.columns else 8.4
+        avg_bearish = analytics_df['Bearish'].mean() if not analytics_df.empty and 'Bearish' in analytics_df.columns else 2.1
+        avg_risk = analytics_df['risk_score'].mean() if not analytics_df.empty and 'risk_score' in analytics_df.columns else 45.0
+        
         body1 = (
             f"This intelligence brief provides a high-level executive summary across the following key sectors: {sectors_str}. "
             "The targeted market environment indicates robust resilience in these areas, driven primarily by sustained "
-            "institutional capital inflows and quantitative easing expectations. The Federal Reserve "
-            "has signaled a cautious but optimistic approach to upcoming rate decisions.\n\n"
-            "Meanwhile, algorithmic indicators are showing signs of heavy accumulation following recent supply "
-            "chain resolutions and stabilizing geopolitical tensions."
+            "institutional capital inflows. "
+            f"Currently, the average AI-driven bullish sentiment stands at {avg_bullish:.1f}%, while bearish sentiment is tracked at {avg_bearish:.1f}%."
         )
         pdf.multi_cell(0, 6, body1)
         pdf.ln(5)
@@ -121,21 +140,21 @@ def generate_professional_pdf(report_type="Executive Summary", sectors=None):
         pdf.set_font("Helvetica", "B", 11)
         pdf.set_fill_color(240, 240, 240)
         pdf.cell(60, 8, "Asset Class", border=1, fill=True)
-        pdf.cell(60, 8, "30D Sentiment", border=1, fill=True)
-        pdf.cell(60, 8, "Volatility Index", border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(60, 8, "Sentiment Profile", border=1, fill=True)
+        pdf.cell(60, 8, "Average Risk Score", border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
         
         pdf.set_font("Helvetica", "", 10)
-        pdf.cell(60, 8, "Equities (S&P 500)", border=1)
+        pdf.cell(60, 8, "Equities Analysis", border=1)
         pdf.set_text_color(0, 128, 0)
-        pdf.cell(60, 8, "+ 8.4% (Bullish)", border=1)
+        pdf.cell(60, 8, f"+ {avg_bullish:.1f}% (Bullish)", border=1)
         pdf.set_text_color(40, 40, 40)
-        pdf.cell(60, 8, "14.2 (Low)", border=1, new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(60, 8, f"{avg_risk:.1f}/100", border=1, new_x="LMARGIN", new_y="NEXT")
         
-        pdf.cell(60, 8, "Commodities", border=1)
+        pdf.cell(60, 8, "Market Baseline", border=1)
         pdf.set_text_color(200, 50, 50)
-        pdf.cell(60, 8, "- 2.1% (Bearish)", border=1)
+        pdf.cell(60, 8, f"- {avg_bearish:.1f}% (Bearish)", border=1)
         pdf.set_text_color(40, 40, 40)
-        pdf.cell(60, 8, "22.5 (High)", border=1, new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(60, 8, "50.0/100", border=1, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(10)
         
         pdf.set_font("Helvetica", "B", 14)
@@ -148,14 +167,11 @@ def generate_professional_pdf(report_type="Executive Summary", sectors=None):
         pdf.set_font("Helvetica", "", 11)
         pdf.set_text_color(40, 40, 40)
         
-        if "Technology" in sectors:
-            pdf.cell(0, 6, "  - Semiconductors & AI Hardware (High Conviction)", new_x="LMARGIN", new_y="NEXT")
-            pdf.cell(0, 6, "  - Enterprise Software & Cloud (Medium Conviction)", new_x="LMARGIN", new_y="NEXT")
-        if "Healthcare" in sectors:
-            pdf.cell(0, 6, "  - Biotech & Genomics (Medium Conviction)", new_x="LMARGIN", new_y="NEXT")
-        if "Financials" in sectors:
-            pdf.cell(0, 6, "  - Diversified Banks (Medium Conviction)", new_x="LMARGIN", new_y="NEXT")
-        if not any(s in ["Technology", "Healthcare", "Financials"] for s in sectors):
+        if not analytics_df.empty and 'ticker' in analytics_df.columns:
+            top_buys = analytics_df.sort_values(by='intelligence_score', ascending=False).head(3)['ticker'].tolist()
+            for tb in top_buys:
+                pdf.cell(0, 6, f"  - {tb} (High Conviction Signal)", new_x="LMARGIN", new_y="NEXT")
+        else:
             pdf.cell(0, 6, f"  - Core {sectors[0]} Holdings (High Conviction)", new_x="LMARGIN", new_y="NEXT")
         
     elif report_type == "Quantitative Alpha Signals":
@@ -163,11 +179,15 @@ def generate_professional_pdf(report_type="Executive Summary", sectors=None):
         pdf.cell(0, 10, "1. Algorithmic Momentum Indicators", new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("Helvetica", "", 11)
         pdf.set_text_color(40, 40, 40)
+        
+        max_intel = analytics_df['intelligence_score'].max() if not analytics_df.empty and 'intelligence_score' in analytics_df.columns else 94.2
+        min_intel = analytics_df['intelligence_score'].min() if not analytics_df.empty and 'intelligence_score' in analytics_df.columns else 41.5
+        
         body1 = (
             f"Our quantitative models have detected significant alpha generation opportunities within {sectors_str}. "
             "Deep learning sentiment models are currently indicating a massive divergence between retail sentiment "
-            "and institutional block-trade accumulation. The relative strength indices (RSI) across these specific "
-            "sectors are highlighting unprecedented mean-reversion setups."
+            "and institutional block-trade accumulation. AI confidence scores range up to "
+            f"{max_intel:.1f}% for prime targets."
         )
         pdf.multi_cell(0, 6, body1)
         pdf.ln(5)
@@ -180,26 +200,28 @@ def generate_professional_pdf(report_type="Executive Summary", sectors=None):
         pdf.cell(60, 8, "Confidence Score", border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
         
         pdf.set_font("Helvetica", "", 10)
-        pdf.cell(60, 8, "Mega-Cap Tech", border=1)
+        pdf.cell(60, 8, "Top Quant Pick", border=1)
         pdf.cell(60, 8, "Mean Reversion", border=1)
         pdf.set_text_color(0, 128, 0)
-        pdf.cell(60, 8, "94.2% (Strong)", border=1, new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(60, 8, f"{max_intel:.1f}% (Strong)", border=1, new_x="LMARGIN", new_y="NEXT")
         
         pdf.set_text_color(40, 40, 40)
-        pdf.cell(60, 8, "Regional Banks", border=1)
+        pdf.cell(60, 8, "Lowest Quant Pick", border=1)
         pdf.cell(60, 8, "Statistical Arbitrage", border=1)
         pdf.set_text_color(200, 50, 50)
-        pdf.cell(60, 8, "41.5% (Weak)", border=1, new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(60, 8, f"{min_intel:.1f}% (Weak)", border=1, new_x="LMARGIN", new_y="NEXT")
         
     elif report_type == "Risk Exposure Analysis":
         pdf.set_font("Helvetica", "B", 14)
         pdf.cell(0, 10, "1. Systemic & Tail Risk Assessment", new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("Helvetica", "", 11)
         pdf.set_text_color(40, 40, 40)
+        
+        high_risk_count = len(analytics_df[analytics_df['risk_score'] > 75]) if not analytics_df.empty and 'risk_score' in analytics_df.columns else 12
+        
         body1 = (
             f"This document outlines the current Value at Risk (VaR) and systemic exposure for portfolios heavily weighted in {sectors_str}. "
-            "Our neural networks are currently flagging heightened geopolitical contagion risks that could "
-            "disproportionately impact cross-border revenue streams in these sectors. The primary tail risks "
+            f"Our neural networks are currently flagging {high_risk_count} entities with elevated risk profiles. The primary tail risks "
             "identified involve sudden liquidity crunches in the overnight repo markets and unexpected regulatory interventions."
         )
         pdf.multi_cell(0, 6, body1)
@@ -232,9 +254,9 @@ def generate_professional_pdf(report_type="Executive Summary", sectors=None):
         pdf.set_text_color(40, 40, 40)
         body1 = (
             f"Analyzing supply chain vulnerabilities specific to {sectors_str}. "
-            "Recent shipping lane closures in the Red Sea and reduced transit capacity in the Panama Canal "
-            "are causing cascading delays in raw material deliveries and semiconductor fabrication schedules. "
-            "Freight costs have spiked 24% month-over-month, which will directly impact the operating margins "
+            "Recent shipping lane closures and reduced transit capacity "
+            "are causing cascading delays in raw material deliveries. "
+            "Freight costs have spiked, which will directly impact the operating margins "
             "of hardware-dependent companies within the selected sectors."
         )
         pdf.multi_cell(0, 6, body1)
@@ -260,35 +282,44 @@ def generate_professional_pdf(report_type="Executive Summary", sectors=None):
     
     return bytes(pdf.output())
 
+from data_loader.loader import load_news_data, load_entities_data
+
 def generate_professional_csv():
-    companies = ['NVIDIA', 'Apple', 'Microsoft', 'Tesla', 'Amazon', 'Alphabet', 'Meta', 'AMD', 'JPMorgan', 'Exxon']
-    dates = pd.date_range(end=datetime.date.today(), periods=30)
-    
-    data = []
-    for comp in companies:
-        for d in dates:
-            data.append({
-                'Date': d.strftime("%d-%b-%Y"), # Shorter format prevents Excel #### issue
-                'Entity': comp,
-                'Sentiment_Score': round(np.random.uniform(-1, 1), 3),
-                'Confidence': round(np.random.uniform(0.65, 0.99), 2),
-                'Volume_Mentions': np.random.randint(500, 15000)
-            })
-            
-    df = pd.DataFrame(data)
-    df = df.sort_values(by=['Date', 'Volume_Mentions'], ascending=[False, False])
-    return df.to_csv(index=False).encode('utf-8')
+    news_df = load_news_data()
+    if not news_df.empty:
+        # Sort by Date if exists
+        if 'Date' in news_df.columns:
+            news_df = news_df.sort_values(by='Date', ascending=False)
+            max_date = news_df['Date'].max()
+            # Filter to 30 days
+            news_df = news_df[news_df['Date'] >= max_date - pd.Timedelta(days=30)]
+        
+        # Prevent MessageSizeError in Streamlit by hard capping row count
+        # Parquet text data is very large uncompressed, so we limit to 500 rows
+        news_df = news_df.head(500)
+        return news_df.to_csv(index=False).encode('utf-8')
+    else:
+        # Fallback empty dataframe
+        return pd.DataFrame(columns=['Date', 'Headline', 'Company']).to_csv(index=False).encode('utf-8')
 
 render_page_header("Download Center & Reporting", "Generate custom intelligence briefs or export raw data extracts for downstream quantitative analysis.")
 
 # --- Action KPIs ---
 k1, k2, k3 = st.columns(3)
 with k1:
-    create_kpi_card("Reports Generated", "1,204", "Last 30 Days", "normal")
+    if 'reports_generated' not in st.session_state:
+        st.session_state.reports_generated = 0
+    create_kpi_card("Reports Generated", str(st.session_state.reports_generated), "This Session", "normal")
 with k2:
-    create_kpi_card("Raw Data Exported", "84.2 GB", "Last 30 Days", "normal")
+    if 'data_exported' not in st.session_state:
+        st.session_state.data_exported = 0
+    create_kpi_card("Raw Data Exported", f"{st.session_state.data_exported:.1f} MB", "This Session", "normal")
 with k3:
-    create_kpi_card("Avg Generation Time", "1.4s", "Cloud Compute", "inverse")
+    if 'avg_gen_time' not in st.session_state:
+        st.session_state.avg_gen_time = 0.0
+        st.session_state.gen_count = 0
+    gen_time_str = f"{st.session_state.avg_gen_time:.1f}s" if st.session_state.avg_gen_time > 0 else "0.0s"
+    create_kpi_card("Avg Generation Time", gen_time_str, "Cloud Compute", "inverse")
 
 st.divider()
 
@@ -308,14 +339,19 @@ with st.container(border=True):
         st.warning("Please select at least one sector to generate the custom report.")
     else:
         # Dynamically generate the PDF based on the selected filters!
+        t0 = time.time()
         custom_pdf = generate_professional_pdf(report_type=report_type, sectors=sectors)
+        t1 = time.time()
+        
         st.download_button(
             label="Download Custom Report",
             data=custom_pdf,
             file_name=f"Custom_{report_type.replace(' ', '_')}.pdf",
             mime="application/pdf",
             use_container_width=True,
-            type="primary"
+            type="primary",
+            on_click=update_download_metrics,
+            args=(len(custom_pdf), t1 - t0, True)
         )
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -333,8 +369,11 @@ with c1:
         st.markdown("<div style='background: rgba(77, 166, 255, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 4px; display: inline-block; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px;'>Format: PDF (2.4 MB)</div>", unsafe_allow_html=True)
         
         # Standard generic report
+        t0 = time.time()
         valid_pdf = generate_professional_pdf(report_type="Executive Summary", sectors=["Global Macro"])
-        st.download_button("Download PDF", data=valid_pdf, file_name="Weekly_Executive_Summary.pdf", mime="application/pdf", use_container_width=True, key="std_pdf")
+        t1 = time.time()
+        st.download_button("Download PDF", data=valid_pdf, file_name="Weekly_Executive_Summary.pdf", mime="application/pdf", use_container_width=True, key="std_pdf",
+                           on_click=update_download_metrics, args=(len(valid_pdf), t1 - t0, True))
 
 with c2:
     with st.container(border=True):
@@ -343,8 +382,11 @@ with c2:
         st.markdown("<p style='color: var(--text-primary); font-size: 0.9rem;'>Comma-separated values containing all entity sentiment scores, conviction ratings, and temporal heatmaps.</p>", unsafe_allow_html=True)
         st.markdown("<div style='background: var(--bg-bull); color: var(--color-bull); padding: 4px 10px; border-radius: 4px; display: inline-block; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px;'>Format: CSV (14.1 MB)</div>", unsafe_allow_html=True)
         
+        t0 = time.time()
         valid_csv = generate_professional_csv()
-        st.download_button("Download CSV", data=valid_csv, file_name="Sentiment_Data_30d.csv", mime="text/csv", use_container_width=True)
+        t1 = time.time()
+        st.download_button("Download CSV", data=valid_csv, file_name="Sentiment_Data_30d.csv", mime="text/csv", use_container_width=True,
+                           on_click=update_download_metrics, args=(len(valid_csv), t1 - t0, False))
 
 with c3:
     with st.container(border=True):
@@ -353,6 +395,13 @@ with c3:
         st.markdown("<p style='color: var(--text-primary); font-size: 0.9rem;'>Highly optimized Parquet file containing all node-edge relationships for ingestion into Python, R, or Neo4j.</p>", unsafe_allow_html=True)
         st.markdown("<div style='background: rgba(255, 187, 51, 0.1); color: #ffbb33; padding: 4px 10px; border-radius: 4px; display: inline-block; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px;'>Format: PARQUET (8.7 MB)</div>", unsafe_allow_html=True)
         
-        # Valid minimal text placeholder for Parquet (since generating real parquet bytes requires pyarrow)
-        valid_parquet_placeholder = b"This is a placeholder for a real binary Parquet file. In a production environment, this would be generated using pandas.to_parquet() or pyarrow."
-        st.download_button("Download Parquet", data=valid_parquet_placeholder, file_name="Knowledge_Graph_Edges.parquet", mime="application/octet-stream", use_container_width=True)
+        t0 = time.time()
+        entities_df = load_entities_data().head(1000) # Limit to strictly avoid MessageSizeError
+        if not entities_df.empty:
+            valid_parquet_bytes = entities_df.to_parquet(index=False)
+        else:
+            valid_parquet_bytes = b"Empty data"
+        t1 = time.time()
+            
+        st.download_button("Download Parquet", data=valid_parquet_bytes, file_name="Knowledge_Graph_Edges.parquet", mime="application/octet-stream", use_container_width=True,
+                           on_click=update_download_metrics, args=(len(valid_parquet_bytes), t1 - t0, False))

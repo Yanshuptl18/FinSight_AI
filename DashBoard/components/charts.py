@@ -53,7 +53,7 @@ def plot_time_series(df, x_col, y_col, title):
     theme = get_theme_colors()
     fig = px.line(df, x=x_col, y=y_col, title=title)
     fig.update_traces(
-        line=dict(width=3, color=theme['--accent'], shape='spline'),
+        line=dict(width=3, color=theme['--accent'], shape='linear'),
         fill='tozeroy',
         fillcolor=theme['--border-color'],
         mode='lines+markers',

@@ -1,7 +1,7 @@
 import streamlit as st
 from components.charts import render_plotly_chart
 import plotly.express as px
-from data_loader.loader import load_mock_sector_data
+from data_loader.loader import load_sector_data
 from components.charts import plot_bar_chart, create_kpi_card
 
 from components.utils import load_css, render_page_header
@@ -9,7 +9,7 @@ load_css()
 
 render_page_header("Sector Intelligence Explorer", "Analyze sector performance, risk, and growth trends based on NLP aggregations.")
 
-sector_df = load_mock_sector_data()
+sector_df = load_sector_data()
 
 # --- Filters Section ---
 with st.container(border=True):
@@ -27,50 +27,90 @@ st.divider()
 
 # --- Top Metrics ---
 col1, col2, col3 = st.columns(3)
-top_sector = sector_df.loc[sector_df['Growth Score'].idxmax()]
-highest_risk = sector_df.loc[sector_df['Risk Score'].idxmax()]
-most_active = sector_df.loc[sector_df['News Volume'].idxmax()]
-
-with col1:
-    create_kpi_card("Fastest Growing", top_sector['Sector'], f"Score: {top_sector['Growth Score']}", "normal")
-with col2:
-    create_kpi_card("Highest Risk", highest_risk['Sector'], f"Risk: {highest_risk['Risk Score']}", "inverse")
-with col3:
-    create_kpi_card("Most Active", most_active['Sector'], f"{most_active['News Volume']} articles", "normal")
+if not filtered_df.empty:
+    top_sector = filtered_df.loc[filtered_df['Growth Score'].idxmax()]
+    highest_risk = filtered_df.loc[filtered_df['Risk Score'].idxmax()]
+    most_active = filtered_df.loc[filtered_df['News Volume'].idxmax()]
+    
+    with col1:
+        create_kpi_card("Fastest Growing", top_sector['Sector'], f"Score: {top_sector['Growth Score']}", "normal")
+    with col2:
+        create_kpi_card("Highest Risk", highest_risk['Sector'], f"Risk: {highest_risk['Risk Score']}", "inverse")
+    with col3:
+        create_kpi_card("Most Active", most_active['Sector'], f"{most_active['News Volume']} articles", "normal")
+else:
+    with col1:
+        create_kpi_card("Fastest Growing", "N/A", "Score: 0", "normal")
+    with col2:
+        create_kpi_card("Highest Risk", "N/A", "Risk: 0", "inverse")
+    with col3:
+        create_kpi_card("Most Active", "N/A", "0 articles", "normal")
 
 st.divider()
 
 # --- Sector Analysis Charts ---
 col_chart1, col_chart2 = st.columns([1.5, 1])
 
+# Defined explicit colors for recommendations
+rec_colors = {
+    'Strong Buy': '#00e676',
+    'Buy': '#69f0ae',
+    'Watch': '#ffa726',
+    'Avoid': '#ff5252',
+    'Neutral': '#4da6ff'
+}
+
 with col_chart1:
     with st.container(border=True):
         st.markdown("### Risk vs Growth Matrix")
-        fig_scatter = px.scatter(
-            filtered_df, 
-            x='Risk Score', 
-            y='Growth Score', 
-            size='News Volume', 
-            color='Recommendation',
-            hover_name='Sector',
-            title="Sector Positioning"
-        )
-        fig_scatter.update_traces(
-            marker=dict(line=dict(width=2, color='var(--bg-primary)')),
-            selector=dict(mode='markers')
-        )
-        fig_scatter.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)', 
-            plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(t=50, b=60, l=50, r=20)
-        )
-        render_plotly_chart(fig_scatter, width='stretch')
+        sample_df = filtered_df.head(500) if len(filtered_df) > 500 else filtered_df
+        
+        if not sample_df.empty:
+            fig_scatter = px.scatter(
+                sample_df, 
+                x='Risk Score', 
+                y='Growth Score', 
+                size='News Volume', 
+                color='Recommendation',
+                color_discrete_map=rec_colors,
+                hover_name='Sector',
+                title="Sector Positioning"
+            )
+            fig_scatter.update_traces(
+                marker=dict(line=dict(width=2, color='var(--bg-primary)')),
+                selector=dict(mode='markers')
+            )
+            fig_scatter.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)', 
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(t=50, b=60, l=50, r=20)
+            )
+            render_plotly_chart(fig_scatter, width='stretch')
+        else:
+            st.info("No data available for chart.")
 
 with col_chart2:
     with st.container(border=True):
         st.markdown("### News Volume by Sector")
-        fig_bar = plot_bar_chart(filtered_df, 'Sector', 'News Volume', "Sector Media Coverage", color='Recommendation')
-        render_plotly_chart(fig_bar, width='stretch')
+        if not filtered_df.empty:
+            fig_bar = px.bar(
+                filtered_df,
+                x='Sector',
+                y='News Volume',
+                color='Recommendation',
+                color_discrete_map=rec_colors,
+                title="Sector Media Coverage"
+            )
+            fig_bar.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)', 
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(t=50, b=60, l=50, r=20),
+                xaxis=dict(showgrid=False, categoryorder='total descending'),
+                yaxis=dict(showgrid=True, gridcolor='var(--border-color)')
+            )
+            render_plotly_chart(fig_bar, width='stretch')
+        else:
+            st.info("No data available for chart.")
 
 st.divider()
 

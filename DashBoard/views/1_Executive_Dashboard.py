@@ -1,7 +1,7 @@
 import streamlit as st
 from components.charts import render_plotly_chart
 import pandas as pd
-from data_loader.loader import load_mock_news_data, get_dashboard_metrics, load_mock_sector_data
+from data_loader.loader import load_news_data, get_dashboard_metrics, load_sector_data
 from components.charts import create_kpi_card, plot_donut_chart, plot_bar_chart, plot_time_series
 
 from components.utils import load_css, render_page_header
@@ -11,9 +11,9 @@ render_page_header(" Executive Dashboard", "High-level overview of market intell
 
 # Load Data
 with st.spinner("Loading intelligence..."):
-    news_df = load_mock_news_data()
+    news_df = load_news_data()
     metrics = get_dashboard_metrics()
-    sector_df = load_mock_sector_data()
+    sector_df = load_sector_data()
 
 # --- KPI Section ---
 st.markdown("### Key Performance Indicators")
@@ -33,15 +33,17 @@ with col4:
 
 st.divider()
 
-# --- AI Insight Section ---
-st.markdown("### FinSight AI Insight")
+# --- Executive Summary & Charts Section ---
 
-ai_html = """<style>.ai-insight-box { background: var(--card-bg); border: 1px solid var(--accent); border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(77, 166, 255, 0.1); position: relative; overflow: hidden; } .ai-insight-box::before { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, #4da6ff, transparent); animation: scanline 3s linear infinite; } @keyframes scanline { 0% { left: -100%; } 100% { left: 100%; } } .ai-header { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; } .ai-pulse { height: 10px; width: 10px; background-color: var(--accent); border-radius: 50%; margin-right: 12px; box-shadow: 0 0 10px #4da6ff; animation: pulseAI 2s infinite; } @keyframes pulseAI { 0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 10px #4da6ff; } 50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 20px #4da6ff; } 100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 10px #4da6ff; } } .ai-list { list-style: none; padding-left: 0; margin: 0; } .ai-list li { margin-bottom: 12px; font-size: 0.95rem; color: var(--text-primary); padding-left: 20px; position: relative; line-height: 1.6; } .ai-list li::before { content: "►"; position: absolute; left: 0; color: var(--accent); font-size: 0.8rem; top: 3px; } .highlight-blue { color: var(--accent); font-weight: 600; } .highlight-green { color: var(--color-bull); font-weight: 600; } .highlight-red { color: #ff6b6b; font-weight: 600; }</style><div class="ai-insight-box"><div class="ai-header"><div class="ai-pulse"></div> FinSight AI Synthesis: Today's Market Summary</div><ul class="ai-list"><li><span class="highlight-blue">Technology</span> generated the highest news activity, primarily driven by <span class="highlight-blue">AI</span> and <span class="highlight-blue">NVIDIA</span>.</li><li><span class="highlight-blue">Financial Services</span> maintained strong confidence despite concerns over <span class="highlight-red">Interest Rates</span>.</li><li><span class="highlight-blue">Healthcare</span> became <span class="highlight-red">less active</span> compared to last week.</li><li><span class="highlight-blue">Apple</span> is currently showing <span class="highlight-green">bullish momentum</span> across multiple publishers.</li></ul></div>"""
-st.markdown(ai_html, unsafe_allow_html=True)
+with st.container(border=True):
+    # Timeline
+    timeline_df = news_df.groupby(news_df['Date'].dt.date).size().reset_index(name='News Volume')
+    fig_timeline = plot_time_series(timeline_df, 'Date', 'News Volume', "News Timeline")
+    fig_timeline.update_xaxes(rangeslider_visible=True)
+    render_plotly_chart(fig_timeline, width='stretch')
 
 st.divider()
 
-# --- Charts Section ---
 col_chart1, col_chart2 = st.columns(2)
 
 with col_chart1:
@@ -51,10 +53,11 @@ with col_chart1:
         fig_sentiment = plot_donut_chart(
             sentiment_counts.index, 
             sentiment_counts.values, 
-            "Market Mood (Sentiment Distribution)"
+            "Market Mood (Sentiment)"
         )
         render_plotly_chart(fig_sentiment, width='stretch')
     
+with col_chart2:
     with st.container(border=True):
         # Sector Distribution
         sector_counts = news_df['Sector'].value_counts().reset_index()
@@ -62,13 +65,11 @@ with col_chart1:
         fig_sector = plot_bar_chart(sector_counts, 'Sector', 'Count', "News by Sector")
         render_plotly_chart(fig_sector, width='stretch')
 
-with col_chart2:
-    with st.container(border=True):
-        # Timeline
-        timeline_df = news_df.groupby(news_df['Date'].dt.date).size().reset_index(name='News Volume')
-        fig_timeline = plot_time_series(timeline_df, 'Date', 'News Volume', "News Timeline (Last 30 Days)")
-        render_plotly_chart(fig_timeline, width='stretch')
-    
+st.divider()
+
+col_row3_1, col_row3_2 = st.columns([1.2, 0.8])
+
+with col_row3_1:
     with st.container(border=True):
         # Top Companies
         company_counts = news_df['Company'].value_counts().head(5).reset_index()
@@ -76,6 +77,19 @@ with col_chart2:
         fig_company = plot_bar_chart(company_counts, 'Count', 'Company', "Top Trending Companies")
         fig_company.update_layout(yaxis={'categoryorder':'total ascending'})
         render_plotly_chart(fig_company, width='stretch')
+
+with col_row3_2:
+    # FinSight AI Insight
+    st.markdown("### FinSight AI Insight")
+    
+    # Compute dynamic insights
+    top_sector = news_df['Sector'].value_counts().idxmax() if 'Sector' in news_df.columns else "Technology"
+    top_company_bullish = news_df[news_df['Sentiment'] == 'Bullish']['Company'].value_counts().idxmax() if not news_df[news_df['Sentiment'] == 'Bullish'].empty else "Apple"
+    high_conf_sector = news_df.groupby('Sector')['Confidence'].mean().idxmax() if 'Sector' in news_df.columns else "Financial Services"
+    bottom_sector = news_df['Sector'].value_counts().idxmin() if 'Sector' in news_df.columns else "Healthcare"
+    
+    ai_html = f"""<style>.ai-insight-box {{ background: var(--card-bg); border: 1px solid var(--accent); border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(77, 166, 255, 0.1); position: relative; overflow: hidden; height: 100%; min-height: 380px; }} .ai-insight-box::before {{ content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, #4da6ff, transparent); animation: scanline 3s linear infinite; }} @keyframes scanline {{ 0% {{ left: -100%; }} 100% {{ left: 100%; }} }} .ai-header {{ font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 25px; display: flex; align-items: center; }} .ai-pulse {{ height: 10px; width: 10px; background-color: var(--accent); border-radius: 50%; margin-right: 12px; box-shadow: 0 0 10px #4da6ff; animation: pulseAI 2s infinite; }} @keyframes pulseAI {{ 0% {{ transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 10px #4da6ff; }} 50% {{ transform: scale(1.3); opacity: 1; box-shadow: 0 0 20px #4da6ff; }} 100% {{ transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 10px #4da6ff; }} }} .ai-list {{ list-style: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }} .ai-list li {{ font-size: 1rem; color: var(--text-primary); padding-left: 20px; position: relative; line-height: 1.6; }} .ai-list li::before {{ content: "►"; position: absolute; left: 0; color: var(--accent); font-size: 0.8rem; top: 5px; }} .highlight-blue {{ color: var(--accent); font-weight: 600; }} .highlight-green {{ color: var(--color-bull); font-weight: 600; }} .highlight-red {{ color: #ff6b6b; font-weight: 600; }}</style><div class="ai-insight-box"><div class="ai-header"><div class="ai-pulse"></div> FinSight AI Synthesis: Today's Market Summary</div><ul class="ai-list"><li><span class="highlight-blue">{top_sector}</span> generated the highest news activity today.</li><li><span class="highlight-blue">{high_conf_sector}</span> maintained strong confidence across major publishers.</li><li><span class="highlight-blue">{bottom_sector}</span> became <span class="highlight-red">less active</span> compared to historical averages.</li><li><span class="highlight-blue">{top_company_bullish}</span> is currently showing <span class="highlight-green">bullish momentum</span> across multiple sources.</li></ul></div>"""
+    st.markdown(ai_html, unsafe_allow_html=True)
 
 st.divider()
 

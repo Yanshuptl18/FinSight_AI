@@ -1,7 +1,7 @@
 import streamlit as st
 from components.charts import render_plotly_chart
 import pandas as pd
-from data_loader.loader import load_mock_news_data
+from data_loader.loader import load_news_data
 from components.charts import plot_time_series, plot_donut_chart, create_kpi_card
 
 from components.utils import load_css, render_page_header
@@ -9,29 +9,64 @@ load_css()
 
 render_page_header("Company Intelligence Explorer")
 
-news_df = load_mock_news_data()
+news_df = load_news_data()
 companies = sorted(news_df["Company"].unique())
 
 # --- Search ---
 with st.container(border=True):
     col_search, col_space = st.columns([1, 2])
     with col_search:
-        selected_company = st.selectbox("Search Company", companies, index=companies.index("Apple"))
+        selected_company = st.selectbox("Search Company", companies)
 
 company_data = news_df[news_df["Company"] == selected_company]
 
 st.divider()
 
 # --- Company Overview ---
+
+if company_data.empty:
+    recommendation, rec_delta, rec_trend = "N/A", None, "off"
+    risk_score, risk_delta, risk_trend = "N/A", None, "off"
+    top_event = "N/A"
+else:
+    sentiment_counts = company_data['Sentiment'].value_counts()
+    bullish = sentiment_counts.get('Bullish', 0)
+    bearish = sentiment_counts.get('Bearish', 0)
+    total = len(company_data)
+    
+    score = (bullish - bearish) / total if total > 0 else 0
+    if score >= 0.3:
+        recommendation, rec_delta, rec_trend = "Strong Buy", "Upgraded", "normal"
+    elif score >= 0.1:
+        recommendation, rec_delta, rec_trend = "Buy", "Positive", "normal"
+    elif score <= -0.3:
+        recommendation, rec_delta, rec_trend = "Strong Sell", "Downgraded", "inverse"
+    elif score <= -0.1:
+        recommendation, rec_delta, rec_trend = "Sell", "Negative", "inverse"
+    else:
+        recommendation, rec_delta, rec_trend = "Hold", "Stable", "off"
+
+    risk = int((bearish / total) * 100) if total > 0 else 50
+    risk_score = f"{risk}/100"
+    
+    if risk < 30:
+        risk_delta, risk_trend = "-5", "inverse"
+    elif risk > 60:
+        risk_delta, risk_trend = "+8", "inverse"
+    else:
+        risk_delta, risk_trend = "+2", "inverse"
+        
+    event_mode = company_data["Event"].mode()
+    top_event = str(event_mode[0]) if not event_mode.empty else "N/A"
+
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    create_kpi_card("Recommendation", "Strong Buy", "Upgraded", "normal")
+    create_kpi_card("Recommendation", recommendation, rec_delta, rec_trend)
 with col2:
-    create_kpi_card("Risk Score", "24/100", "-5", "inverse")
+    create_kpi_card("Risk Score", risk_score, risk_delta, risk_trend)
 with col3:
     create_kpi_card("Total Articles", str(len(company_data)), None, "off")
 with col4:
-    top_event = str(company_data["Event"].mode()[0]) if not company_data.empty else "N/A"
     create_kpi_card("Top Event", top_event, None, "off")
 
 st.divider()

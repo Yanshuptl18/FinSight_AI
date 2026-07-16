@@ -15,69 +15,34 @@ if "search_query" not in st.session_state:
 if "trigger_search" not in st.session_state:
     st.session_state.trigger_search = False
 
-# --- Mock Database ---
-mock_db = {
-    "ai regulations": [
-        ("The EU AI Act is expected to increase compliance costs for tech firms by 15%...", "Reuters", "98%", "2023-10-12"),
-        ("European startups are pivoting to open-source models to bypass stringent...", "Bloomberg", "91%", "2023-10-10"),
-        ("Investment in EU tech has slowed pending regulatory clarity...", "Financial Times", "87%", "2023-10-05")
-    ],
-    "nvidia earnings": [
-        ("NVIDIA blows past Q3 expectations driven by unprecedented data center demand...", "CNBC", "99%", "2023-11-21"),
-        ("Semiconductor supply chain tightens as NVIDIA secures additional TSMC capacity...", "WSJ", "94%", "2023-11-20"),
-        ("Analysts upgrade NVDA price target, citing sustainable AI infrastructure spend...", "MarketWatch", "89%", "2023-11-18")
-    ],
-    "ev market": [
-        ("Global EV sales growth decelerates as price wars squeeze legacy automaker margins...", "Bloomberg", "95%", "2024-01-15"),
-        ("Chinese EV manufacturer BYD overtakes Tesla in quarterly deliveries...", "Reuters", "92%", "2024-01-02"),
-        ("Battery raw material prices hit 3-year lows, providing tailwinds for EV startups...", "Financial Times", "88%", "2023-12-28")
-    ],
-    "rate cuts": [
-        ("Federal Reserve signals three potential rate cuts in 2024 amid cooling inflation...", "WSJ", "97%", "2023-12-13"),
-        ("Treasury yields slide as bond markets aggressively price in a dovish pivot...", "Bloomberg", "93%", "2023-12-14"),
-        ("Real estate stocks rally on hopes of lower mortgage rates heading into spring...", "CNBC", "86%", "2023-12-15")
-    ],
-    "renewable energy": [
-        ("Wind and solar capacity additions hit record highs despite supply chain bottlenecks...", "Reuters", "94%", "2023-11-05"),
-        ("Major oil firms scale back green investments to focus on core dividend growth...", "Financial Times", "91%", "2023-11-02"),
-        ("New government subsidies accelerate utility-scale battery storage deployments...", "WSJ", "85%", "2023-10-28")
-    ],
-    "inflation": [
-        ("Core CPI rises unexpectedly, throwing cold water on early rate cut hopes...", "Bloomberg", "96%", "2024-02-13"),
-        ("Consumer spending remains resilient despite lingering inflation pressures...", "Reuters", "90%", "2024-02-10"),
-        ("Retailers warn of margin compression as input costs remain elevated...", "WSJ", "85%", "2024-02-05")
-    ],
-    "commercial real estate": [
-        ("Regional banks increase provisions for commercial real estate loan defaults...", "Financial Times", "98%", "2024-01-30"),
-        ("Office vacancy rates hit all-time highs in major metropolitan areas...", "WSJ", "92%", "2024-01-25"),
-        ("Distressed commercial properties present new opportunities for private equity...", "Bloomberg", "88%", "2024-01-20")
-    ],
-    "semiconductor supply": [
-        ("Global foundry capacity remains tight as AI chip demand outpaces production...", "Reuters", "95%", "2024-02-01"),
-        ("New US export controls on advanced semiconductors reshape global supply chains...", "Financial Times", "93%", "2024-01-15"),
-        ("Memory chip prices rebound following aggressive production cuts by major suppliers...", "CNBC", "87%", "2024-01-10")
-    ],
-    "default": [
-        ("Global equities experience heightened volatility amid shifting macroeconomic indicators...", "Reuters", "82%", "2024-02-10"),
-        ("Supply chain normalization leads to improved corporate margins across industrial sectors...", "Bloomberg", "78%", "2024-02-08"),
-        ("Tech sector valuations stretch as investors continue to crowd into mega-cap names...", "WSJ", "75%", "2024-02-05")
-    ]
-}
+from data_loader.loader import load_news_data
+news_df = load_news_data()
 
-# --- Suggested Queries Section ---
+
+# --- Dynamic Suggested Queries ---
 st.markdown("##### Quick Suggestions:")
 
-# Larger pool of queries to randomly pick from
-query_pool = [
-    "AI regulations in Europe",
-    "NVIDIA data center earnings",
-    "Global EV market trends",
-    "Federal Reserve rate cuts",
-    "Renewable energy investments",
-    "Inflation and consumer spending",
-    "Commercial real estate risks",
-    "Semiconductor supply chain"
-]
+# Build a dynamic query pool from real topics or headlines
+query_pool = []
+try:
+    if not news_df.empty and 'Topic' in news_df.columns:
+        query_pool = [f"News about {t}" for t in news_df['Topic'].dropna().unique()[:10]]
+    if not news_df.empty and 'Company' in news_df.columns:
+        query_pool += [f"Latest on {c}" for c in news_df['Company'].dropna().unique()[:10]]
+        
+    import os
+    from data_loader.loader import DATA_PATH
+    ct_path = os.path.join(DATA_PATH, "clustered_topics.parquet")
+    if os.path.exists(ct_path):
+        import pandas as pd
+        ct_df = pd.read_parquet(ct_path)
+        query_pool += ct_df['topic_name'].dropna().unique()[:10].tolist()
+except Exception:
+    pass
+
+if not query_pool:
+    query_pool = ["Market regulations", "Tech earnings", "Supply chain constraints", "Federal reserve rates", "Renewable energy trends"]
+
 
 # Randomly select 5 suggestions on every reload
 if "random_suggestions" not in st.session_state:
@@ -138,26 +103,86 @@ st.divider()
 # --- Search Execution ---
 if query:
     if st.session_state.trigger_search:
-        with st.spinner("Searching millions of vectors..."):
-            time.sleep(0.5) # Simulate search time
         st.session_state.trigger_search = False
         
-    # Match query to mock db
-    q_lower = query.lower()
-    results = mock_db["default"]
-    for key in mock_db.keys():
-        if key in q_lower:
-            results = mock_db[key]
-            break
+    import time
+    start_time = time.time()
+    with st.spinner("Searching millions of vectors..."):
+        q_lower = query.lower()
+        ai_search_successful = False
+        
+        try:
+            from data_loader.loader import load_semantic_indices
+            indices = load_semantic_indices()
+            
+            company_idx = indices.get("company_index", {})
+            company_lookup = indices.get("company_lookup", {})
+            cluster_idx = indices.get("cluster_index", {})
+            analytics_idx = indices.get("analytics_lookup", {})
+            
+            # Simple keyword extraction
+            tokens = set(q_lower.replace(",", "").replace(".", "").replace("?", "").split())
+            
+            results = []
+            
+            # 1. Check for Company Matches (tickers)
+            for token in tokens:
+                ticker = token.upper()
+                if ticker in company_idx:
+                    comp_data = company_idx[ticker]
+                    snippet = f"Entity Profile: {ticker}. Total News: {comp_data.get('total_news', 'N/A')}. First seen: {str(comp_data.get('first_news', ''))[:10]}. Avg Score: {str(comp_data.get('avg_headline_sentiment', 0))[:4]}"
+                    results.append((snippet, "Entity Database", "99%", str(comp_data.get('latest_news', '2024-01-01'))[:10]))
+                    ai_search_successful = True
+                    break # Stop after finding one company for simplicity
+                    
+            # 2. Check for Cluster/Category Matches
+            if not ai_search_successful:
+                for cluster_desc in cluster_idx.keys():
+                    if any(t in cluster_desc.lower() for t in tokens if len(t) > 4):
+                        snippet = f"Market Cluster Identified: {cluster_idx[cluster_desc]}. This cluster represents related market movements and sentiment trends."
+                        results.append((snippet, "Cluster Intelligence", "95%", "2024-01-01"))
+                        ai_search_successful = True
+                        break
+                        
+            # 3. Check Analytics / Publishers
+            if not ai_search_successful:
+                for pub_lower in analytics_idx.keys():
+                    if any(t in str(pub_lower).lower() for t in tokens if len(t) > 3):
+                        snippet = f"Publisher Profile: {analytics_idx[pub_lower]}. Highly active source in our database."
+                        results.append((snippet, "Publisher Database", "92%", "2024-01-01"))
+                        ai_search_successful = True
+                        break
+                        
+        except Exception as e:
+            st.warning(f"⚠️ Semantic Search encountered an error: {e}. Falling back to basic text search.")
+            
+        if not ai_search_successful:
+            # Text-based semantic fallback on real data
+            if not news_df.empty:
+                mask = news_df['Headline'].str.lower().str.contains(q_lower, na=False) | (news_df['Topic'].str.lower().str.contains(q_lower, na=False) if 'Topic' in news_df.columns else False)
+                filtered = news_df[mask].head(10)
+                
+                results = []
+                for _, row in filtered.iterrows():
+                    snippet = row['Headline']
+                    source = row['Publisher']
+                    score = f"{int(float(row['Confidence']) * 100)}%" if 'Confidence' in row and pd.notna(row['Confidence']) else "90%"
+                    date_str = str(row['Date'])[:10] if 'Date' in row and pd.notna(row['Date']) else "2024-01-01"
+                    results.append((snippet, source, score, date_str))
+                    
+                if not results:
+                    results = [("No highly relevant insights found for this exact query.", "System", "0%", "N/A")]
+            else:
+                results = [("Database is currently empty or loading.", "System", "0%", "N/A")]
             
     # --- KPIs ---
     k1, k2, k3 = st.columns(3)
     with k1:
-        create_kpi_card("Documents Scanned", "2.4M", "Live Database", "normal")
+        create_kpi_card("Documents Scanned", f"{len(news_df):,}" if not news_df.empty else "0", "Live Database", "normal")
     with k2:
         create_kpi_card("Vector Dimensions", "1,536", "OpenAI Ada-002", "inverse")
     with k3:
-        retrieval_time = f"{random.uniform(0.1, 0.4):.2f}s"
+        retrieval_time = f"{(time.time() - start_time):.3f}s"
         create_kpi_card("Retrieval Time", retrieval_time, "Ultra Low Latency", "normal")
         
     st.markdown("<br>", unsafe_allow_html=True)

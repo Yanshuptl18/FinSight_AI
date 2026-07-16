@@ -11,37 +11,49 @@ load_css()
 
 render_page_header("Timeline Intelligence Explorer", "Filter and explore historical financial events chronologically. Insights update dynamically based on your selected time window.")
 
-# --- Generate Better Mock Data (Cached so it doesn't re-roll on every slider move) ---
+from data_loader.loader import load_timeline_data
+
 @st.cache_data
 def get_timeline_data():
-    dates = pd.date_range(start='2023-01-01', end='2024-06-01', freq='W')
-    
-    events = []
-    companies = ["Apple", "NVIDIA", "Tesla", "Microsoft", "Google", "Federal Reserve", "SEC", "OpenAI", "TSMC"]
-    
-    for d in dates:
-        category = np.random.choice(['Macro', 'Earnings', 'M&A', 'Regulatory'])
-        intensity = np.random.randint(10, 100)
-        entity = random.choice(companies)
+    timeline_df = load_timeline_data()
+    if timeline_df.empty:
+        return pd.DataFrame(columns=['Date', 'Event Intensity', 'Category', 'Entity', 'Headline'])
         
-        if category == 'Earnings':
-            headline = f"{entity} posts Q{random.randint(1,4)} earnings surprise"
-        elif category == 'M&A':
-            headline = f"{entity} announces strategic acquisition"
-        elif category == 'Regulatory':
-            headline = f"New compliance ruling heavily impacts {entity}"
-        else:
-            headline = f"Market volatility shifts driven by {entity}"
-            
-        events.append({
-            'Date': d.date(),
-            'Event Intensity': intensity,
-            'Category': category,
-            'Entity': entity,
-            'Headline': headline
-        })
+    # Standardize column names
+    rename_map = {
+        'published_date': 'Date',
+        'final_event': 'Category',
+        'ticker': 'Entity',
+        'headline': 'Headline'
+    }
+    
+    # Rename matching columns
+    timeline_df = timeline_df.rename(columns=lambda x: rename_map.get(x, x))
+    
+    # Ensure required columns exist
+    if 'Date' in timeline_df.columns:
+        timeline_df['Date'] = pd.to_datetime(timeline_df['Date']).dt.date
         
-    return pd.DataFrame(events)
+    # Map event importance to a 0-100 intensity scale
+    if 'event_importance' in timeline_df.columns:
+        timeline_df['Event Intensity'] = timeline_df['event_importance'] * 10
+    
+    # Fill defaults if missing
+    if 'Category' not in timeline_df.columns:
+        timeline_df['Category'] = "General"
+    if 'Entity' not in timeline_df.columns:
+        timeline_df['Entity'] = "Market"
+    if 'Headline' not in timeline_df.columns:
+        timeline_df['Headline'] = "No Headline"
+    if 'Event Intensity' not in timeline_df.columns:
+        timeline_df['Event Intensity'] = 50
+        
+    # Cap the total dataset size to avoid MessageSizeError when rendering the scatter plot
+    # We take a random sample of 2000 events to show a representative spread of intensities over time
+    if len(timeline_df) > 2000:
+        timeline_df = timeline_df.sample(n=2000, random_state=42)
+        
+    return timeline_df
 
 df = get_timeline_data()
 
