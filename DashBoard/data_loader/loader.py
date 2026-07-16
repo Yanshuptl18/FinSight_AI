@@ -286,7 +286,16 @@ def load_timeline_data():
     get_real_data()
     file_path = os.path.join(DATA_PATH, "company_event_timeline.parquet")
     if os.path.exists(file_path):
-        df = pd.read_parquet(file_path)
+        # Load only necessary columns to prevent OOM
+        cols = ['published_date', 'final_event', 'ticker', 'headline', 'event_importance', 'market_signal']
+        import pyarrow.parquet as pq
+        try:
+            available_cols = pq.read_metadata(file_path).schema.names
+            cols_to_load = [c for c in cols if c in available_cols]
+        except Exception:
+            cols_to_load = cols
+            
+        df = pd.read_parquet(file_path, columns=cols_to_load)
         if 'published_date' in df.columns:
             df['published_date'] = pd.to_datetime(df['published_date'])
         return df
@@ -297,7 +306,15 @@ def load_entities_data():
     get_real_data()
     file_path = os.path.join(DATA_PATH, "news_entities.parquet")
     if os.path.exists(file_path):
-        df = pd.read_parquet(file_path)
+        cols = ['ticker', 'published_date', 'headline', 'entity', 'entity_label']
+        import pyarrow.parquet as pq
+        try:
+            available_cols = pq.read_metadata(file_path).schema.names
+            cols_to_load = [c for c in cols if c in available_cols]
+        except Exception:
+            cols_to_load = cols
+            
+        df = pd.read_parquet(file_path, columns=cols_to_load)
         if 'published_date' in df.columns:
             df['published_date'] = pd.to_datetime(df['published_date'])
         return df
