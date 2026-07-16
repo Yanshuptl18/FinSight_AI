@@ -78,7 +78,7 @@ FinSight AI combines **Data Engineering**, **Machine Learning**, **Natural Langu
 
 **Dashboard**
 
-[https://your-streamlit-app.streamlit.app](https://finshightai.streamlit.app/)
+[FinSight_AI](https://finshightai.streamlit.app/)
 
 
 ---
