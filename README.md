@@ -2,36 +2,44 @@
 
 ## AI-Powered Financial Intelligence Platform
 
-FinSight AI is an end-to-end **Financial Intelligence Platform** that transforms large-scale financial news data into meaningful market intelligence using **Natural Language Processing (NLP)**, **Machine Learning**, **Graph Analytics**, and **Interactive Data Visualization**.
+FinSight AI is an end-to-end Financial Intelligence Platform that transforms financial news into actionable market insights using **Natural Language Processing (NLP)**, **Machine Learning**, **Knowledge Graphs**, and **Interactive Data Visualization**.
 
-The platform processes and analyzes **3.2+ million financial news articles** from **6,600+ companies**, **1,000+ publishers**, and **28 financial sectors** to uncover hidden insights, market trends, company relationships, and investment opportunities.
+The platform analyzes **3.2+ million financial news articles** from **6,600+ companies**, **1,000+ publishers**, and **28 financial sectors** to discover market trends, financial events, company relationships, and investment opportunities.
 
-Instead of simply displaying financial news, FinSight AI converts unstructured text into structured intelligence by automatically identifying companies, sectors, topics, financial events, sentiment, and market signals. It then combines these insights into interactive dashboards, knowledge graphs, recommendation systems, and advanced search tools.
+Instead of displaying raw news, FinSight AI automatically extracts entities, identifies financial events, discovers hidden topics, builds knowledge graphs, analyzes sector intelligence, and generates AI-powered recommendations through an interactive Streamlit dashboard.
 
-The platform allows users to:
+---
 
-- Explore millions of financial news articles using powerful search and filtering.
-- Analyze **6,600+ companies** with detailed profiles and market insights.
-- Monitor **28 financial sectors** through intelligence scores, risk analysis, and lifecycle tracking.
-- Discover important financial topics and market events using AI-powered NLP models.
-- Visualize relationships between companies, sectors, topics, publishers, and events through interactive knowledge graphs.
-- Perform semantic search to find related companies, sectors, and financial concepts.
-- Explore sector similarity networks and event propagation across industries.
-- Receive AI-generated investment recommendations based on multiple analytical factors.
-- Generate interactive visualizations and downloadable reports through a modern Streamlit dashboard.
+## Key Features
 
-### Project Highlights
+- Analyze **3.2+ million** financial news articles
+- Explore **6,600+ companies** with detailed insights
+- Monitor **28 financial sectors** using intelligence scores and risk analysis
+- Discover financial topics and market events using AI
+- Visualize relationships through interactive Knowledge Graphs
+- Perform AI-powered Semantic Search
+- Explore Sector Networks and Event Propagation
+- Get intelligent investment recommendations
+- Interactive dashboard with real-time analytics and visualizations
 
-- **3.2+ Million** Financial News Articles Processed
-- **6,600+** Public Companies Covered
-- **1,000+** Financial News Publishers
-- **28** Financial Market Sectors
-- **20+** Financial Event Categories
-- **17** Interactive Dashboard Modules
-- **15** End-to-End Data Processing & Intelligence Notebooks
-- **Multiple AI Models** for NLP, Topic Modeling, Sentiment Analysis, Semantic Search, and Recommendation Systems
+---
 
-FinSight AI combines data engineering, artificial intelligence, machine learning, and interactive analytics into a single platform, making it easier for analysts, researchers, students, and investors to understand financial markets through data-driven insights.
+## Project Highlights
+
+| Feature | Value |
+|---------|------:|
+| Financial News Articles | **3.2+ Million** |
+| Companies Covered | **6,600+** |
+| News Publishers | **1,000+** |
+| Financial Sectors | **28** |
+| Financial Event Categories | **20+** |
+| Interactive Dashboard Pages | **17** |
+| Data Processing Notebooks | **15** |
+| AI / ML / NLP Models | **10+** |
+
+---
+
+FinSight AI combines **Data Engineering**, **Machine Learning**, **Natural Language Processing**, **Graph Analytics**, and **Interactive Visualization** into a single platform, helping users explore financial markets through AI-driven insights and powerful analytics.
 
 # Live Demo
 
@@ -315,93 +323,124 @@ Interactive Dashboard
 FinSight_AI/
 │
 ├── DashBoard/
-├── data/
-├── models/
 ├── notebooks/
 ├── reports/
-├── assets/
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-# Machine Learning and AI Models
+# Machine Learning & AI Models
 
-| Model | Category | Training |
-|--------|----------|----------|
-| Sentence Transformers | NLP | Pretrained |
-| BERTopic | NLP | Pretrained + Custom Topic Generation |
-| UMAP | Machine Learning | Algorithm |
+| Model / Algorithm | Category | Type |
+|-------------------|----------|------|
+| FinBERT | NLP | Pretrained Transformer |
+| Sentence Transformers (all-MiniLM-L6-v2) | NLP | Pretrained Embedding Model |
+| BERTopic | NLP | Pretrained Topic Modeling |
+| UMAP | Machine Learning | Dimensionality Reduction |
 | HDBSCAN | Machine Learning | Density-Based Clustering |
-| TF-IDF | NLP | Feature Extraction |
-| Cosine Similarity | Machine Learning | Similarity Engine |
-| Rule-Based Event Classifier | NLP | Custom Built |
-| Semantic Event Classifier | NLP | Pretrained Embedding Based |
+| TF-IDF Vectorizer | NLP | Feature Extraction |
+| CountVectorizer | NLP | Feature Extraction |
+| c-TF-IDF | NLP | Topic Representation |
+| Cosine Similarity | Machine Learning | Similarity Measurement |
+| NetworkX | Graph Analytics | Network Analysis |
+| Rule-Based Event Classifier | NLP | Custom Developed |
+| Semantic Event Classifier | NLP | Embedding-Based |
 | Hybrid Event Classifier | NLP | Custom Hybrid Model |
-| Knowledge Graph Engine | Graph Analytics | Custom Built |
-| Recommendation Engine | Machine Learning | Rule-Based Intelligence |
-| Semantic Search Engine | NLP | Embedding Based |
+| Recommendation Engine | Machine Learning | Custom Rule-Based |
+| Semantic Search Engine | NLP | Embedding-Based Retrieval |
 
 ---
+## Dataset
 
-# Dataset
+FinSight AI is built using the **Massive Stock News Analysis Dataset**, which contains millions of real-world financial news articles collected from multiple publishers over more than a decade.
+
+### Download Dataset
+
+```python
+import kagglehub
+
+# Download the latest version
+path = kagglehub.dataset_download(
+    "miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests"
+)
+
+print("Dataset Path:", path)
+```
+
+### Dataset Statistics
 
 | Metric | Value |
 |---------|------:|
-| Financial News Articles | 3.2 Million+ |
-| Companies | 6,619 |
-| Publishers | 1,047 |
-| Financial Sectors | 28 |
-| Time Coverage | 2009–2020 |
-| Topics | Generated using BERTopic |
-| Events | Hybrid Classified |
+| Financial News Articles | **3.2+ Million** |
+| Companies | **6,619** |
+| Publishers | **1,047** |
+| Financial Sectors | **28** |
+| Time Coverage | **2009 – 2020** |
+| AI-Generated Topics | **BERTopic** |
+| Event Categories | **Hybrid Event Classification** |
 
 ---
 
 # Technologies Used
 
-### Programming
+FinSight AI combines modern Data Science, Machine Learning, NLP, Graph Analytics, and Interactive Visualization technologies.
+
+## Programming Language
 
 - Python
 
-### Dashboard
+## Dashboard & Web Application
 
 - Streamlit
 
-### Data Processing
+## Data Processing
 
 - Pandas
 - NumPy
 
-### Machine Learning
+## Machine Learning
 
 - Scikit-learn
 - UMAP
 - HDBSCAN
 
-### Natural Language Processing
+## Natural Language Processing (NLP)
 
+- FinBERT
 - Sentence Transformers
 - BERTopic
 - TF-IDF
+- CountVectorizer
 
-### Graph Analytics
+## Graph Analytics
 
 - NetworkX
 - PyVis
 
-### Visualization
+## Data Visualization
 
 - Plotly
 - Matplotlib
 
-### Storage
+## Data Storage
 
 - Parquet
 - CSV
 
 ---
+
+## Project Scale
+
+- **3.2+ Million** Financial News Articles Processed
+- **6,600+ Companies** Analyzed
+- **1,000+ Publishers** Covered
+- **28 Financial Sectors** Identified
+- **20+ Financial Event Categories**
+- **17 Interactive Dashboard Modules**
+- **15 End-to-End AI Processing Notebooks**
+- **10+ AI, ML & NLP Models Integrated**
 
 # Folder Structure
 
