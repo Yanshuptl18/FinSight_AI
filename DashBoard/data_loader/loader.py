@@ -115,12 +115,12 @@ def get_real_data():
     for filename, file_id in DATA_DRIVE_IDS.items():
         file_path = os.path.join(DATA_PATH, filename)
         if not os.path.exists(file_path):
-            st.info(f"Downloading {filename} from Google Drive... This might take a while.")
+            print(f"Downloading {filename} from Google Drive... This might take a while.")
             url = f'https://drive.google.com/uc?id={file_id}'
             try:
-                gdown.download(url, file_path, quiet=False)
+                gdown.download(url, file_path, quiet=True)
             except Exception as e:
-                st.warning(f"Failed to download {filename}. Google Drive rate limit may be exceeded. Exception: {e}")
+                print(f"Failed to download {filename}. Google Drive rate limit may be exceeded. Exception: {e}")
 
 @st.cache_resource(ttl=3600)
 def load_news_data():
