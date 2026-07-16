@@ -5,37 +5,18 @@ import os
 import pandas as pd
 from components.utils import load_css, render_page_header, THEMES
 from components.charts import create_kpi_card
-from data_loader.loader import load_entities_data
+from data_loader.loader import DATA_PATH
 
 load_css()
 render_page_header("Company Ecosystem Network", "Interactive visualization of supply chains, competitors, and strategic partnerships.")
 
-entities_df = load_entities_data()
-
-if entities_df.empty:
-    st.warning("No entity data available.")
+# Load precomputed edges directly instead of computing on 7.3M rows
+edge_file = os.path.join(DATA_PATH, "company_network_edges.parquet")
+if os.path.exists(edge_file):
+    edge_counts = pd.read_parquet(edge_file)
+else:
+    st.warning("Company network data is currently processing.")
     st.stop()
-
-# Filter only ORG entities for the company network
-org_df = entities_df[entities_df['entity_label'] == 'ORG'].copy()
-
-# Deduce relationships based on keywords in the headline
-def get_relation(headline):
-    headline = str(headline).lower()
-    if any(k in headline for k in ['supply', 'supplier', 'hardware', 'foundry', 'equip', 'assembl']):
-        return "Supplier / Hardware"
-    elif any(k in headline for k in ['compet', 'rival', 'race', 'versus', 'vs']):
-        return "Competitor / Rival"
-    elif any(k in headline for k in ['partner', 'agree', 'collaborat', 'pact', 'deal']):
-        return "Partner"
-    return "Co-mentioned"
-
-org_df['relation'] = org_df['headline'].apply(get_relation)
-
-# Build edges using value_counts to avoid MemoryError
-edge_counts = org_df[['ticker', 'entity', 'relation']].value_counts().reset_index(name='weight')
-# Filter noise
-edge_counts = edge_counts[edge_counts['weight'] >= 2]
 
 # Ensure we get a good mix of relations, not just the massive 'Co-mentioned'
 specific = edge_counts[edge_counts['relation'] != 'Co-mentioned'].sort_values(by='weight', ascending=False).head(150)

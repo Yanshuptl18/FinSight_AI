@@ -123,6 +123,43 @@ def get_real_data():
                 print(f"Failed to download {filename}. Google Drive rate limit may be exceeded. Exception: {e}")
 
 @st.cache_resource(ttl=3600)
+def get_dataset_row_count(file_name):
+    """Safely reads the total row count from Parquet metadata instantly."""
+    file_path = os.path.join(DATA_PATH, file_name)
+    if os.path.exists(file_path):
+        import pyarrow.parquet as pq
+        try:
+            return pq.read_metadata(file_path).num_rows
+        except Exception:
+            pass
+    return 0
+
+def load_with_limit(file_path, cols_to_load, limit=50000):
+    """Loads a massive parquet file in chunks, bounding memory strictly."""
+    import pyarrow.parquet as pq
+    try:
+        parquet_file = pq.ParquetFile(file_path)
+        dfs = []
+        total_rows = 0
+        for i in range(parquet_file.num_row_groups):
+            df_chunk = parquet_file.read_row_group(i, columns=cols_to_load).to_pandas()
+            dfs.append(df_chunk)
+            total_rows += len(df_chunk)
+            if total_rows >= limit:
+                break
+        
+        if not dfs:
+            return pd.DataFrame(columns=cols_to_load)
+            
+        df = pd.concat(dfs, ignore_index=True)
+        if len(df) > limit:
+            df = df.head(limit)
+        return df
+    except Exception as e:
+        print(f"Error loading {file_path} with limit: {e}")
+        return pd.read_parquet(file_path, columns=cols_to_load).head(limit)
+
+@st.cache_resource(ttl=3600)
 def load_news_data():
     get_real_data() # Ensure datasets are downloaded
     
@@ -142,7 +179,7 @@ def load_news_data():
         except Exception:
             cols_to_load = req_cols
             
-        df = pd.read_parquet(file_path, columns=cols_to_load)
+        df = load_with_limit(file_path, cols_to_load, limit=50000)
         
         # Rename columns to match what the dashboard expects
         rename_map = {
@@ -233,8 +270,12 @@ def get_dashboard_metrics():
     if news_df.empty:
         return {}
         
+    total_news = get_dataset_row_count("financial_intelligence_dataset.parquet")
+    if total_news == 0:
+        total_news = len(news_df)
+        
     metrics = {
-        "Total News": len(news_df),
+        "Total News": total_news,
         "Companies": news_df["Company"].nunique() if "Company" in news_df.columns else 0,
         "Publishers": news_df["Publisher"].nunique() if "Publisher" in news_df.columns else 0,
         "Topics": news_df["Topic"].nunique() if "Topic" in news_df.columns else 0,
@@ -295,7 +336,7 @@ def load_timeline_data():
         except Exception:
             cols_to_load = cols
             
-        df = pd.read_parquet(file_path, columns=cols_to_load)
+        df = load_with_limit(file_path, cols_to_load, limit=50000)
         if 'published_date' in df.columns:
             df['published_date'] = pd.to_datetime(df['published_date'])
         return df
@@ -314,7 +355,7 @@ def load_entities_data():
         except Exception:
             cols_to_load = cols
             
-        df = pd.read_parquet(file_path, columns=cols_to_load)
+        df = load_with_limit(file_path, cols_to_load, limit=50000)
         if 'published_date' in df.columns:
             df['published_date'] = pd.to_datetime(df['published_date'])
         return df
