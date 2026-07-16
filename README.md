@@ -222,16 +222,6 @@ Project overview, architecture, technology stack, datasets, and author informati
 
 ---
 
-# Overview
-
-FinSight AI is designed to convert large-scale financial news data into structured financial intelligence.
-
-Instead of simply presenting news articles, the platform identifies important entities, extracts topics, classifies financial events, builds knowledge graphs, analyzes sector relationships, performs semantic search, and generates intelligent investment recommendations.
-
-The complete pipeline combines data engineering, Natural Language Processing, Machine Learning, graph analytics, and interactive visualization into one unified platform.
-
----
-
 # Key Features
 
 - Executive Dashboard
