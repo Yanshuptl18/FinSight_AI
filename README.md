@@ -2,11 +2,36 @@
 
 ## AI-Powered Financial Intelligence Platform
 
-FinSight AI is an end-to-end Financial Intelligence Platform that transforms millions of financial news articles into actionable market intelligence using Natural Language Processing, Machine Learning, Graph Analytics, and Interactive Visualization.
+FinSight AI is an end-to-end **Financial Intelligence Platform** that transforms large-scale financial news data into meaningful market intelligence using **Natural Language Processing (NLP)**, **Machine Learning**, **Graph Analytics**, and **Interactive Data Visualization**.
 
-The platform enables users to explore financial news, discover hidden relationships between companies and sectors, analyze market events, visualize knowledge graphs, perform semantic search, and receive intelligent sector recommendations through an interactive Streamlit dashboard.
+The platform processes and analyzes **3.2+ million financial news articles** from **6,600+ companies**, **1,000+ publishers**, and **28 financial sectors** to uncover hidden insights, market trends, company relationships, and investment opportunities.
 
----
+Instead of simply displaying financial news, FinSight AI converts unstructured text into structured intelligence by automatically identifying companies, sectors, topics, financial events, sentiment, and market signals. It then combines these insights into interactive dashboards, knowledge graphs, recommendation systems, and advanced search tools.
+
+The platform allows users to:
+
+- Explore millions of financial news articles using powerful search and filtering.
+- Analyze **6,600+ companies** with detailed profiles and market insights.
+- Monitor **28 financial sectors** through intelligence scores, risk analysis, and lifecycle tracking.
+- Discover important financial topics and market events using AI-powered NLP models.
+- Visualize relationships between companies, sectors, topics, publishers, and events through interactive knowledge graphs.
+- Perform semantic search to find related companies, sectors, and financial concepts.
+- Explore sector similarity networks and event propagation across industries.
+- Receive AI-generated investment recommendations based on multiple analytical factors.
+- Generate interactive visualizations and downloadable reports through a modern Streamlit dashboard.
+
+### Project Highlights
+
+- **3.2+ Million** Financial News Articles Processed
+- **6,600+** Public Companies Covered
+- **1,000+** Financial News Publishers
+- **28** Financial Market Sectors
+- **20+** Financial Event Categories
+- **17** Interactive Dashboard Modules
+- **15** End-to-End Data Processing & Intelligence Notebooks
+- **Multiple AI Models** for NLP, Topic Modeling, Sentiment Analysis, Semantic Search, and Recommendation Systems
+
+FinSight AI combines data engineering, artificial intelligence, machine learning, and interactive analytics into a single platform, making it easier for analysts, researchers, students, and investors to understand financial markets through data-driven insights.
 
 # Live Demo
 
