@@ -450,10 +450,7 @@ def load_semantic_indices():
     import pickle
     indices = {}
     pkl_files = [
-        "analytics_lookup.pkl", "cluster_index.pkl", "company_index.pkl", 
-        "company_lookup.pkl", "event_index.pkl", "fingerprint_index.pkl", 
-        "neighbor_lookup.pkl", "news_index.pkl", "publisher_index.pkl", 
-        "similarity_lookup.pkl", "timeline_lookup.pkl"
+        "analytics_lookup.pkl", "cluster_index.pkl", "company_index.pkl", "company_lookup.pkl"
     ]
     for pkl in pkl_files:
         path = os.path.join(DATA_PATH, pkl)

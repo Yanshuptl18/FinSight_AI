@@ -137,4 +137,7 @@ with col2:
                 
                 with open(f"{path}/sector_network.html", 'r', encoding='utf-8') as HtmlFile:
                     source_code = HtmlFile.read()
-                    components.html(source_code, height=670, scrolling=False)
+                    import warnings
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        components.html(source_code, height=670, scrolling=False)
