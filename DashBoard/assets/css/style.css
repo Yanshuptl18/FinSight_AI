@@ -389,43 +389,70 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
 
 /* ===== ULTRA-PREMIUM GLASSMORPHIC TAB BAR ===== */
 [data-baseweb="tab-list"] {
-    background: var(--bg-secondary) !important;
+    background: var(--card-bg) !important;
     border-radius: 12px !important;
-    padding: 6px !important;
+    padding: 6px 8px !important;
     border: 1px solid var(--border-color) !important;
     gap: 8px !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-    margin-bottom: 20px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
+    margin-bottom: 24px !important;
+    overflow-x: auto !important;
 }
 
 [data-baseweb="tab"] {
     border-radius: 8px !important;
-    padding: 10px 20px !important;
+    padding: 10px 22px !important;
     color: var(--text-primary) !important;
     font-weight: 600 !important;
     font-size: 0.95rem !important;
     border: 1px solid transparent !important;
     background-color: transparent !important;
-    transition: all 0.25s ease !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Ensure all child paragraphs/spans inside tabs inherit high contrast color */
+[data-baseweb="tab"] p,
+[data-baseweb="tab"] span,
+[data-baseweb="tab"] div {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    transition: color 0.2s ease !important;
 }
 
 [data-baseweb="tab"]:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
+    background-color: rgba(var(--accent-rgb, 77, 166, 255), 0.15) !important;
+    border-color: rgba(var(--accent-rgb, 77, 166, 255), 0.3) !important;
+}
+
+[data-baseweb="tab"]:hover p,
+[data-baseweb="tab"]:hover span {
     color: var(--text-bright) !important;
 }
 
 [aria-selected="true"][data-baseweb="tab"] {
-    background-color: var(--accent) !important;
-    color: var(--btn-text) !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%) !important;
     border: 1px solid var(--accent) !important;
+    box-shadow: 0 4px 15px rgba(0, 82, 204, 0.4) !important;
 }
 
-/* Remove Streamlit default red underline under selected tab */
+[aria-selected="true"][data-baseweb="tab"] p,
+[aria-selected="true"][data-baseweb="tab"] span {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Completely remove red/pink focus outlines, highlight bars, and borders */
 [data-baseweb="tab-highlight"],
-[data-baseweb="tab-border"] {
+[data-baseweb="tab-border"],
+[data-baseweb="tab"]:focus,
+[data-baseweb="tab"]:active {
     display: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
 }
 
 /* Radio / Checkbox label text */

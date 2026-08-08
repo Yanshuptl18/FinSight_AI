@@ -231,18 +231,32 @@ def get_dataset_row_count(file_name):
             pass
     return 0
 
-def load_columns(file_path, cols_to_load):
-    """Loads a parquet file projecting only requested columns across ALL rows."""
+def load_columns(file_path, cols_to_load, limit=None):
+    """Loads a parquet file projecting requested columns with an optional row limit for low RAM footprint."""
     import pyarrow.parquet as pq
     try:
+        if limit:
+            pf = pq.ParquetFile(file_path)
+            batches = []
+            cur_rows = 0
+            for batch in pf.iter_batches(columns=cols_to_load, batch_size=25000):
+                batches.append(batch.to_pandas())
+                cur_rows += len(batch)
+                if cur_rows >= limit:
+                    break
+            if batches:
+                return pd.concat(batches, ignore_index=True).iloc[:limit]
         table = pq.read_table(file_path, columns=cols_to_load)
         return table.to_pandas()
     except Exception as e:
         print(f"Error loading {file_path} with column projection: {e}")
-        return pd.read_parquet(file_path, columns=cols_to_load)
+        df = pd.read_parquet(file_path, columns=cols_to_load)
+        return df.iloc[:limit] if limit else df
 
-@st.cache_data(ttl=3600, max_entries=10)
+@st.cache_data(ttl=600, max_entries=1)
 def load_news_data():
+    import gc
+    gc.collect()
     log_memory("load_news_data start")
     ensure_file("financial_intelligence_dataset.parquet")
     ensure_file("company_analytics.parquet")
@@ -261,7 +275,7 @@ def load_news_data():
         except Exception:
             cols_to_load = req_cols
             
-        df = load_columns(file_path, cols_to_load)
+        df = load_columns(file_path, cols_to_load, limit=100000)
         
         rename_map = {
             "published_date": "Date",
@@ -521,8 +535,11 @@ def get_real_models():
             
     return loaded_models
 
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=600, max_entries=1)
 def load_timeline_data():
+    import gc
+    gc.collect()
+    log_memory("load_timeline_data start")
     ensure_file("company_event_timeline.parquet")
     file_path = os.path.join(DATA_PATH, "company_event_timeline.parquet")
     if os.path.exists(file_path):
@@ -534,7 +551,7 @@ def load_timeline_data():
         except Exception:
             cols_to_load = cols
             
-        df = load_columns(file_path, cols_to_load)
+        df = load_columns(file_path, cols_to_load, limit=75000)
         if not df.empty:
             if 'published_date' in df.columns:
                 df['published_date'] = pd.to_datetime(df['published_date'])
@@ -544,8 +561,10 @@ def load_timeline_data():
         return df
     return pd.DataFrame()
 
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=600, max_entries=1)
 def load_entities_data():
+    import gc
+    gc.collect()
     ensure_file("news_entities.parquet")
     file_path = os.path.join(DATA_PATH, "news_entities.parquet")
     if os.path.exists(file_path):
@@ -557,7 +576,7 @@ def load_entities_data():
         except Exception:
             cols_to_load = cols
             
-        df = load_columns(file_path, cols_to_load)
+        df = load_columns(file_path, cols_to_load, limit=75000)
         if 'published_date' in df.columns:
             df['published_date'] = pd.to_datetime(df['published_date'])
         for cat_c in ['ticker', 'entity_label']:

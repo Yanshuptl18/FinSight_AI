@@ -10,7 +10,6 @@ load_css()
 
 render_page_header("Timeline Intelligence Explorer", "Chronological analysis and event intensity mapping across the complete 3,215,296 market news timeline.")
 
-@st.cache_data(ttl=3600, show_spinner="Loading 3.2M Event Timeline...")
 def get_timeline_data():
     timeline_df = load_timeline_data()
     if timeline_df.empty:
