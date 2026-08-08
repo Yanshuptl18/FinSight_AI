@@ -620,7 +620,7 @@ div[data-testid="stTable"] {
     color: var(--accent) !important; /* Passes theme accent to SVG outer frame stroke */
 }
 
-/* Double Rhombus Emblem with Crystal Clear FS Monogram & Hover 90° Rotation */
+/* Double Rhombus Emblem: Stationary FS Monogram & Hover 90° Outer Rhombus Rotation */
 [data-testid="stSidebarNav"]::before {
     content: "";
     position: absolute;
@@ -628,21 +628,20 @@ div[data-testid="stTable"] {
     left: 18px;
     width: 54px;
     height: 54px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='glow' x='-25%25' y='-25%25' width='150%25' height='150%25'%3E%3CfeGaussianBlur stdDeviation='3.5' result='coloredBlur'/%3E%3CfeMerge%3E%3CfeMergeNode in='coloredBlur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cg transform='rotate(45 50 50)'%3E%3Crect x='16' y='16' width='68' height='68' rx='14' fill='none' stroke='currentColor' stroke-width='5.5' filter='url(%23glow)' /%3E%3Crect x='21' y='21' width='58' height='58' rx='12' fill='%230f172a' stroke='rgba(255,255,255,0.25)' stroke-width='2' /%3E%3C/g%3E%3Ctext x='50' y='52' text-anchor='middle' dominant-baseline='central' font-family='system-ui, -apple-system, sans-serif' font-weight='900' font-size='33'%3E%3Ctspan fill='%23FFFFFF'%3EF%3C/tspan%3E%3Ctspan fill='currentColor'%3ES%3C/tspan%3E%3C/text%3E%3C/svg%3E");
-
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='glow' x='-25%25' y='-25%25' width='150%25' height='150%25'%3E%3CfeGaussianBlur stdDeviation='3.5' result='coloredBlur'/%3E%3CfeMerge%3E%3CfeMergeNode in='coloredBlur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cstyle%3E .rhombus-outer %7B transform-origin: 50px 50px; transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1); %7D svg:hover .rhombus-outer %7B transform: rotate(135deg); %7D %3C/style%3E%3Cg class='rhombus-outer' transform='rotate(45 50 50)'%3E%3Crect x='16' y='16' width='68' height='68' rx='14' fill='none' stroke='currentColor' stroke-width='5.5' filter='url(%23glow)' /%3E%3Crect x='21' y='21' width='58' height='58' rx='12' fill='%230f172a' stroke='rgba(255,255,255,0.25)' stroke-width='2' /%3E%3C/g%3E%3Ctext x='50' y='52' text-anchor='middle' dominant-baseline='central' font-family='system-ui, -apple-system, sans-serif' font-weight='900' font-size='33'%3E%3Ctspan fill='%23FFFFFF'%3EF%3C/tspan%3E%3Ctspan fill='currentColor'%3ES%3C/tspan%3E%3C/text%3E%3C/svg%3E");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+    transition: filter 0.4s ease;
     animation: rhombusFloat2D 3.5s ease-in-out infinite alternate;
 }
 
-/* Hover Interactive: Outer Rhombus Rotates Smoothly 90° on Hover */
+/* Hover Interactive Elevate */
 [data-testid="stSidebarNav"]:hover::before {
-    transform: rotate(90deg) scale(1.12);
     filter: drop-shadow(0 0 22px var(--accent));
 }
+
 
 /* Two-Line Stacked Typography: Line 1 (FINSIGHT) = Crisp White, Line 2 (INTELLIGENCE) = Theme Accent */
 [data-testid="stSidebarNav"]::after {

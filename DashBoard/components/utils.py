@@ -81,8 +81,9 @@ THEMES = {
         "--bg-secondary": "#3D0000",
         "--accent": "#FF0000",
         "--text-primary": "#CCCCCC",
-        "--text-bright": "#000000",
+        "--text-bright": "#FFFFFF",
         "--btn-text": "#FFFFFF",
+
 
         "--card-bg": "rgba(61, 0, 0, 0.6)",
         "--border-color": "rgba(149, 1, 1, 0.5)",
