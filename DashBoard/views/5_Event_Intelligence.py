@@ -90,10 +90,10 @@ st.divider()
 
 # --- Multi-Tab Analytics ---
 tab1, tab2, tab3, tab4 = st.tabs([
-    "Event Sentiment & Signal Distribution",
-    "Temporal Co-occurrence Heatmap",
-    "Network Centrality & Graph Importance",
-    "Propagation Pathways & Risk"
+    "Sentiment Signals",
+    "Temporal Heatmap",
+    "Network Centrality",
+    "Propagation & Risk"
 ])
 
 with tab1:

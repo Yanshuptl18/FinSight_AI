@@ -114,31 +114,20 @@ div[data-testid="stMetricValue"] {
     font-weight: bold;
 }
 
-/* Glassmorphism containers */
-.css-1r6slb0, .css-1y4p8pa, [data-testid="stVerticalBlock"] > div > div > div[data-testid="stVerticalBlock"] {
-    background: var(--card-bg);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 1rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-/* Add a subtle hover to layout cards */
-.css-1r6slb0, .css-1y4p8pa, div[data-testid="stVerticalBlockBorderWrapper"] {
+/* Add a constant visible boundary to layout cards */
+div[data-testid="stVerticalBlockBorderWrapper"] {
     background: var(--card-bg) !important;
     border-radius: 12px !important;
-    border: 1px solid var(--border-color) !important;
+    border: 1px solid var(--accent) !important; /* Constant dynamic accent boundary */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
     padding: 20px !important;
     backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
 }
 
 div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3) !important;
-    border-color: var(--accent) !important;
+    box-shadow: 0 8px 30px var(--accent) !important; /* Glows dynamic accent on hover */
 }
 
 /* Button overrides */
@@ -177,19 +166,15 @@ div[data-testid="stVerticalBlockBorderWrapper"]:hover {
     overflow: hidden;
 }
 
-/* Animated Scanline for Chart Containers */
-div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"]) {
-    position: relative;
-    overflow: hidden;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"])::before {
+/* Animated Scanline for ALL Chart Containers */
+div[data-testid="stVerticalBlockBorderWrapper"]::before {
     content: "";
     position: absolute;
     top: 0; left: -100%;
     width: 100%; height: 3px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    animation: scanline 3s linear infinite;
+    animation: scanline 3s linear infinite; /* Constant continuous animation without hover */
+    opacity: 1;
 }
 
 @keyframes scanline {
@@ -457,14 +442,13 @@ div[data-testid="stTabs"] {
 div[data-testid="stTabs"] [data-baseweb="tab-list"],
 div[data-testid="stTabs"] [role="tablist"],
 [data-baseweb="tab-list"] {
-    background: var(--card-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 14px !important;
-    padding: 6px 8px !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
     gap: 8px !important;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     display: flex !important;
     align-items: center !important;
     overflow-x: auto !important;
