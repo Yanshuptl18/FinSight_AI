@@ -456,7 +456,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
     border-color: var(--border-color) !important;
 }
 
-/* Ultra-Premium Dynamic Sidebar Logo (SVG Icon + Initials) */
+/* Ultra-Premium Dynamic & Animated Sidebar Logo (Cybernetic 3D Hexagon + Shimmering Monogram) */
 [data-testid="stSidebarNav"] {
     position: relative;
     padding-top: 105px !important; /* Make room for the absolute positioned logo */
@@ -468,38 +468,93 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
     position: absolute;
     top: 25px;
     left: 20px;
-    width: 42px; /* Slightly larger */
-    height: 42px;
-    background-color: var(--accent); /* Dynamically colored by theme! */
+    width: 44px;
+    height: 44px;
+    background-color: var(--accent); /* Dynamically colored by active theme */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7.77v8.46L12 22l10-5.77V7.77L12 2zm0 4.5l5 2.89v5.77L12 18l-5-2.89V9.39l5-2.89zM12 12l-4.5-2.6M12 12l4.5-2.6M12 12v5.5' stroke='black' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7.77v8.46L12 22l10-5.77V7.77L12 2zm0 4.5l5 2.89v5.77L12 18l-5-2.89V9.39l5-2.89zM12 12l-4.5-2.6M12 12l4.5-2.6M12 12v5.5' stroke='black' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     -webkit-mask-size: contain;
     mask-size: contain;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-    filter: drop-shadow(0 0 10px rgba(var(--accent-rgb, 0,150,255), 0.6)); /* Stronger glow */
+    filter: drop-shadow(0 0 12px var(--accent));
+    animation: cyberHexFloat 4s ease-in-out infinite alternate, cyberGlowPulse 2.5s ease-in-out infinite alternate;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
 }
 
 [data-testid="stSidebarNav"]::after {
     /* The Custom Designed Tech Monogram */
     content: "FS";
     position: absolute;
-    top: 18px; /* Moved up to align perfectly with the hexagon */
-    left: 72px; 
+    top: 18px;
+    left: 74px;
     font-family: 'Inter', 'Arial Black', system-ui, -apple-system, sans-serif;
-    font-size: 3.2rem; /* Much bolder and larger */
+    font-size: 3.2rem;
     font-weight: 900;
-    letter-spacing: -2.5px; /* Tighter, more modern kerning */
+    letter-spacing: -2.5px;
     line-height: 1;
-    padding-right: 12px; /* CRITICAL: Expands bounding box so the 'S' doesn't get clipped on the right! */
-    /* A sophisticated, elegant tech skew */
-    transform: skewX(-10deg); /* More aggressive slant for a stylish tech feel */
-    /* A stunning premium gradient blending the bright text into the active theme accent */
-    background: linear-gradient(135deg, var(--text-bright) 0%, var(--text-primary) 40%, var(--accent) 100%);
+    padding-right: 14px;
+    transform: skewX(-10deg);
+    /* Shimmering moving gradient fill */
+    background: linear-gradient(120deg, var(--text-bright) 0%, var(--text-primary) 25%, var(--accent) 50%, #ffffff 75%, var(--accent) 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); /* Deep professional shadow */
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+    animation: monogramShimmer 4s linear infinite, textPulse 3s ease-in-out infinite alternate;
+    transition: all 0.3s ease;
+}
+
+/* Interactive Hover Acceleration */
+[data-testid="stSidebarNav"]:hover::before {
+    transform: scale(1.18) rotate(360deg);
+    filter: drop-shadow(0 0 20px var(--accent)) drop-shadow(0 0 30px var(--accent));
+}
+
+[data-testid="stSidebarNav"]:hover::after {
+    letter-spacing: -1px;
+    filter: drop-shadow(0 0 12px var(--accent));
+}
+
+/* Keyframe Animations */
+@keyframes cyberHexFloat {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(4deg);
+    }
+    100% {
+        transform: translateY(2px) rotate(-3deg);
+    }
+}
+
+@keyframes cyberGlowPulse {
+    0% {
+        filter: drop-shadow(0 0 8px var(--accent));
+    }
+    100% {
+        filter: drop-shadow(0 0 18px var(--accent)) drop-shadow(0 0 25px rgba(255,255,255,0.4));
+    }
+}
+
+@keyframes monogramShimmer {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+@keyframes textPulse {
+    0% {
+        opacity: 0.92;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 /* Premium Animated Boundary for all Charts */
