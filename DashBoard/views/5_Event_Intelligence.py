@@ -9,8 +9,7 @@ from data_loader.loader import (
     load_event_statistics,
     load_event_heatmap,
     load_event_propagation_paths,
-    load_timeline_data,
-    load_news_data
+    load_timeline_data
 )
 
 load_css()
@@ -25,7 +24,6 @@ stat_df = load_event_statistics()
 heatmap_df = load_event_heatmap()
 paths_df = load_event_propagation_paths()
 timeline_df = load_timeline_data()
-news_df = load_news_data()
 
 if master_event_df.empty:
     st.warning("Event intelligence data is currently loading or unavailable.")

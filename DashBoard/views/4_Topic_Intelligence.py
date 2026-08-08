@@ -9,7 +9,7 @@ from data_loader.loader import (
     load_topic_timeline,
     load_clustered_topics,
     load_topic_similarity,
-    load_news_data
+    get_dataset_row_count
 )
 
 load_css()
@@ -23,7 +23,6 @@ master_topic_df = load_topic_profiles()
 timeline_df = load_topic_timeline()
 clustered_df = load_clustered_topics()
 similarity_df = load_topic_similarity()
-news_df = load_news_data()
 
 if master_topic_df.empty and timeline_df.empty:
     st.warning("Topic intelligence data is loading or unavailable.")
@@ -76,7 +75,7 @@ st.divider()
 
 # --- Top Key Performance Indicators ---
 k1, k2, k3, k4 = st.columns(4)
-total_news_corpus = len(news_df) if not news_df.empty else 3215296
+total_news_corpus = get_dataset_row_count("financial_intelligence_dataset.parquet") or 3215296
 total_subclusters = len(clustered_df) if not clustered_df.empty else 2913
 
 with k1:
