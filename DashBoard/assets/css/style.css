@@ -613,7 +613,7 @@ div[data-testid="stTable"] {
     border-color: var(--border-color) !important;
 }
 
-/* ===== HYPER-ADVANCED 3D ANIMATED LOGO SYSTEM ===== */
+/* ===== ULTRA-PREMIUM CREATIVE 3D FINANCIAL EMBLEM (MARKET GROWTH BARS) ===== */
 [data-testid="stSidebarNav"] {
     position: relative;
     padding-top: 115px !important; /* Space for 3D logo */
@@ -621,7 +621,7 @@ div[data-testid="stTable"] {
     transform-style: preserve-3d;
 }
 
-/* 3D Multi-Axis Gyroscopic Crystal Prism */
+/* Creative 3D Financial Growth Candlestick / Bar Chart Emblem */
 [data-testid="stSidebarNav"]::before {
     content: "";
     position: absolute;
@@ -629,20 +629,22 @@ div[data-testid="stTable"] {
     left: 20px;
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, var(--accent) 0%, #00ADB5 35%, #0052cc 70%, #ffffff 100%);
-    background-size: 250% 250%;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    border-radius: 6px;
-    box-shadow: 
-        0 12px 28px rgba(0, 0, 0, 0.45),
-        inset 0 0 15px rgba(255, 255, 255, 0.6),
-        0 0 20px rgba(var(--accent-rgb, 154, 166, 178), 0.4);
+    /* Ascending Financial Market Bar Chart Polygon */
+    clip-path: polygon(
+        /* Bar 1 (Short left bar) */
+        5% 95%, 5% 55%, 28% 55%, 28% 95%,
+        /* Bar 2 (Medium center bar) */
+        36% 95%, 36% 30%, 59% 30%, 59% 95%,
+        /* Bar 3 (Tall right bar with peak arrow) */
+        67% 95%, 67% 5%, 100% 5%, 100% 95%
+    );
+    background: linear-gradient(135deg, var(--color-bull, #00e676) 0%, var(--accent) 55%, #3B82F6 100%);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.5);
     animation: 
-        logo3DHyperRotate 7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite,
-        logo3DFloat 3.2s ease-in-out infinite alternate,
-        logoGradientGlow 4s ease infinite;
+        finance3DGrowthPulse 4s ease-in-out infinite alternate,
+        finance3DFloat 3.5s ease-in-out infinite alternate;
     transform-style: preserve-3d;
-    filter: drop-shadow(0 0 15px var(--accent));
+    filter: drop-shadow(0 0 14px var(--accent));
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -662,7 +664,6 @@ div[data-testid="stTable"] {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    /* Layered 3D Bevel Text Shadows */
     text-shadow: 
         0 1px 0 rgba(0,0,0,0.3),
         0 2px 0 rgba(0,0,0,0.2),
@@ -673,10 +674,10 @@ div[data-testid="stTable"] {
     transform: translateZ(12px);
 }
 
-/* Hover Interactive Gyroscopic Hyper-Drive */
+/* Hover Interactive 3D Financial Surge */
 [data-testid="stSidebarNav"]:hover::before {
-    animation: logo3DHyperSpin 1.2s linear infinite;
-    filter: drop-shadow(0 0 25px var(--accent)) drop-shadow(0 0 35px #ffffff) drop-shadow(0 0 45px var(--accent));
+    transform: rotateY(180deg) scale(1.15) translateZ(10px);
+    filter: drop-shadow(0 0 25px var(--color-bull, #00e676)) drop-shadow(0 0 35px var(--accent));
 }
 
 [data-testid="stSidebarNav"]:hover::after {
@@ -684,52 +685,28 @@ div[data-testid="stTable"] {
     letter-spacing: 0.4px;
 }
 
-/* 3D Continuous Keyframe Animations */
-@keyframes logo3DHyperRotate {
+/* 3D Continuous Keyframe Animations for Financial Growth Emblem */
+@keyframes finance3DGrowthPulse {
     0% {
-        transform: rotateY(0deg) rotateX(20deg) rotateZ(0deg);
-    }
-    25% {
-        transform: rotateY(90deg) rotateX(-15deg) rotateZ(45deg);
+        transform: rotateY(-12deg) rotateX(12deg) scale(1);
+        filter: drop-shadow(0 0 10px var(--accent));
     }
     50% {
-        transform: rotateY(180deg) rotateX(20deg) rotateZ(180deg);
-    }
-    75% {
-        transform: rotateY(270deg) rotateX(-15deg) rotateZ(225deg);
+        transform: rotateY(15deg) rotateX(-8deg) scale(1.06);
+        filter: drop-shadow(0 0 20px var(--color-bull, #00e676)) drop-shadow(0 0 25px var(--accent));
     }
     100% {
-        transform: rotateY(360deg) rotateX(20deg) rotateZ(360deg);
+        transform: rotateY(-12deg) rotateX(12deg) scale(1);
+        filter: drop-shadow(0 0 10px var(--accent));
     }
 }
 
-@keyframes logo3DHyperSpin {
-    0% {
-        transform: rotateY(0deg) rotateX(25deg) scale(1.18);
-    }
-    100% {
-        transform: rotateY(360deg) rotateX(25deg) scale(1.18);
-    }
-}
-
-@keyframes logo3DFloat {
+@keyframes finance3DFloat {
     0% {
         top: 22px;
     }
     100% {
-        top: 14px;
-    }
-}
-
-@keyframes logoGradientGlow {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
+        top: 15px;
     }
 }
 
@@ -743,6 +720,7 @@ div[data-testid="stTable"] {
         filter: drop-shadow(0 0 18px var(--accent)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.7));
     }
 }
+
 
 
 

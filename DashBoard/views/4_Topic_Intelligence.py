@@ -21,8 +21,6 @@ render_page_header(
 
 master_topic_df = load_topic_profiles()
 timeline_df = load_topic_timeline()
-clustered_df = load_clustered_topics()
-similarity_df = load_topic_similarity()
 
 if master_topic_df.empty and timeline_df.empty:
     st.warning("Topic intelligence data is loading or unavailable.")
@@ -76,7 +74,7 @@ st.divider()
 # --- Top Key Performance Indicators ---
 k1, k2, k3, k4 = st.columns(4)
 total_news_corpus = get_dataset_row_count("financial_intelligence_dataset.parquet") or 3215296
-total_subclusters = len(clustered_df) if not clustered_df.empty else 2913
+total_subclusters = get_dataset_row_count("clustered_topics.parquet") or 2913
 
 with k1:
     create_kpi_card("Monitored Topics", "20 Core Topics", f"{total_subclusters:,} Sub-Clusters", "normal")
@@ -161,6 +159,7 @@ with tab2:
         st.info("Popularity vs diversity matrix metrics unavailable.")
 
 with tab3:
+    similarity_df = load_topic_similarity()
     if not similarity_df.empty:
         fig_sim = px.bar(
             similarity_df.sort_values(by='similarity', ascending=True).tail(15),
@@ -183,7 +182,9 @@ with tab3:
 
 with tab4:
     st.markdown("### Searchable Topic Sub-Clusters (2,913 Nodes)")
+    clustered_df = load_clustered_topics()
     if not clustered_df.empty:
+
         search_kw = st.text_input("Search Sub-Cluster Keywords / Headlines", placeholder="e.g. Dividend, Semiconductor, CEO, Acquisition")
         
         clust_view = clustered_df.copy()
