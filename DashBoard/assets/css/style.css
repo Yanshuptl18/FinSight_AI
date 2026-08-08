@@ -614,7 +614,20 @@ div[data-testid="stTable"] {
 }
 
 /* ===== CUSTOM SIDEBAR LOGO COMPONENT ===== */
+[data-testid="stSidebarUserContent"] {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Force logo container div to top position above navigation */
+[data-testid="stSidebarUserContent"] > div:has(.sidebar-logo-container),
+[data-testid="stSidebarUserContent"] > div.element-container:has(.sidebar-logo-container),
+.sidebar-logo-container {
+    order: -999 !important;
+}
+
 [data-testid="stSidebarNav"] {
+    order: 0 !important;
     position: relative;
     padding-top: 10px !important; /* Clean space for navigation */
 }
@@ -639,6 +652,7 @@ div[data-testid="stTable"] {
     cursor: pointer;
     user-select: none;
 }
+
 
 
 /* Outer Rhombus Badge */
