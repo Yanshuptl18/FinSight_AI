@@ -613,22 +613,51 @@ div[data-testid="stTable"] {
     border-color: var(--border-color) !important;
 }
 
-/* ===== CUSTOM SIDEBAR LOGO COMPONENT ===== */
-[data-testid="stSidebar"] {
-    position: relative !important;
+/* ===== SCOPED SIDEBAR LOGO COMPONENT ===== */
+/* Force the logo element container to be completely fixed relative to the sidebar */
+[data-testid="stSidebar"] div.element-container:has(.sidebar-logo-container) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important; /* Will match sidebar width since sidebar uses transforms */
+    z-index: 999999 !important;
+    margin: 0 !important;
+    padding: 20px 15px 15px 15px !important;
+    background: var(--bg-secondary) !important;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
 }
 
-/* Remove Streamlit default top headers/lines */
-[data-testid="stSidebarHeader"],
+/* Push the navigation down so it starts below the fixed logo and restore natural flow */
+[data-testid="stSidebarNav"] {
+    margin-top: 105px !important; /* Offset for the logo height */
+    padding-top: 0 !important;
+}
+
+/* HIDE "VIEW MORE / VIEW LESS" EXPANDER & SHOW ALL PAGES CONTINUOUSLY */
+[data-testid="stSidebarNavShowMore"],
+button[data-testid="stSidebarNavShowMore"],
+[data-testid="stSidebarNav"] button:has(span),
 [data-testid="stSidebarNavSeparator"] {
     display: none !important;
 }
 
-/* Shift navigation menu down so buttons start directly AFTER the logo header */
-[data-testid="stSidebarNav"] {
-    padding-top: 82px !important;
-    position: relative !important;
+/* Force all navigation page items to be expanded and visible */
+[data-testid="stSidebarNavItems"],
+[data-testid="stSidebarNav"] ul {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
 }
+
+[data-testid="stSidebarNavItems"] li,
+[data-testid="stSidebarNav"] ul li {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-height: none !important;
+}
+
 
 /* Remove old pseudo-element logo overlays */
 [data-testid="stSidebarNav"]::before,
@@ -636,31 +665,23 @@ div[data-testid="stTable"] {
     display: none !important;
 }
 
-/* Pin logo container at the VERY TOP (0px) of the sidebar */
+/* Logo container internal styling (strictly scoped) */
 .sidebar-logo-container {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    height: 75px !important;
-    z-index: 99999 !important;
-    background: var(--bg-secondary) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 14px !important;
-    padding: 0 16px !important;
-    border-bottom: 1px solid var(--border-color) !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    cursor: pointer !important;
-    user-select: none !important;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px 14px 14px;
+    margin: 0 0 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 8px;
 }
 
-
-
-
 /* Outer Rhombus Badge */
+
 .rhombus-badge {
     position: relative;
     width: 44px;

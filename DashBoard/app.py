@@ -14,7 +14,7 @@ load_css()
 # Render logo at top of sidebar
 st.sidebar.markdown(
     """
-    <div class="sidebar-logo-container">
+    <div class="sidebar-logo-container" id="finsight-sidebar-logo">
         <div class="rhombus-badge">
             <div class="monogram-text">
                 <span class="f-letter">F</span><span class="s-letter">S</span>
@@ -28,6 +28,7 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # Define the navigation structure internally so Streamlit handles routing
 
@@ -54,6 +55,6 @@ pages = [
 ]
 
 # Initialize the navigation
-pg = st.navigation(pages)
+pg = st.navigation(pages, expanded=True)
 # Run the selected page
 pg.run()
