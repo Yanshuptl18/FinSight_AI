@@ -385,75 +385,181 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
     color: inherit;
 }
 
-/* Make sure the links inside the groups are not affected by this button style */
+/* ===== ALL STREAMLIT STANDARD BUTTONS (ALL PAGES & ALL THEMES) ===== */
+div[data-testid="stButton"] button,
+div[data-testid="stDownloadButton"] button,
+div[data-testid="stFormSubmitButton"] button {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px !important;
+    padding: 9px 22px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.3px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
 
-/* ===== ULTRA-PREMIUM GLASSMORPHIC TAB BAR ===== */
+div[data-testid="stButton"] button p,
+div[data-testid="stDownloadButton"] button p,
+div[data-testid="stFormSubmitButton"] button p,
+div[data-testid="stButton"] button span,
+div[data-testid="stDownloadButton"] button span,
+div[data-testid="stFormSubmitButton"] button span {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+div[data-testid="stButton"] button:hover,
+div[data-testid="stDownloadButton"] button:hover,
+div[data-testid="stFormSubmitButton"] button:hover {
+    background: var(--accent) !important;
+    color: var(--btn-text, #ffffff) !important;
+    border-color: var(--accent) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+div[data-testid="stButton"] button:hover p,
+div[data-testid="stDownloadButton"] button:hover p,
+div[data-testid="stFormSubmitButton"] button:hover p,
+div[data-testid="stButton"] button:hover span,
+div[data-testid="stDownloadButton"] button:hover span,
+div[data-testid="stFormSubmitButton"] button:hover span {
+    color: var(--btn-text, #ffffff) !important;
+    font-weight: 700 !important;
+}
+
+div[data-testid="stButton"] button[kind="primary"],
+div[data-testid="stDownloadButton"] button[kind="primary"] {
+    background: var(--accent) !important;
+    color: var(--btn-text, #ffffff) !important;
+    border: 1px solid var(--accent) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+div[data-testid="stButton"] button[kind="primary"] p,
+div[data-testid="stDownloadButton"] button[kind="primary"] p,
+div[data-testid="stButton"] button[kind="primary"] span,
+div[data-testid="stDownloadButton"] button[kind="primary"] span {
+    color: var(--btn-text, #ffffff) !important;
+    font-weight: 700 !important;
+}
+
+/* ===== ULTRA-PREMIUM GLASSMORPHIC TAB SYSTEM (ALL PAGES & ALL THEMES) ===== */
+div[data-testid="stTabs"] {
+    background: transparent !important;
+    margin-top: 10px !important;
+    margin-bottom: 24px !important;
+}
+
+div[data-testid="stTabs"] [data-baseweb="tab-list"],
+div[data-testid="stTabs"] [role="tablist"],
 [data-baseweb="tab-list"] {
     background: var(--card-bg) !important;
-    border-radius: 12px !important;
-    padding: 6px 8px !important;
     border: 1px solid var(--border-color) !important;
+    border-radius: 14px !important;
+    padding: 6px 8px !important;
     gap: 8px !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
-    margin-bottom: 24px !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    display: flex !important;
+    align-items: center !important;
     overflow-x: auto !important;
 }
 
+div[data-testid="stTabs"] button[data-baseweb="tab"],
+div[data-testid="stTabs"] button[role="tab"],
+div[data-testid="stTabs"] [role="tab"],
 [data-baseweb="tab"] {
-    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px !important;
     padding: 10px 22px !important;
-    color: var(--text-primary) !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-    border: 1px solid transparent !important;
-    background-color: transparent !important;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    margin: 0 !important;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    cursor: pointer !important;
     outline: none !important;
     box-shadow: none !important;
+    height: auto !important;
 }
 
-/* Ensure all child paragraphs/spans inside tabs inherit high contrast color */
+/* Force high-contrast text for unselected tabs in ALL themes */
+div[data-testid="stTabs"] button[data-baseweb="tab"] p,
+div[data-testid="stTabs"] button[data-baseweb="tab"] span,
+div[data-testid="stTabs"] button[data-baseweb="tab"] div,
+div[data-testid="stTabs"] [role="tab"] p,
+div[data-testid="stTabs"] [role="tab"] span,
+div[data-testid="stTabs"] [role="tab"] div,
 [data-baseweb="tab"] p,
 [data-baseweb="tab"] span,
 [data-baseweb="tab"] div {
     color: var(--text-primary) !important;
     font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.2px !important;
+    margin: 0 !important;
     transition: color 0.2s ease !important;
 }
 
+/* Tab hover state */
+div[data-testid="stTabs"] button[data-baseweb="tab"]:hover,
+div[data-testid="stTabs"] [role="tab"]:hover,
 [data-baseweb="tab"]:hover {
-    background-color: rgba(var(--accent-rgb, 77, 166, 255), 0.15) !important;
-    border-color: rgba(var(--accent-rgb, 77, 166, 255), 0.3) !important;
+    background-color: var(--sidebar-link-hover-bg, var(--accent)) !important;
+    border-color: var(--accent) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
+div[data-testid="stTabs"] button[data-baseweb="tab"]:hover p,
+div[data-testid="stTabs"] button[data-baseweb="tab"]:hover span,
+div[data-testid="stTabs"] [role="tab"]:hover p,
+div[data-testid="stTabs"] [role="tab"]:hover span,
 [data-baseweb="tab"]:hover p,
 [data-baseweb="tab"]:hover span {
-    color: var(--text-bright) !important;
+    color: var(--sidebar-link-hover-text, #ffffff) !important;
 }
 
+/* ACTIVE SELECTED TAB - Solid vibrant theme accent pill button */
+div[data-testid="stTabs"] button[aria-selected="true"],
+div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"],
+div[data-testid="stTabs"] [role="tab"][aria-selected="true"],
 [aria-selected="true"][data-baseweb="tab"] {
-    background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%) !important;
+    background: var(--accent) !important;
     border: 1px solid var(--accent) !important;
-    box-shadow: 0 4px 15px rgba(0, 82, 204, 0.4) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    transform: translateY(-1px) !important;
 }
 
+div[data-testid="stTabs"] button[aria-selected="true"] p,
+div[data-testid="stTabs"] button[aria-selected="true"] span,
+div[data-testid="stTabs"] button[aria-selected="true"] div,
+div[data-testid="stTabs"] [role="tab"][aria-selected="true"] p,
+div[data-testid="stTabs"] [role="tab"][aria-selected="true"] span,
+div[data-testid="stTabs"] [role="tab"][aria-selected="true"] div,
 [aria-selected="true"][data-baseweb="tab"] p,
 [aria-selected="true"][data-baseweb="tab"] span {
-    color: #ffffff !important;
+    color: var(--btn-text, #ffffff) !important;
     font-weight: 700 !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Completely remove red/pink focus outlines, highlight bars, and borders */
+/* COMPLETELY HIDE Streamlit default red/pink underline bars */
+div[data-testid="stTabs"] [data-baseweb="tab-highlight"],
+div[data-testid="stTabs"] [data-baseweb="tab-border"],
 [data-baseweb="tab-highlight"],
-[data-baseweb="tab-border"],
-[data-baseweb="tab"]:focus,
-[data-baseweb="tab"]:active {
+[data-baseweb="tab-border"] {
     display: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    border-color: transparent !important;
+    height: 0 !important;
+    width: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    visibility: hidden !important;
 }
+
 
 /* Radio / Checkbox label text */
 [data-testid="stRadio"] label,
