@@ -8,7 +8,8 @@ from components.charts import create_kpi_card
 from data_loader.loader import load_kg_nodes, load_kg_edges, load_kg_metrics
 
 load_css()
-render_page_header("AI Knowledge Graph Explorer", "Interactive entity network demonstrating relationships between Companies, Publishers, Topics, and Events.")
+render_page_header("Market Entity Network", "Visual network mapping relationships between companies, publishers, topics, and market events.")
+
 
 # Load Real KG Data
 nodes_df = load_kg_nodes()

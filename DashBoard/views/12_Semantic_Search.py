@@ -7,7 +7,8 @@ from components.charts import create_kpi_card
 
 load_css()
 
-render_page_header("Semantic Intelligence Search", "Use natural language to query our entire vector database of financial intelligence, filings, and news.")
+render_page_header("Financial Intelligence Search", "Search financial news, market reports, and corporate filings using plain language.")
+
 
 # --- Session State for Search ---
 if "search_query" not in st.session_state:

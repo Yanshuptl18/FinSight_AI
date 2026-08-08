@@ -9,7 +9,8 @@ from data_loader.loader import load_event_influence, load_event_propagation_path
 
 load_css()
 
-render_page_header("Event Propagation Explorer", "Visualize how specific events cascade across sectors, industries, and companies based on AI-generated causal chains.")
+render_page_header("Event Propagation Explorer", "Track how market events affect related sectors, industries, and corporate supply chains.")
+
 
 influence_df = load_event_influence()
 paths_df = load_event_propagation_paths()

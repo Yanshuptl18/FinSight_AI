@@ -7,7 +7,7 @@ from components.charts import create_kpi_card, plot_donut_chart, plot_bar_chart,
 
 load_css()
 
-render_page_header("News Intelligence Explorer", "Advanced semantic search, publisher analytics, sentiment signals, and real-time news feed across 3.2M+ records.")
+render_page_header("News Intelligence Explorer", "Search headlines, filter by publisher, sentiment, and date range across 3.2M+ financial news records.")
 
 news_df = load_news_data()
 
@@ -17,7 +17,8 @@ if news_df.empty:
 
 # --- Search & Filter Section ---
 with st.container(border=True):
-    st.markdown("#### Advanced Search & Multi-Dimensional Filters")
+    st.markdown("#### Search & Filter Market News")
+
     
     # Row 1: Search Query Input
     search_query = st.text_input("Keyword / Headline Search", placeholder="e.g. Earnings, Acquisition, Semiconductor, Dividend, Federal Reserve")

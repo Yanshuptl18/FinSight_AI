@@ -15,7 +15,7 @@ load_css()
 
 render_page_header(
     "Sector Intelligence Explorer",
-    "Comprehensive sector analysis incorporating network centrality, temporal momentum, macro investment themes, and AI knowledge bases."
+    "Sector performance, sentiment distribution, and key industry metrics across 28 financial sectors."
 )
 
 sector_df = load_sector_data()
@@ -30,7 +30,8 @@ if sector_df.empty:
 
 # --- Filters Section ---
 with st.container(border=True):
-    st.markdown("#### Multi-Dimensional Sector Filtering")
+    st.markdown("#### Filter Sectors")
+
     f_col1, f_col2, f_col3 = st.columns(3)
     
     with f_col1:

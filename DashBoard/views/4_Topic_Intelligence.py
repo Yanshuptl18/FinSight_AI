@@ -16,8 +16,9 @@ load_css()
 
 render_page_header(
     "Topic Intelligence Explorer",
-    "Comprehensive topic analysis across 3.2M+ news articles, 2,913 topic sub-clusters, temporal trends, diversity metrics, and AI knowledge cards."
+    "In-depth analysis of market topics, sub-clusters, sentiment trends, and sector relevance across 3.2M+ financial news records."
 )
+
 
 master_topic_df = load_topic_profiles()
 timeline_df = load_topic_timeline()
@@ -39,7 +40,8 @@ if not timeline_df.empty and 'topic_name' in timeline_df.columns:
 
 # --- Filters Section ---
 with st.container(border=True):
-    st.markdown("#### Multi-Dimensional Topic Filtering")
+    st.markdown("#### Filter Topics")
+
     f_col1, f_col2, f_col3 = st.columns(3)
     
     with f_col1:
@@ -181,7 +183,8 @@ with tab3:
         st.info("Topic similarity matrix unavailable.")
 
 with tab4:
-    st.markdown("### Searchable Topic Sub-Clusters (2,913 Nodes)")
+    st.markdown("### Topic Sub-Clusters (2,913 Groups)")
+
     clustered_df = load_clustered_topics()
     if not clustered_df.empty:
 
@@ -214,8 +217,9 @@ with tab4:
 
 st.divider()
 
-# --- AI Topic Knowledge Base Cards ---
-st.markdown("### AI Topic Knowledge Cards & Deep Profiles")
+# --- Topic Briefs & Profiles ---
+st.markdown("### Topic Insights & Briefs")
+
 
 if filtered_topics.empty:
     st.warning("No topics match the selected filters.")

@@ -17,7 +17,7 @@ load_css()
 
 render_page_header(
     "Event Intelligence Explorer",
-    "Deep dive into 30 core market event types, 812 propagation pathways, sentiment signals, network centrality, and temporal co-occurrence heatmaps."
+    "Detailed analysis of 30 market event categories, impact pathways, and sentiment signals across corporate news."
 )
 
 master_event_df = load_event_influence()
@@ -32,7 +32,8 @@ if master_event_df.empty:
 
 # --- Filters Section ---
 with st.container(border=True):
-    st.markdown("#### Multi-Dimensional Event Filtering")
+    st.markdown("#### Filter Market Events")
+
     col1, col2, col3 = st.columns(3)
     
     with col1:
