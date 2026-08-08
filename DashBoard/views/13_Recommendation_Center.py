@@ -27,8 +27,8 @@ if not analytics_df.empty:
     # Load cluster mapping once
     cluster_map = {}
     try:
-        import os
-        from data_loader.loader import DATA_PATH
+        from data_loader.loader import DATA_PATH, ensure_file
+        ensure_file("clustered_topics.parquet")
         ct_path = os.path.join(DATA_PATH, "clustered_topics.parquet")
         if os.path.exists(ct_path):
             ct_df = pd.read_parquet(ct_path)

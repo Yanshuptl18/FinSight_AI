@@ -30,8 +30,8 @@ try:
     if not news_df.empty and 'Company' in news_df.columns:
         query_pool += [f"Latest on {c}" for c in news_df['Company'].dropna().unique()[:10]]
         
-    import os
-    from data_loader.loader import DATA_PATH
+    from data_loader.loader import DATA_PATH, ensure_file
+    ensure_file("clustered_topics.parquet")
     ct_path = os.path.join(DATA_PATH, "clustered_topics.parquet")
     if os.path.exists(ct_path):
         import pandas as pd

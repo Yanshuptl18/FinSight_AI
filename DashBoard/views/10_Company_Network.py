@@ -6,18 +6,20 @@ import pandas as pd
 from collections import Counter
 from components.utils import load_css, render_page_header, THEMES
 from components.charts import create_kpi_card
-from data_loader.loader import DATA_PATH
+from data_loader.loader import DATA_PATH, ensure_file
 
 load_css()
 render_page_header("Company Ecosystem Network", "Interactive visualization of supply chains, competitors, and strategic partnerships across all tracked corporate entities.")
 
 # Load full precomputed network dataset
+ensure_file("company_network_edges.parquet")
 edge_file = os.path.join(DATA_PATH, "company_network_edges.parquet")
 if os.path.exists(edge_file):
     full_edge_df = pd.read_parquet(edge_file)
 else:
     st.warning("Company network data is currently processing.")
     st.stop()
+
 
 # Compute Global Dataset Metrics across all 186k+ edges & 75k+ entities
 global_all_nodes = set(full_edge_df['ticker']).union(set(full_edge_df['entity']))

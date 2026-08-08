@@ -613,86 +613,73 @@ div[data-testid="stTable"] {
     border-color: var(--border-color) !important;
 }
 
-/* ===== ULTRA-PREMIUM 3D ANIMATED LOGO SYSTEM ===== */
+/* ===== ULTRA-PREMIUM CLASSIC 3D LOGO SYSTEM ===== */
 [data-testid="stSidebarNav"] {
     position: relative;
     padding-top: 110px !important; /* Space for 3D logo */
-    perspective: 1000px;
+    perspective: 1200px;
     transform-style: preserve-3d;
 }
 
-/* 3D Rotating Holographic Emblem */
+/* Classic 3D Metallic Emblem (Professional Diamond Prism) */
 [data-testid="stSidebarNav"]::before {
     content: "";
     position: absolute;
     top: 22px;
     left: 20px;
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--accent) 0%, #0052cc 50%, #7928ca 100%);
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.5);
-    animation: logo3DRotate 8s linear infinite, logo3DFloat 3s ease-in-out infinite alternate;
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, #00ADB5 0%, var(--accent) 50%, #3B82F6 100%);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    border-radius: 4px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 0 12px rgba(255, 255, 255, 0.4);
+    animation: logo3DClassicRotate 10s linear infinite, logo3DFloat 3.5s ease-in-out infinite alternate;
     transform-style: preserve-3d;
-    filter: drop-shadow(0 0 14px var(--accent));
+    filter: drop-shadow(0 0 12px var(--accent));
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* 3D Glowing Monogram */
+/* Classic Professional Typography */
 [data-testid="stSidebarNav"]::after {
     content: "FinSight AI";
     position: absolute;
-    top: 26px;
+    top: 27px;
     left: 80px;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-size: 1.35rem;
-    font-weight: 900;
-    letter-spacing: -0.5px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
     line-height: 1.1;
-    background: linear-gradient(135deg, var(--text-bright) 0%, var(--accent) 50%, #ffffff 100%);
+    background: linear-gradient(135deg, var(--text-bright) 0%, var(--accent) 60%, #ffffff 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 
-        0 1px 0 rgba(0,0,0,0.2),
-        0 2px 0 rgba(0,0,0,0.15),
-        0 3px 5px rgba(0,0,0,0.4),
-        0 0 12px var(--accent);
-    animation: logoText3DShimmer 3s ease-in-out infinite alternate;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    animation: logoText3DShimmer 4s ease-in-out infinite alternate;
     transition: all 0.4s ease;
 }
 
-/* Hover Interactive 3D Acceleration */
+/* Hover Interactive Classic Elevate */
 [data-testid="stSidebarNav"]:hover::before {
-    animation: logo3DFastSpin 1.5s linear infinite;
-    filter: drop-shadow(0 0 25px var(--accent)) drop-shadow(0 0 35px #ffffff);
+    transform: rotateY(180deg) scale(1.1);
+    filter: drop-shadow(0 0 20px var(--accent));
 }
 
 [data-testid="stSidebarNav"]:hover::after {
-    transform: translateZ(20px) scale(1.05);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
 }
 
 /* 3D Continuous Keyframe Animations */
-@keyframes logo3DRotate {
+@keyframes logo3DClassicRotate {
     0% {
-        transform: rotateY(0deg) rotateX(15deg) rotateZ(0deg);
+        transform: rotateY(0deg) rotateX(10deg);
     }
     50% {
-        transform: rotateY(180deg) rotateX(-15deg) rotateZ(180deg);
+        transform: rotateY(180deg) rotateX(-10deg);
     }
     100% {
-        transform: rotateY(360deg) rotateX(15deg) rotateZ(360deg);
-    }
-}
-
-@keyframes logo3DFastSpin {
-    0% {
-        transform: rotateY(0deg) rotateX(25deg) scale(1.15);
-    }
-    100% {
-        transform: rotateY(360deg) rotateX(25deg) scale(1.15);
+        transform: rotateY(360deg) rotateX(10deg);
     }
 }
 
@@ -701,20 +688,19 @@ div[data-testid="stTable"] {
         top: 22px;
     }
     100% {
-        top: 15px;
+        top: 16px;
     }
 }
 
 @keyframes logoText3DShimmer {
     0% {
         background-position: 0% center;
-        filter: drop-shadow(0 0 8px var(--accent));
     }
     100% {
         background-position: 200% center;
-        filter: drop-shadow(0 0 18px var(--accent)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
     }
 }
+
 
 
 /* Premium Animated Boundary for all Charts */
