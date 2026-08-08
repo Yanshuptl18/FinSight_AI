@@ -236,12 +236,18 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 18px;
+    padding: 16px 18px;
     margin-bottom: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    min-height: 130px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
 }
 .kpi-card::before {
     content: "";
@@ -249,12 +255,12 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
     top: 0; left: 0; width: 4px; height: 100%;
     background: var(--accent);
     border-radius: 4px 0 0 4px;
-    opacity: 0.5;
+    opacity: 0.6;
     transition: opacity 0.3s;
 }
 .kpi-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
     border-color: var(--accent);
 }
 .kpi-card:hover::before {
@@ -265,17 +271,44 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
 /* ===== STREAMLIT NATIVE WIDGET OVERRIDES ===== */
 /* These force Streamlit's own widgets to respect our theme CSS variables */
 
-/* Selectbox / Dropdown */
+/* Selectbox / Dropdown & Multiselect */
 [data-baseweb="select"] > div,
 [data-baseweb="select"] > div:hover {
     background-color: var(--bg-secondary) !important;
     border-color: var(--border-color) !important;
     color: var(--text-primary) !important;
+    border-radius: 8px !important;
 }
+
+/* Force "Choose options" placeholder text, value text, and input text to use high-contrast color */
+[data-baseweb="select"] div,
 [data-baseweb="select"] span,
-[data-baseweb="select"] svg {
+[data-baseweb="select"] input,
+[data-baseweb="select"] input::placeholder,
+[data-baseweb="select"] [data-baseweb="value-container"] *,
+.stMultiSelect [data-baseweb="select"] *,
+.stSelectbox [data-baseweb="select"] * {
     color: var(--text-primary) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+}
+
+/* Dropdown Arrow & Icons */
+[data-baseweb="select"] svg {
     fill: var(--text-primary) !important;
+    color: var(--text-primary) !important;
+    opacity: 0.9 !important;
+}
+
+/* Multiselect Selected Tags */
+[data-baseweb="tag"] {
+    background-color: var(--accent) !important;
+    border-radius: 6px !important;
+}
+[data-baseweb="tag"] span {
+    color: var(--btn-text) !important;
+    font-weight: 600 !important;
 }
 
 /* Dropdown menu popup */
@@ -287,8 +320,10 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
 [data-baseweb="option"] {
     background-color: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
+    font-weight: 500 !important;
 }
-[data-baseweb="option"]:hover {
+[data-baseweb="option"]:hover,
+[data-baseweb="option"][aria-selected="true"] {
     background-color: var(--accent) !important;
     color: var(--btn-text) !important;
 }
@@ -352,17 +387,45 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPlotlyChart"
 
 /* Make sure the links inside the groups are not affected by this button style */
 
-/* Tab bar */
+/* ===== ULTRA-PREMIUM GLASSMORPHIC TAB BAR ===== */
 [data-baseweb="tab-list"] {
-    background-color: var(--bg-secondary) !important;
-    border-bottom: 2px solid var(--border-color) !important;
+    background: var(--bg-secondary) !important;
+    border-radius: 12px !important;
+    padding: 6px !important;
+    border: 1px solid var(--border-color) !important;
+    gap: 8px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 20px !important;
 }
+
 [data-baseweb="tab"] {
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
     color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    border: 1px solid transparent !important;
+    background-color: transparent !important;
+    transition: all 0.25s ease !important;
 }
+
+[data-baseweb="tab"]:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: var(--text-bright) !important;
+}
+
 [aria-selected="true"][data-baseweb="tab"] {
-    color: var(--accent) !important;
-    border-bottom: 2px solid var(--accent) !important;
+    background-color: var(--accent) !important;
+    color: var(--btn-text) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid var(--accent) !important;
+}
+
+/* Remove Streamlit default red underline under selected tab */
+[data-baseweb="tab-highlight"],
+[data-baseweb="tab-border"] {
+    display: none !important;
 }
 
 /* Radio / Checkbox label text */

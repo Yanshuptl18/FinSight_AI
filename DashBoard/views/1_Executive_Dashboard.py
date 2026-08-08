@@ -4,7 +4,7 @@ import pandas as pd
 from data_loader.loader import load_news_data, get_dashboard_metrics, load_sector_data
 from components.charts import create_kpi_card, plot_donut_chart, plot_bar_chart, plot_time_series
 
-from components.utils import load_css, render_page_header
+from components.utils import load_css, render_page_header, clean_html
 load_css()
 
 render_page_header(" Executive Dashboard", "High-level overview of market intelligence, sentiment, and trending entities.")
@@ -89,19 +89,16 @@ with col_row3_2:
     bottom_sector = news_df['Sector'].value_counts().idxmin() if 'Sector' in news_df.columns else "Healthcare"
     
     ai_html = f"""<style>.ai-insight-box {{ background: var(--card-bg); border: 1px solid var(--accent); border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(77, 166, 255, 0.1); position: relative; overflow: hidden; height: 100%; min-height: 380px; }} .ai-insight-box::before {{ content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, #4da6ff, transparent); animation: scanline 3s linear infinite; }} @keyframes scanline {{ 0% {{ left: -100%; }} 100% {{ left: 100%; }} }} .ai-header {{ font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 25px; display: flex; align-items: center; }} .ai-pulse {{ height: 10px; width: 10px; background-color: var(--accent); border-radius: 50%; margin-right: 12px; box-shadow: 0 0 10px #4da6ff; animation: pulseAI 2s infinite; }} @keyframes pulseAI {{ 0% {{ transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 10px #4da6ff; }} 50% {{ transform: scale(1.3); opacity: 1; box-shadow: 0 0 20px #4da6ff; }} 100% {{ transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 10px #4da6ff; }} }} .ai-list {{ list-style: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }} .ai-list li {{ font-size: 1rem; color: var(--text-primary); padding-left: 20px; position: relative; line-height: 1.6; }} .ai-list li::before {{ content: "►"; position: absolute; left: 0; color: var(--accent); font-size: 0.8rem; top: 5px; }} .highlight-blue {{ color: var(--accent); font-weight: 600; }} .highlight-green {{ color: var(--color-bull); font-weight: 600; }} .highlight-red {{ color: #ff6b6b; font-weight: 600; }}</style><div class="ai-insight-box"><div class="ai-header"><div class="ai-pulse"></div> FinSight AI Synthesis: Today's Market Summary</div><ul class="ai-list"><li><span class="highlight-blue">{top_sector}</span> generated the highest news activity today.</li><li><span class="highlight-blue">{high_conf_sector}</span> maintained strong confidence across major publishers.</li><li><span class="highlight-blue">{bottom_sector}</span> became <span class="highlight-red">less active</span> compared to historical averages.</li><li><span class="highlight-blue">{top_company_bullish}</span> is currently showing <span class="highlight-green">bullish momentum</span> across multiple sources.</li></ul></div>"""
-    st.markdown(ai_html, unsafe_allow_html=True)
+    st.markdown(clean_html(ai_html), unsafe_allow_html=True)
 
 st.divider()
 
 # --- Recent Headlines ---
-# --- Recent Headlines ---
 st.markdown("### Latest High-Confidence Headlines")
-
-
 
 headlines = news_df[['Date', 'Headline', 'Company', 'Sentiment', 'Confidence']].head(10)
 
-feed_html = "<div style=\'padding: 10px; max-height: 600px; overflow-y: auto;\'>"
+feed_html = "<div style='padding: 10px; max-height: 600px; overflow-y: auto;'>"
 feed_html += "<div style='display: flex; flex-direction: column; gap: 12px;'>"
 
 for _, row in headlines.iterrows():
@@ -118,7 +115,7 @@ for _, row in headlines.iterrows():
         s_color, s_bg = "var(--color-neutral)", "var(--bg-neutral)"
         border_left = f"4px solid {s_color}"
         
-    date_str = str(row['Date'])[:16] # Truncate seconds if present
+    date_str = str(row['Date'])[:16]
     
     feed_html += f"<div class='headline-card' style='border-left: {border_left};'>"
     feed_html += f"<div style='display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;'>"
@@ -132,4 +129,4 @@ for _, row in headlines.iterrows():
     feed_html += f"</div></div>"
 feed_html += "</div></div>"
 
-st.markdown(feed_html, unsafe_allow_html=True)
+st.markdown(clean_html(feed_html), unsafe_allow_html=True)

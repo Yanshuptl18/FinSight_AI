@@ -181,6 +181,7 @@ with col2:
             
             # Map node attributes
             # PyVis nodes
+            added_nodes = set()
             for _, row in display_nodes.iterrows():
                 n_id = row['node_id']
                 n_type = row.get('node_type', 'Unknown')
@@ -188,12 +189,12 @@ with col2:
                 n_color = label_colors.get(n_type, '#9e9e9e')
                 n_size = 40 if n_type == 'Company' else 25
                 
-                # Make the selected focus node larger
                 if n_id in selected_nodes:
                     n_size = 60
                     
                 n_title = f"{n_label} ({n_type})"
                 net.add_node(n_id, label=n_label, title=n_title, color=n_color, size=n_size)
+                added_nodes.add(n_id)
                 
             for _, row in display_edges.iterrows():
                 src = row['source']
@@ -201,9 +202,14 @@ with col2:
                 title = row.get('relation', '')
                 weight = row.get('weight', 1.0)
                 
-                # PyVis needs nodes to exist before adding edges
-                if src in valid_node_ids and dst in valid_node_ids:
-                    net.add_edge(src, dst, title=title, value=weight, color=_theme['--border-color'])
+                if src not in added_nodes:
+                    net.add_node(src, label=str(src), title=str(src), color='#9e9e9e', size=25)
+                    added_nodes.add(src)
+                if dst not in added_nodes:
+                    net.add_node(dst, label=str(dst), title=str(dst), color='#9e9e9e', size=25)
+                    added_nodes.add(dst)
+
+                net.add_edge(src, dst, title=title, value=weight, color=_theme['--border-color'])
                 
             path = "html_files"
             if not os.path.exists(path):

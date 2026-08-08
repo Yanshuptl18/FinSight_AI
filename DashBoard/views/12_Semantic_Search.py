@@ -55,20 +55,20 @@ div.stButton > button {
     border-radius: 20px;
     border: 1px solid var(--border-color);
     background-color: var(--card-bg);
-    color: #ffffff !important;
+    color: var(--text-primary) !important;
     padding: 2px 15px;
     transition: all 0.3s ease;
 }
 div.stButton > button p {
-    color: #ffffff !important;
+    color: var(--text-primary) !important;
 }
 div.stButton > button:hover {
     border: 1px solid var(--accent);
-    color: #ffffff !important;
+    color: var(--text-bright) !important;
     background-color: var(--bg-secondary);
 }
 div.stButton > button:hover p {
-    color: #ffffff !important;
+    color: var(--text-bright) !important;
 }
 </style>
 """, unsafe_allow_html=True)

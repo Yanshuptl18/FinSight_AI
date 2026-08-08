@@ -29,10 +29,10 @@ THEMES = {
     "Cool Gray": {
         "--bg-primary": "#F8FAFC",
         "--bg-secondary": "#D9EAFD",
-        "--accent": "#BCCCDC",
-        "--text-primary": "#475569", 
-        "--text-bright": "#1e293b",
-        "--btn-text": "#1e293b",
+        "--accent": "#3B82F6",
+        "--text-primary": "#0f172a", 
+        "--text-bright": "#020617",
+        "--btn-text": "#FFFFFF",
         "--card-bg": "rgba(217, 234, 253, 0.6)",
         "--border-color": "rgba(188, 204, 220, 0.5)",
         "--sidebar-active-bg": "#F8FAFC",
@@ -143,6 +143,13 @@ def render_template(template_name: str, **kwargs) -> str:
         st.error(f"Missing template variable {e} for {template_name}.html")
         return ""
 
+def clean_html(html_str: str) -> str:
+    """Strips leading whitespace from all lines of an HTML string to prevent 
+    Streamlit's Markdown parser from accidentally rendering indented HTML as code blocks."""
+    if not html_str:
+        return ""
+    return "\n".join(line.strip() for line in html_str.split("\n"))
+
 def render_page_header(title: str, subtitle: str = ""):
     """Renders a beautiful, theme-aware page header."""
     subtitle_html = ""
@@ -151,4 +158,4 @@ def render_page_header(title: str, subtitle: str = ""):
         
     html_content = render_template("page_header", title=title, subtitle_html=subtitle_html)
     if html_content:
-        st.markdown(html_content, unsafe_allow_html=True)
+        st.markdown(clean_html(html_content), unsafe_allow_html=True)

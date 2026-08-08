@@ -1,5 +1,11 @@
+deployment_data/
 data/
-!data/company_network_edges.parquet
 models/
+.env
+.streamlit/secrets.toml
+*.token
+*.key
 __pycache__/
 *.pyc
+.cache/
+*.log

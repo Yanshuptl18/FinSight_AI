@@ -12,15 +12,16 @@ def create_kpi_card(title, value, delta=None, delta_color="normal"):
     if delta:
         if delta_color == "normal":
             if str(delta).startswith("-"):
-                delta_html = f'<span style="background: rgba(255,68,68,0.15); color: #ff6b6b; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; border: 1px solid rgba(255,68,68,0.3);">↓ {delta}</span>'
+                delta_html = f'<span style="background: rgba(255,68,68,0.15); color: #ff6b6b; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; border: 1px solid rgba(255,68,68,0.3); display: inline-block;">↓ {delta}</span>'
             else:
-                delta_html = f'<span style="background: rgba(0,200,81,0.15); color: #00e676; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; border: 1px solid rgba(0,200,81,0.3);">↑ {delta}</span>'
+                delta_html = f'<span style="background: rgba(0,200,81,0.15); color: #00e676; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; border: 1px solid rgba(0,200,81,0.3); display: inline-block;">↑ {delta}</span>'
         else:
-            delta_html = f'<span style="background: var(--border-color); color: var(--text-primary); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; border: 1px solid var(--border-color);">{delta}</span>'
+            delta_html = f'<span style="background: var(--border-color); color: var(--text-primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; border: 1px solid var(--border-color); display: inline-block;">{delta}</span>'
     else:
         delta_html = ""
 
-    html = f'<div class="kpi-card"><div style="font-size: 0.9rem; color: var(--text-primary); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">{title}</div><div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;"><div style="font-size: 1.5rem; font-weight: 700; color: var(--text-bright); line-height: 1.2;">{value}</div><div style="flex-shrink: 0;">{delta_html}</div></div></div>'
+    delta_container = f'<div style="align-self: flex-start; margin-top: 4px;">{delta_html}</div>' if delta_html else ''
+    html = f'<div class="kpi-card"><div style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{title}</div><div style="display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; gap: 6px;"><div style="font-size: 1.35rem; font-weight: 800; color: var(--text-bright); line-height: 1.25; word-wrap: break-word; overflow-wrap: break-word;">{value}</div>{delta_container}</div></div>'
     st.markdown(html, unsafe_allow_html=True)
 
 def plot_donut_chart(labels, values, title, colors=None):
@@ -49,7 +50,7 @@ def plot_donut_chart(labels, values, title, colors=None):
     )
     return fig
 
-def plot_time_series(df, x_col, y_col, title):
+def plot_time_series(df, x_col, y_col, title, enable_rangeslider=True):
     theme = get_theme_colors()
     fig = px.line(df, x=x_col, y=y_col, title=title)
     fig.update_traces(
@@ -57,7 +58,7 @@ def plot_time_series(df, x_col, y_col, title):
         fill='tozeroy',
         fillcolor=theme['--border-color'],
         mode='lines+markers',
-        marker=dict(size=6, color=theme['--accent'], line=dict(width=2, color=theme['--bg-primary'])),
+        marker=dict(size=5, color=theme['--accent'], line=dict(width=1.5, color=theme['--bg-primary'])),
         selected=dict(marker=dict(opacity=1)),
         unselected=dict(marker=dict(opacity=0.2, color=theme['--text-primary']))
     )
@@ -67,9 +68,26 @@ def plot_time_series(df, x_col, y_col, title):
         legend=dict(font=dict(color=theme['--text-primary'])),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        margin=dict(t=50, b=60, l=50, r=20),
-        xaxis=dict(showgrid=False, title="", tickfont=dict(color=theme['--text-primary'])),
-        yaxis=dict(showgrid=True, gridcolor=theme['--border-color'], title="", tickfont=dict(color=theme['--text-primary'])),
+        margin=dict(t=50, b=60, l=60, r=30),
+        xaxis=dict(
+            showgrid=False, 
+            title="", 
+            tickfont=dict(color=theme['--text-primary']),
+            rangeslider=dict(visible=enable_rangeslider),
+            rangeselector=dict(
+                buttons=list([
+                    dict(count=1, label="1m", step="month", stepmode="backward"),
+                    dict(count=6, label="6m", step="month", stepmode="backward"),
+                    dict(count=1, label="1y", step="year", stepmode="backward"),
+                    dict(count=1, label="YTD", step="year", stepmode="todate"),
+                    dict(step="all", label="All")
+                ]),
+                bgcolor=theme['--bg-secondary'],
+                activecolor=theme['--accent'],
+                font=dict(color=theme['--text-bright'], size=11)
+            ) if enable_rangeslider else None
+        ),
+        yaxis=dict(automargin=True, showgrid=True, gridcolor=theme['--border-color'], title="", tickfont=dict(color=theme['--text-primary'])),
         hovermode="x unified",
         hoverlabel=dict(bgcolor=theme['--bg-secondary'], bordercolor=theme['--accent'], font=dict(color=theme['--text-bright'])),
         clickmode='event+select'
@@ -93,9 +111,9 @@ def plot_bar_chart(df, x_col, y_col, title, color=None):
         legend=dict(font=dict(color=theme['--text-primary'])),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        margin=dict(t=50, b=60, l=50, r=20),
+        margin=dict(t=50, b=60, l=140, r=30),
         xaxis=dict(showgrid=False, title="", tickfont=dict(color=theme['--text-primary'])),
-        yaxis=dict(showgrid=True, gridcolor=theme['--border-color'], title="", tickfont=dict(color=theme['--text-primary'])),
+        yaxis=dict(automargin=True, showgrid=True, gridcolor=theme['--border-color'], title="", tickfont=dict(color=theme['--text-primary'])),
         hovermode="x",
         hoverlabel=dict(bgcolor=theme['--bg-secondary'], bordercolor=theme['--border-color'], font=dict(color=theme['--text-bright'])),
         clickmode='event+select'
@@ -105,18 +123,23 @@ def plot_bar_chart(df, x_col, y_col, title, color=None):
 def apply_custom_theme(fig):
     """Applies the current dynamic theme colors to ANY Plotly figure."""
     theme = get_theme_colors()
+    title_text = None
+    if fig.layout.title and getattr(fig.layout.title, 'text', None):
+        title_text = fig.layout.title.text
+
     fig.update_layout(
-        font=dict(color=theme['--text-primary']),
+        font=dict(color=theme['--text-primary'], family='Inter, sans-serif'),
         legend=dict(font=dict(color=theme['--text-primary'])),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(showgrid=False, title_font=dict(color=theme['--text-primary']), tickfont=dict(color=theme['--text-primary'])),
-        yaxis=dict(showgrid=True, gridcolor=theme['--border-color'], title_font=dict(color=theme['--text-primary']), tickfont=dict(color=theme['--text-primary'])),
-        hoverlabel=dict(bgcolor=theme['--bg-secondary'], font_size=14, bordercolor=theme['--border-color']),
+        yaxis=dict(automargin=True, showgrid=True, gridcolor=theme['--border-color'], title_font=dict(color=theme['--text-primary']), tickfont=dict(color=theme['--text-primary'])),
+        hoverlabel=dict(bgcolor=theme['--bg-secondary'], font_size=13, bordercolor=theme['--border-color'], font=dict(color=theme['--text-bright'])),
     )
-    # Check if there is a title and update its font if so
-    if fig.layout.title and getattr(fig.layout.title, 'text', None):
-        fig.update_layout(title=dict(font=dict(size=16, color=theme['--text-bright'])))
+    
+    if title_text:
+        fig.update_layout(title=dict(text=title_text, font=dict(size=16, color=theme['--text-bright'])))
+
     return fig
 
 def render_plotly_chart(fig, **kwargs):

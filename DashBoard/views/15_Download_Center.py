@@ -396,7 +396,7 @@ with c3:
         st.markdown("<div style='background: rgba(255, 187, 51, 0.1); color: #ffbb33; padding: 4px 10px; border-radius: 4px; display: inline-block; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px;'>Format: PARQUET (8.7 MB)</div>", unsafe_allow_html=True)
         
         t0 = time.time()
-        entities_df = load_entities_data().head(1000) # Limit to strictly avoid MessageSizeError
+        entities_df = load_entities_data()
         if not entities_df.empty:
             valid_parquet_bytes = entities_df.to_parquet(index=False)
         else:

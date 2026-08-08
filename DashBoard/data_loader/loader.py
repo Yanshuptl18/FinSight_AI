@@ -6,13 +6,96 @@ import os
 import gdown
 import joblib
 import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DATA_PATH = os.path.join(BASE_DIR, "data")
+MODEL_PATH = os.path.join(BASE_DIR, "models")
+HF_REPO_ID = os.getenv("HF_REPO_ID", "Yanshuptl18/finsight-ai-data")
+
+def get_hf_token():
+    """
+    Securely resolves HF_TOKEN from Streamlit Secrets or Environment Variables.
+    Contains ZERO hardcoded secrets.
+    """
+    try:
+        if hasattr(st, "secrets") and "HF_TOKEN" in st.secrets:
+            token = st.secrets["HF_TOKEN"]
+            if token and str(token).strip():
+                return str(token).strip()
+    except Exception:
+        pass
+    token = os.getenv("HF_TOKEN")
+    if token and str(token).strip():
+        return str(token).strip()
+    return None
+
 try:
-    from config import MODEL_PATH, DATA_PATH
+    from huggingface_hub import hf_hub_download
+    HAS_HF = True
 except ImportError:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    MODEL_PATH = os.path.join(BASE_DIR, "models")
-    DATA_PATH = os.path.join(BASE_DIR, "data")
+    HAS_HF = False
+
+def download_file(filename, drive_id=None, is_model=False):
+    """
+    Lazy-loads individual dataset or model files on-demand from the private 
+    Hugging Face repository (Yanshuptl18/finsight-ai-data) using hf_hub_download().
+    """
+    target_dir = MODEL_PATH if is_model else DATA_PATH
+    target_path = os.path.join(target_dir, filename)
+    if os.path.exists(target_path):
+        return True
+
+    os.makedirs(target_dir, exist_ok=True)
+    base_dir = os.path.dirname(DATA_PATH)
+    subfolder = "models" if is_model else "data"
+    hf_rel_path = f"{subfolder}/{filename}"
+
+    hf_token = get_hf_token()
+
+    # Primary: Try lazy downloading from Hugging Face
+    if HAS_HF and HF_REPO_ID:
+        try:
+            print(f"Downloading {filename} on-demand from Hugging Face ({HF_REPO_ID})...")
+            try:
+                hf_hub_download(
+                    repo_id=HF_REPO_ID,
+                    filename=hf_rel_path,
+                    repo_type="dataset",
+                    token=hf_token,
+                    local_dir=base_dir
+                )
+            except Exception:
+                hf_hub_download(
+                    repo_id=HF_REPO_ID,
+                    filename=filename,
+                    repo_type="dataset",
+                    token=hf_token,
+                    local_dir=target_dir
+                )
+            if os.path.exists(target_path):
+                return True
+        except Exception as e:
+            print(f"Hugging Face download failed for {filename}: {e}")
+            if not hf_token:
+                try:
+                    st.warning(f"HF_TOKEN is missing. Please set HF_TOKEN in Streamlit Secrets or environment variables to download {filename} from private dataset {HF_REPO_ID}.")
+                except Exception:
+                    pass
+
+    # Secondary: Fallback to Google Drive
+    if drive_id:
+        try:
+            print(f"Downloading {filename} from Google Drive fallback...")
+            url = f'https://drive.google.com/uc?id={drive_id}'
+            gdown.download(url, target_path, quiet=True)
+            if os.path.exists(target_path):
+                return True
+        except Exception as e:
+            print(f"Google Drive download failed for {filename}: {e}")
+
+    return os.path.exists(target_path)
 
 # Google Drive IDs for the real data
 DATA_DRIVE_IDS = {
@@ -109,19 +192,12 @@ DATA_DRIVE_IDS = {
 @st.cache_resource(show_spinner="Downloading & Loading Datasets...")
 def get_real_data():
     """
-    Downloads datasets from Google Drive if they don't exist locally.
+    Downloads datasets from Hugging Face repository (or Google Drive fallback) if they don't exist locally.
     """
     os.makedirs(DATA_PATH, exist_ok=True)
     
     for filename, file_id in DATA_DRIVE_IDS.items():
-        file_path = os.path.join(DATA_PATH, filename)
-        if not os.path.exists(file_path):
-            print(f"Downloading {filename} from Google Drive... This might take a while.")
-            url = f'https://drive.google.com/uc?id={file_id}'
-            try:
-                gdown.download(url, file_path, quiet=True)
-            except Exception as e:
-                print(f"Failed to download {filename}. Google Drive rate limit may be exceeded. Exception: {e}")
+        download_file(filename, drive_id=file_id, is_model=False)
 
 @st.cache_resource(ttl=3600)
 def get_dataset_row_count(file_name):
@@ -135,30 +211,15 @@ def get_dataset_row_count(file_name):
             pass
     return 0
 
-def load_with_limit(file_path, cols_to_load, limit=50000):
-    """Loads a massive parquet file in chunks, bounding memory strictly."""
+def load_columns(file_path, cols_to_load):
+    """Loads a parquet file projecting only requested columns across ALL rows."""
     import pyarrow.parquet as pq
     try:
-        parquet_file = pq.ParquetFile(file_path)
-        dfs = []
-        total_rows = 0
-        for i in range(parquet_file.num_row_groups):
-            df_chunk = parquet_file.read_row_group(i, columns=cols_to_load).to_pandas()
-            dfs.append(df_chunk)
-            total_rows += len(df_chunk)
-            if total_rows >= limit:
-                break
-        
-        if not dfs:
-            return pd.DataFrame(columns=cols_to_load)
-            
-        df = pd.concat(dfs, ignore_index=True)
-        if len(df) > limit:
-            df = df.head(limit)
-        return df
+        table = pq.read_table(file_path, columns=cols_to_load)
+        return table.to_pandas()
     except Exception as e:
-        print(f"Error loading {file_path} with limit: {e}")
-        return pd.read_parquet(file_path, columns=cols_to_load).head(limit)
+        print(f"Error loading {file_path} with column projection: {e}")
+        return pd.read_parquet(file_path, columns=cols_to_load)
 
 @st.cache_resource(ttl=3600)
 def load_news_data():
@@ -166,7 +227,7 @@ def load_news_data():
     
     file_path = os.path.join(DATA_PATH, "financial_intelligence_dataset.parquet")
     if os.path.exists(file_path):
-        # Only load necessary columns to avoid ArrowMemoryError on large datasets
+        # Only load necessary columns to optimize memory while loading ALL rows
         req_cols = [
             "published_date", "headline", "publisher", "ticker", 
             "topic_name", "final_event", "market_signal", "final_confidence"
@@ -180,7 +241,7 @@ def load_news_data():
         except Exception:
             cols_to_load = req_cols
             
-        df = load_with_limit(file_path, cols_to_load, limit=50000)
+        df = load_columns(file_path, cols_to_load)
         
         # Rename columns to match what the dashboard expects
         rename_map = {
@@ -242,9 +303,41 @@ def load_sector_data():
         profile_df = pd.read_parquet(os.path.join(DATA_PATH, "sector_profile.parquet"))
         rec_df = pd.read_parquet(os.path.join(DATA_PATH, "sector_recommendations.parquet"))
         
-        # Merge on sector name
-        df = pd.merge(profile_df, rec_df, on="sector", how="left")
+        # Merge profile and recommendations on sector
+        df = pd.merge(profile_df, rec_df, on="sector", how="left", suffixes=('', '_rec'))
         
+        # Optionally merge sector_master if present
+        master_path = os.path.join(DATA_PATH, "sector_master.parquet")
+        if os.path.exists(master_path):
+            master_df = pd.read_parquet(master_path)
+            dup_cols = [c for c in master_df.columns if c in df.columns and c != 'sector']
+            master_df = master_df.drop(columns=dup_cols)
+            df = pd.merge(df, master_df, on="sector", how="left")
+
+        # Optionally merge sector_network_metrics if present
+        net_path = os.path.join(DATA_PATH, "sector_network_metrics.parquet")
+        if os.path.exists(net_path):
+            net_df = pd.read_parquet(net_path)
+            dup_cols = [c for c in net_df.columns if c in df.columns and c != 'sector']
+            net_df = net_df.drop(columns=dup_cols)
+            df = pd.merge(df, net_df, on="sector", how="left")
+
+        # Optionally merge sector_knowledge_base if present
+        kb_path = os.path.join(DATA_PATH, "sector_knowledge_base.parquet")
+        if os.path.exists(kb_path):
+            kb_df = pd.read_parquet(kb_path)
+            dup_cols = [c for c in kb_df.columns if c in df.columns and c != 'sector']
+            kb_df = kb_df.drop(columns=dup_cols)
+            df = pd.merge(df, kb_df, on="sector", how="left")
+
+        # Merge sector_temporal if present
+        temp_path = os.path.join(DATA_PATH, "sector_temporal.parquet")
+        if os.path.exists(temp_path):
+            temp_df = pd.read_parquet(temp_path)
+            dup_cols = [c for c in temp_df.columns if c in df.columns and c != 'sector']
+            temp_df = temp_df.drop(columns=dup_cols)
+            df = pd.merge(df, temp_df, on="sector", how="left")
+
         # Map columns to what the view expects
         df = df.rename(columns={
             "sector": "Sector",
@@ -260,10 +353,105 @@ def load_sector_data():
         df['Growth Score'] = df['Growth Score'].fillna(50.0).astype(int)
         df['News Volume'] = df['News Volume'].fillna(0).astype(int)
         
+        # Ensure network_influence is non-zero and populated for all 28 sectors
+        if 'coverage_score' in df.columns and 'network_influence' in df.columns:
+            max_cov = df['coverage_score'].max() if df['coverage_score'].max() > 0 else 1.0
+            df['network_influence'] = df['network_influence'].fillna(df['coverage_score'] / max_cov)
+            df.loc[df['network_influence'] == 0, 'network_influence'] = (df['coverage_score'] / max_cov).round(3)
+        
         return df
     except Exception as e:
         print(f"Error loading sector data: {e}")
         return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_sector_relationships():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "sector_relationships.parquet")
+    if os.path.exists(file_path):
+        return pd.read_parquet(file_path)
+    return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_sector_temporal():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "sector_temporal.parquet")
+    if os.path.exists(file_path):
+        return pd.read_parquet(file_path)
+    return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_sector_clusters():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "sector_clusters.parquet")
+    if os.path.exists(file_path):
+        return pd.read_parquet(file_path)
+    return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_investment_themes():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "investment_theme_summary.parquet")
+    if os.path.exists(file_path):
+        return pd.read_parquet(file_path)
+    return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_topic_profiles():
+    get_real_data()
+    try:
+        p_file = os.path.join(DATA_PATH, "topic_profiles.parquet")
+        g_file = os.path.join(DATA_PATH, "topic_growth.parquet")
+        d_file = os.path.join(DATA_PATH, "topic_diversity.parquet")
+        pop_file = os.path.join(DATA_PATH, "topic_popularity.parquet")
+        card_file = os.path.join(DATA_PATH, "topic_cards.parquet")
+
+        df = pd.read_parquet(p_file) if os.path.exists(p_file) else pd.DataFrame()
+
+        if not df.empty and os.path.exists(g_file):
+            g_df = pd.read_parquet(g_file)
+            dup_cols = [c for c in g_df.columns if c in df.columns and c != 'topic_id']
+            g_df = g_df.drop(columns=dup_cols)
+            df = pd.merge(df, g_df, on='topic_id', how='left')
+
+        if not df.empty and os.path.exists(d_file):
+            d_df = pd.read_parquet(d_file)
+            dup_cols = [c for c in d_df.columns if c in df.columns and c != 'topic_id']
+            d_df = d_df.drop(columns=dup_cols)
+            df = pd.merge(df, d_df, on='topic_id', how='left')
+
+        if not df.empty and os.path.exists(pop_file):
+            pop_df = pd.read_parquet(pop_file)
+            dup_cols = [c for c in pop_df.columns if c in df.columns and c != 'topic_id']
+            pop_df = pop_df.drop(columns=dup_cols)
+            df = pd.merge(df, pop_df, on='topic_id', how='left')
+
+        if not df.empty and os.path.exists(card_file):
+            card_df = pd.read_parquet(card_file)
+            dup_cols = [c for c in card_df.columns if c in df.columns and c != 'topic_id']
+            card_df = card_df.drop(columns=dup_cols)
+            df = pd.merge(df, card_df, on='topic_id', how='left')
+
+        return df
+    except Exception as e:
+        print(f"Error loading master topic profiles: {e}")
+        return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_topic_timeline():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "topic_timeline.parquet")
+    if os.path.exists(file_path):
+        return pd.read_parquet(file_path)
+    return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_topic_similarity():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "topic_similarity.parquet")
+    if os.path.exists(file_path):
+        return pd.read_parquet(file_path)
+    return pd.DataFrame()
 
 @st.cache_resource(ttl=3600)
 def get_dashboard_metrics():
@@ -297,7 +485,7 @@ MODEL_DRIVE_IDS = {
 @st.cache_resource(show_spinner="Downloading & Loading Models...")
 def get_real_models():
     """
-    Downloads the real models from Google Drive if they don't exist locally,
+    Downloads the real models from Hugging Face (or Google Drive fallback) if they don't exist locally,
     and then loads them into memory.
     """
     # Ensure the models directory exists
@@ -306,20 +494,16 @@ def get_real_models():
     loaded_models = {}
     
     for filename, file_id in MODEL_DRIVE_IDS.items():
+        download_file(filename, drive_id=file_id, is_model=True)
         file_path = os.path.join(MODEL_PATH, filename)
         
-        # Download from Google Drive if not found locally
-        if not os.path.exists(file_path):
-            st.info(f"Downloading {filename} from Google Drive... This might take a while.")
-            url = f'https://drive.google.com/uc?id={file_id}'
-            gdown.download(url, file_path, quiet=False)
-            
         # Load model using joblib
-        try:
-            model_name = filename.replace("_model.pkl", "")
-            loaded_models[model_name] = joblib.load(file_path)
-        except Exception as e:
-            st.error(f"Error loading {filename}: {str(e)}")
+        if os.path.exists(file_path):
+            try:
+                model_name = filename.replace("_model.pkl", "")
+                loaded_models[model_name] = joblib.load(file_path)
+            except Exception as e:
+                st.error(f"Error loading {filename}: {str(e)}")
             
     return loaded_models
 
@@ -337,9 +521,13 @@ def load_timeline_data():
         except Exception:
             cols_to_load = cols
             
-        df = load_with_limit(file_path, cols_to_load, limit=50000)
-        if 'published_date' in df.columns:
-            df['published_date'] = pd.to_datetime(df['published_date'])
+        df = load_columns(file_path, cols_to_load)
+        if not df.empty:
+            if 'published_date' in df.columns:
+                df['published_date'] = pd.to_datetime(df['published_date'])
+            for cat_c in ['final_event', 'ticker', 'market_signal']:
+                if cat_c in df.columns:
+                    df[cat_c] = df[cat_c].astype('category')
         return df
     return pd.DataFrame()
 
@@ -356,7 +544,7 @@ def load_entities_data():
         except Exception:
             cols_to_load = cols
             
-        df = load_with_limit(file_path, cols_to_load, limit=50000)
+        df = load_columns(file_path, cols_to_load)
         if 'published_date' in df.columns:
             df['published_date'] = pd.to_datetime(df['published_date'])
         return df
@@ -383,7 +571,63 @@ def load_clustered_topics():
 @st.cache_resource(ttl=3600)
 def load_event_influence():
     get_real_data()
-    file_path = os.path.join(DATA_PATH, "event_influence.parquet")
+    try:
+        inf_file = os.path.join(DATA_PATH, "event_influence.parquet")
+        cent_file = os.path.join(DATA_PATH, "event_centrality.parquet")
+        lc_file = os.path.join(DATA_PATH, "event_lifecycle.parquet")
+        risk_file = os.path.join(DATA_PATH, "propagation_risk.parquet")
+        card_file = os.path.join(DATA_PATH, "event_knowledge_cards.parquet")
+        comm_file = os.path.join(DATA_PATH, "event_communities.parquet")
+
+        df = pd.read_parquet(inf_file) if os.path.exists(inf_file) else pd.DataFrame()
+
+        if not df.empty and os.path.exists(cent_file):
+            cent_df = pd.read_parquet(cent_file)
+            dup_cols = [c for c in cent_df.columns if c in df.columns and c != 'final_event']
+            cent_df = cent_df.drop(columns=dup_cols)
+            df = pd.merge(df, cent_df, on='final_event', how='left')
+
+        if not df.empty and os.path.exists(lc_file):
+            lc_df = pd.read_parquet(lc_file)
+            dup_cols = [c for c in lc_df.columns if c in df.columns and c != 'final_event']
+            lc_df = lc_df.drop(columns=dup_cols)
+            df = pd.merge(df, lc_df, on='final_event', how='left')
+
+        if not df.empty and os.path.exists(risk_file):
+            risk_df = pd.read_parquet(risk_file)
+            dup_cols = [c for c in risk_df.columns if c in df.columns and c != 'final_event']
+            risk_df = risk_df.drop(columns=dup_cols)
+            df = pd.merge(df, risk_df, on='final_event', how='left')
+
+        if not df.empty and os.path.exists(card_file):
+            card_df = pd.read_parquet(card_file)
+            dup_cols = [c for c in card_df.columns if c in df.columns and c != 'final_event']
+            card_df = card_df.drop(columns=dup_cols)
+            df = pd.merge(df, card_df, on='final_event', how='left')
+
+        if not df.empty and os.path.exists(comm_file):
+            comm_df = pd.read_parquet(comm_file)
+            dup_cols = [c for c in comm_df.columns if c in df.columns and c != 'final_event']
+            comm_df = comm_df.drop(columns=dup_cols)
+            df = pd.merge(df, comm_df, on='final_event', how='left')
+
+        return df
+    except Exception as e:
+        print(f"Error loading master event influence data: {e}")
+        return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_event_statistics():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "event_statistics.parquet")
+    if os.path.exists(file_path):
+        return pd.read_parquet(file_path)
+    return pd.DataFrame()
+
+@st.cache_resource(ttl=3600)
+def load_event_heatmap():
+    get_real_data()
+    file_path = os.path.join(DATA_PATH, "event_heatmap.parquet")
     if os.path.exists(file_path):
         return pd.read_parquet(file_path)
     return pd.DataFrame()
