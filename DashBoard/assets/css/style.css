@@ -560,6 +560,30 @@ div[data-testid="stTabs"] [data-baseweb="tab-border"],
     visibility: hidden !important;
 }
 
+/* ===== DISABLE ALL STREAMLIT STALE DIMMING / BLUR OVERLAYS ===== */
+[data-st-mode="stale"],
+[data-testid="stElementContainer"][data-st-mode="stale"],
+div[data-st-mode="stale"],
+.stElementContainer[data-st-mode="stale"],
+[data-testid="stDataFrame"][data-st-mode="stale"],
+div.stDataFrame[data-st-mode="stale"],
+[data-testid="stTable"][data-st-mode="stale"] {
+    opacity: 1 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    transition: none !important;
+    pointer-events: auto !important;
+}
+
+/* Ensure crisp 100% opacity for DataFrames across all themes */
+div[data-testid="stDataFrame"],
+div[data-testid="stTable"] {
+    opacity: 1 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+}
+
+
 
 /* Radio / Checkbox label text */
 [data-testid="stRadio"] label,
@@ -589,106 +613,109 @@ div[data-testid="stTabs"] [data-baseweb="tab-border"],
     border-color: var(--border-color) !important;
 }
 
-/* Ultra-Premium Dynamic & Animated Sidebar Logo (Cybernetic 3D Hexagon + Shimmering Monogram) */
+/* ===== ULTRA-PREMIUM 3D ANIMATED LOGO SYSTEM ===== */
 [data-testid="stSidebarNav"] {
     position: relative;
-    padding-top: 105px !important; /* Make room for the absolute positioned logo */
+    padding-top: 110px !important; /* Space for 3D logo */
+    perspective: 1000px;
+    transform-style: preserve-3d;
 }
 
+/* 3D Rotating Holographic Emblem */
 [data-testid="stSidebarNav"]::before {
-    /* The Cybernetic Hexagon Icon */
     content: "";
     position: absolute;
-    top: 25px;
+    top: 22px;
     left: 20px;
-    width: 44px;
-    height: 44px;
-    background-color: var(--accent); /* Dynamically colored by active theme */
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7.77v8.46L12 22l10-5.77V7.77L12 2zm0 4.5l5 2.89v5.77L12 18l-5-2.89V9.39l5-2.89zM12 12l-4.5-2.6M12 12l4.5-2.6M12 12v5.5' stroke='black' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7.77v8.46L12 22l10-5.77V7.77L12 2zm0 4.5l5 2.89v5.77L12 18l-5-2.89V9.39l5-2.89zM12 12l-4.5-2.6M12 12l4.5-2.6M12 12v5.5' stroke='black' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    filter: drop-shadow(0 0 12px var(--accent));
-    animation: cyberHexFloat 4s ease-in-out infinite alternate, cyberGlowPulse 2.5s ease-in-out infinite alternate;
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--accent) 0%, #0052cc 50%, #7928ca 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.5);
+    animation: logo3DRotate 8s linear infinite, logo3DFloat 3s ease-in-out infinite alternate;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 0 14px var(--accent));
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* 3D Glowing Monogram */
 [data-testid="stSidebarNav"]::after {
-    /* The Custom Designed Tech Monogram */
-    content: "FS";
+    content: "FinSight AI";
     position: absolute;
-    top: 18px;
-    left: 74px;
-    font-family: 'Inter', 'Arial Black', system-ui, -apple-system, sans-serif;
-    font-size: 3.2rem;
+    top: 26px;
+    left: 80px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1.35rem;
     font-weight: 900;
-    letter-spacing: -2.5px;
-    line-height: 1;
-    padding-right: 14px;
-    transform: skewX(-10deg);
-    /* Shimmering moving gradient fill */
-    background: linear-gradient(120deg, var(--text-bright) 0%, var(--text-primary) 25%, var(--accent) 50%, #ffffff 75%, var(--accent) 100%);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--text-bright) 0%, var(--accent) 50%, #ffffff 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
-    animation: monogramShimmer 4s linear infinite, textPulse 3s ease-in-out infinite alternate;
-    transition: all 0.3s ease;
+    text-shadow: 
+        0 1px 0 rgba(0,0,0,0.2),
+        0 2px 0 rgba(0,0,0,0.15),
+        0 3px 5px rgba(0,0,0,0.4),
+        0 0 12px var(--accent);
+    animation: logoText3DShimmer 3s ease-in-out infinite alternate;
+    transition: all 0.4s ease;
 }
 
-/* Interactive Hover Acceleration */
+/* Hover Interactive 3D Acceleration */
 [data-testid="stSidebarNav"]:hover::before {
-    transform: scale(1.18) rotate(360deg);
-    filter: drop-shadow(0 0 20px var(--accent)) drop-shadow(0 0 30px var(--accent));
+    animation: logo3DFastSpin 1.5s linear infinite;
+    filter: drop-shadow(0 0 25px var(--accent)) drop-shadow(0 0 35px #ffffff);
 }
 
 [data-testid="stSidebarNav"]:hover::after {
-    letter-spacing: -1px;
-    filter: drop-shadow(0 0 12px var(--accent));
+    transform: translateZ(20px) scale(1.05);
+    letter-spacing: 0.5px;
 }
 
-/* Keyframe Animations */
-@keyframes cyberHexFloat {
+/* 3D Continuous Keyframe Animations */
+@keyframes logo3DRotate {
     0% {
-        transform: translateY(0px) rotate(0deg);
+        transform: rotateY(0deg) rotateX(15deg) rotateZ(0deg);
     }
     50% {
-        transform: translateY(-5px) rotate(4deg);
+        transform: rotateY(180deg) rotateX(-15deg) rotateZ(180deg);
     }
     100% {
-        transform: translateY(2px) rotate(-3deg);
+        transform: rotateY(360deg) rotateX(15deg) rotateZ(360deg);
     }
 }
 
-@keyframes cyberGlowPulse {
+@keyframes logo3DFastSpin {
     0% {
+        transform: rotateY(0deg) rotateX(25deg) scale(1.15);
+    }
+    100% {
+        transform: rotateY(360deg) rotateX(25deg) scale(1.15);
+    }
+}
+
+@keyframes logo3DFloat {
+    0% {
+        top: 22px;
+    }
+    100% {
+        top: 15px;
+    }
+}
+
+@keyframes logoText3DShimmer {
+    0% {
+        background-position: 0% center;
         filter: drop-shadow(0 0 8px var(--accent));
     }
     100% {
-        filter: drop-shadow(0 0 18px var(--accent)) drop-shadow(0 0 25px rgba(255,255,255,0.4));
-    }
-}
-
-@keyframes monogramShimmer {
-    0% {
-        background-position: 0% center;
-    }
-    100% {
         background-position: 200% center;
+        filter: drop-shadow(0 0 18px var(--accent)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
     }
 }
 
-@keyframes textPulse {
-    0% {
-        opacity: 0.92;
-    }
-    100% {
-        opacity: 1;
-    }
-}
 
 /* Premium Animated Boundary for all Charts */
 [data-testid="stPlotlyChart"] {

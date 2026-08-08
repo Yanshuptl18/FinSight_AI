@@ -9,7 +9,8 @@ from data_loader.loader import (
     load_event_statistics,
     load_event_heatmap,
     load_event_propagation_paths,
-    load_timeline_data
+    load_timeline_data,
+    get_dataset_row_count
 )
 
 load_css()
@@ -61,7 +62,7 @@ st.divider()
 
 # --- Top Key Performance Indicators ---
 k1, k2, k3, k4 = st.columns(4)
-total_event_items = len(news_df) if not news_df.empty else 3215296
+total_event_items = get_dataset_row_count("financial_intelligence_dataset.parquet") or 3215296
 total_pathways = len(paths_df) if not paths_df.empty else 812
 
 with k1:
