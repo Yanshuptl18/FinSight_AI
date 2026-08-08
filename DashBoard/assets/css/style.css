@@ -613,73 +613,109 @@ div[data-testid="stTable"] {
     border-color: var(--border-color) !important;
 }
 
-/* ===== ULTRA-PREMIUM YP-STYLE LOGO WITH HIGH-PRECISION ALIGNMENT ===== */
+/* ===== CUSTOM SIDEBAR LOGO COMPONENT ===== */
 [data-testid="stSidebarNav"] {
     position: relative;
-    padding-top: 115px !important; /* Space for logo */
-    color: var(--accent) !important; /* Passes theme accent to SVG outer frame stroke & S letter */
+    padding-top: 10px !important; /* Clean space for navigation */
 }
 
-/* Double Rhombus Emblem: Perfectly Centered FS Monogram & Hover 90° Rotation */
-[data-testid="stSidebarNav"]::before {
-    content: "";
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    width: 58px;
-    height: 58px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='glow' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeGaussianBlur stdDeviation='3' result='coloredBlur'/%3E%3CfeMerge%3E%3CfeMergeNode in='coloredBlur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cstyle%3E .rhombus-outer %7B transform-origin: 50px 50px; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); %7D svg:hover .rhombus-outer %7B transform: rotate(135deg); %7D %3C/style%3E%3Cg class='rhombus-outer' transform='rotate(45 50 50)'%3E%3Crect x='20' y='20' width='60' height='60' rx='14' fill='none' stroke='currentColor' stroke-width='5' filter='url(%23glow)' /%3E%3Crect x='24' y='24' width='52' height='52' rx='11' fill='%230f172a' stroke='rgba(255,255,255,0.25)' stroke-width='2' /%3E%3C/g%3E%3Ctext x='50' y='50' text-anchor='middle' dominant-baseline='central' font-family='system-ui, -apple-system, sans-serif' font-weight='900' font-size='28' letter-spacing='-1'%3E%3Ctspan fill='%23FFFFFF'%3EF%3C/tspan%3E%3Ctspan fill='currentColor'%3ES%3C/tspan%3E%3C/text%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
-    transition: filter 0.4s ease;
-    animation: rhombusFloat2D 3.5s ease-in-out infinite alternate;
-}
-
-/* Hover Interactive Elevate */
-[data-testid="stSidebarNav"]:hover::before {
-    filter: drop-shadow(0 0 22px var(--accent));
-}
-
-/* Two-Line Stacked Typography: Line 1 (FINSIGHT) = Crisp White, Line 2 (INTELLIGENCE) = Theme Accent */
+/* Remove old pseudo-element logo overlays */
+[data-testid="stSidebarNav"]::before,
 [data-testid="stSidebarNav"]::after {
-    content: "FINSIGHT\A INTELLIGENCE";
-    white-space: pre;
-    position: absolute;
-    top: 24px;
-    left: 88px;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-size: 1.22rem;
-    font-weight: 900;
-    line-height: 1.15;
-    letter-spacing: 1.2px;
-    background: linear-gradient(
-        to bottom,
-        var(--text-bright) 0%,
-        var(--text-bright) 48%,
-        var(--accent) 52%,
-        var(--accent) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: all 0.4s ease;
+    display: none !important;
 }
 
-[data-testid="stSidebarNav"]:hover::after {
+.sidebar-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 12px 18px 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Outer Rhombus Badge */
+.rhombus-badge {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f172a;
+    border: 3.5px solid var(--accent);
+    border-radius: 10px;
+    transform: rotate(45deg);
+    box-shadow: 0 0 14px var(--accent), inset 0 0 8px rgba(0, 0, 0, 0.6);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+    flex-shrink: 0;
+    margin-left: 6px;
+}
+
+/* On Mouse Hover: Outer Rhombus Badge Rotates 90° smoothly (45° -> 135°) */
+.sidebar-logo-container:hover .rhombus-badge {
+    transform: rotate(135deg) scale(1.08);
+    box-shadow: 0 0 22px var(--accent), inset 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Stationary Monogram Text (Counter-rotated -45° so FS is 100% upright!) */
+.monogram-text {
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Counter-rotate on hover so FS stays 100% STATIONARY while rhombus badge rotates 90° around it! */
+.sidebar-logo-container:hover .monogram-text {
+    transform: rotate(-135deg);
+}
+
+.f-letter {
+    color: #FFFFFF !important;
+}
+
+.s-letter {
+    color: var(--accent) !important;
+}
+
+/* Two-Line Stacked Title */
+.logo-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.15;
+}
+
+.title-top {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    color: var(--text-bright) !important;
+    transition: letter-spacing 0.4s ease;
+}
+
+.title-bottom {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 3.2px;
+    color: var(--accent) !important;
+}
+
+.sidebar-logo-container:hover .title-top {
     letter-spacing: 1.6px;
 }
 
-/* Floating Animation */
-@keyframes rhombusFloat2D {
-    0% {
-        top: 16px;
-    }
-    100% {
-        top: 10px;
-    }
-}
 }
 
 

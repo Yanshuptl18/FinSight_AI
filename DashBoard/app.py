@@ -11,7 +11,26 @@ st.set_page_config(
 
 load_css()
 
+# Render logo at top of sidebar
+st.sidebar.markdown(
+    """
+    <div class="sidebar-logo-container">
+        <div class="rhombus-badge">
+            <div class="monogram-text">
+                <span class="f-letter">F</span><span class="s-letter">S</span>
+            </div>
+        </div>
+        <div class="logo-title">
+            <span class="title-top">FINSIGHT</span>
+            <span class="title-bottom">INTELLIGENCE</span>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # Define the navigation structure internally so Streamlit handles routing
+
 # Using a flat list removes all plain text section headers, leaving ONLY the styled buttons
 pages = [
     st.Page("views/0_Command_Center.py", title="Command Center", icon=":material/dashboard:"),
