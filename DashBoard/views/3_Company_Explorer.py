@@ -1,7 +1,7 @@
 import streamlit as st
 from components.charts import render_plotly_chart
 import pandas as pd
-from data_loader.loader import load_news_data
+from data_loader.loader import load_news_data, get_company_news, load_company_analytics
 from components.charts import plot_time_series, plot_donut_chart, create_kpi_card
 
 from components.utils import load_css, render_page_header
@@ -9,16 +9,25 @@ load_css()
 
 render_page_header("Company Intelligence Explorer")
 
-news_df = load_news_data()
-companies = sorted(news_df["Company"].unique())
+analytics_df = load_company_analytics()
+if not analytics_df.empty and 'ticker' in analytics_df.columns:
+    companies = sorted(analytics_df['ticker'].dropna().unique().tolist())
+else:
+    news_df = load_news_data()
+    companies = sorted(news_df["Company"].unique()) if not news_df.empty else ["AAPL", "GILD", "NVDA"]
 
 # --- Search ---
 with st.container(border=True):
     col_search, col_space = st.columns([1, 2])
     with col_search:
-        selected_company = st.selectbox("Search Company", companies)
+        default_idx = companies.index("AAPL") if "AAPL" in companies else 0
+        selected_company = st.selectbox("Search Company", companies, index=default_idx)
 
-company_data = news_df[news_df["Company"] == selected_company]
+company_data = get_company_news(selected_company)
+if company_data.empty:
+    news_df = load_news_data()
+    if not news_df.empty and 'Company' in news_df.columns:
+        company_data = news_df[news_df["Company"] == selected_company]
 
 st.divider()
 

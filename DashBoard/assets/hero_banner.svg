@@ -1,0 +1,227 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" width="100%" height="100%" style="background:#090d16; border-radius:12px; border:1px solid #1e293b; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080c15"/>
+      <stop offset="50%" stop-color="#0d1424"/>
+      <stop offset="100%" stop-color="#080d18"/>
+    </linearGradient>
+    <radialGradient id="glowTeal" cx="65%" cy="45%" r="45%">
+      <stop offset="0%" stop-color="#00ADB5" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#0052cc" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowBlue" cx="25%" cy="35%" r="40%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Node Glow Filters -->
+    <filter id="neonTeal" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="neonBlue" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Linear Accents -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00ADB5" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#00ADB5" stop-opacity="0.8"/>
+      <stop offset="70%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <style><![CDATA[
+    /* Technical Grid & Ambient */
+    .grid-line { stroke: #1e293b; stroke-width: 0.5; stroke-opacity: 0.35; stroke-dasharray: 4 6; }
+    
+    /* Animation Keyframes */
+    @keyframes pulseRing {
+      0% { r: 6px; opacity: 0.9; }
+      50% { r: 18px; opacity: 0.1; }
+      100% { r: 6px; opacity: 0.9; }
+    }
+    @keyframes pulseRingLarge {
+      0% { r: 10px; opacity: 0.8; }
+      50% { r: 26px; opacity: 0.05; }
+      100% { r: 10px; opacity: 0.8; }
+    }
+    @keyframes flowEdge {
+      0% { stroke-dashoffset: 240; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes scanline {
+      0% { transform: translateY(-50px); opacity: 0.0; }
+      50% { opacity: 0.4; }
+      100% { transform: translateY(330px); opacity: 0.0; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    @keyframes signalPulse {
+      0% { opacity: 0.4; transform: scale(0.98); }
+      50% { opacity: 1; transform: scale(1.02); }
+      100% { opacity: 0.4; transform: scale(0.98); }
+    }
+
+    /* Applied Styles */
+    .pulse-ring-1 { animation: pulseRing 3.2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .pulse-ring-2 { animation: pulseRing 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 1.2s; }
+    .pulse-ring-3 { animation: pulseRingLarge 4.5s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.6s; }
+    .edge-flow { stroke-dasharray: 6 14; animation: flowEdge 8s linear infinite; }
+    .edge-flow-fast { stroke-dasharray: 4 10; animation: flowEdge 4.5s linear infinite; }
+    .scanner { animation: scanline 7s ease-in-out infinite; }
+    .blinker { animation: blink 2.2s ease-in-out infinite; }
+    .badge-signal { animation: signalPulse 3s ease-in-out infinite; }
+  ]]></style>
+
+  <!-- Background Base -->
+  <rect width="960" height="320" fill="url(#bgGrad)"/>
+  <rect width="960" height="320" fill="url(#glowTeal)"/>
+  <rect width="960" height="320" fill="url(#glowBlue)"/>
+
+  <!-- Subtle Coordinate Grid -->
+  <line x1="80" y1="0" x2="80" y2="320" class="grid-line"/>
+  <line x1="240" y1="0" x2="240" y2="320" class="grid-line"/>
+  <line x1="420" y1="0" x2="420" y2="320" class="grid-line"/>
+  <line x1="600" y1="0" x2="600" y2="320" class="grid-line"/>
+  <line x1="780" y1="0" x2="780" y2="320" class="grid-line"/>
+  <line x1="0" y1="70" x2="960" y2="70" class="grid-line"/>
+  <line x1="0" y1="160" x2="960" y2="160" class="grid-line"/>
+  <line x1="0" y1="250" x2="960" y2="250" class="grid-line"/>
+
+  <!-- Scanning Sweep Beam -->
+  <line x1="0" y1="0" x2="960" y2="0" stroke="url(#accentLine)" stroke-width="1.5" class="scanner"/>
+
+  <!-- LEFT HERO TYPOGRAPHY & IDENTITY -->
+  <g transform="translate(60, 48)">
+    <!-- Platform Tag -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="224" height="24" rx="4" fill="#0f172a" stroke="#00ADB5" stroke-width="0.8" stroke-opacity="0.7"/>
+      <circle cx="12" cy="12" r="3.5" fill="#00E5FF" class="blinker"/>
+      <text x="24" y="16" fill="#00ADB5" font-size="10" font-weight="700" letter-spacing="1.5" font-family="'SF Mono', Consolas, monospace">INSTITUTIONAL INTELLIGENCE</text>
+    </g>
+
+    <!-- Main Title -->
+    <text x="0" y="74" fill="url(#textGrad)" font-size="44" font-weight="800" letter-spacing="-0.5">FinSight <tspan fill="#00ADB5">AI</tspan></text>
+
+    <!-- Concise Value Proposition Subtitle -->
+    <text x="0" y="104" fill="#94a3b8" font-size="14.5" font-weight="400" letter-spacing="0.2">
+      Large-Scale Financial NLP, Knowledge Graphs &amp; Market Signal Intelligence
+    </text>
+
+    <!-- Key Core Modules Capability Pill Bar -->
+    <g transform="translate(0, 130)">
+      <!-- Pill 1 -->
+      <rect x="0" y="0" width="112" height="26" rx="13" fill="#1e293b" fill-opacity="0.6" stroke="#334155" stroke-width="0.8"/>
+      <text x="12" y="17" fill="#cbd5e1" font-size="11" font-weight="600">3.2M+ Articles</text>
+
+      <!-- Pill 2 -->
+      <rect x="120" y="0" width="128" height="26" rx="13" fill="#1e293b" fill-opacity="0.6" stroke="#334155" stroke-width="0.8"/>
+      <text x="132" y="17" fill="#cbd5e1" font-size="11" font-weight="600">6,619 Companies</text>
+
+      <!-- Pill 3 -->
+      <rect x="256" y="0" width="102" height="26" rx="13" fill="#1e293b" fill-opacity="0.6" stroke="#334155" stroke-width="0.8"/>
+      <text x="268" y="17" fill="#cbd5e1" font-size="11" font-weight="600">28 Sectors</text>
+
+      <!-- Pill 4 -->
+      <rect x="366" y="0" width="98" height="26" rx="13" fill="#1e293b" fill-opacity="0.6" stroke="#00ADB5" stroke-width="0.8" stroke-opacity="0.7"/>
+      <text x="378" y="17" fill="#38bdf8" font-size="11" font-weight="600">30 Events</text>
+    </g>
+  </g>
+
+  <!-- RIGHT DYNAMIC FINANCIAL NETWORK / KNOWLEDGE GRAPH VISUALIZATION -->
+  <g transform="translate(480, 20)">
+    <!-- Ambient Graph Glow behind nodes -->
+    <ellipse cx="260" cy="140" rx="150" ry="110" fill="#00ADB5" fill-opacity="0.06"/>
+
+    <!-- Network Edges (Static Background Trace) -->
+    <path d="M 120 70 L 250 120 L 390 80 L 330 210 L 250 120 L 160 220 Z" fill="none" stroke="#1e293b" stroke-width="1.2"/>
+    <path d="M 250 120 L 260 250 M 120 70 L 160 220 M 390 80 L 330 210" fill="none" stroke="#1e293b" stroke-width="0.8"/>
+
+    <!-- Dynamic Flowing Pulses (Active Synapses) -->
+    <path d="M 120 70 L 250 120" fill="none" stroke="#00ADB5" stroke-width="2" class="edge-flow" stroke-opacity="0.85"/>
+    <path d="M 250 120 L 390 80" fill="none" stroke="#38bdf8" stroke-width="2" class="edge-flow-fast" stroke-opacity="0.85"/>
+    <path d="M 250 120 L 330 210" fill="none" stroke="#10b981" stroke-width="2" class="edge-flow" stroke-opacity="0.75"/>
+    <path d="M 160 220 L 250 120" fill="none" stroke="#f59e0b" stroke-width="1.8" class="edge-flow-fast" stroke-opacity="0.75"/>
+    <path d="M 250 120 L 260 250" fill="none" stroke="#b388ff" stroke-width="1.8" class="edge-flow" stroke-opacity="0.7"/>
+
+    <!-- Outer Pulse Rings -->
+    <circle cx="250" cy="120" r="14" fill="none" stroke="#00ADB5" stroke-width="1.2" class="pulse-ring-3"/>
+    <circle cx="120" cy="70" r="8" fill="none" stroke="#38bdf8" stroke-width="1.2" class="pulse-ring-1"/>
+    <circle cx="390" cy="80" r="8" fill="none" stroke="#10b981" stroke-width="1.2" class="pulse-ring-2"/>
+    <circle cx="160" cy="220" r="8" fill="none" stroke="#f59e0b" stroke-width="1.2" class="pulse-ring-1"/>
+
+    <!-- Central Node (FinSight Intelligence Nexus) -->
+    <circle cx="250" cy="120" r="18" fill="#0f172a" stroke="#00ADB5" stroke-width="2.5" filter="url(#neonTeal)"/>
+    <circle cx="250" cy="120" r="6" fill="#00E5FF"/>
+    <text x="250" y="152" fill="#e2e8f0" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">NEXUS</text>
+
+    <!-- Node 1: Tech Sector (AAPL/NVDA) -->
+    <circle cx="120" cy="70" r="13" fill="#0f172a" stroke="#38bdf8" stroke-width="2" filter="url(#neonBlue)"/>
+    <circle cx="120" cy="70" r="4.5" fill="#38bdf8"/>
+    <text x="120" y="50" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">TECH CLUSTER</text>
+    <text x="120" y="96" fill="#64748b" font-size="8.5" font-family="'SF Mono', Consolas, monospace" text-anchor="middle">AAPL / NVDA</text>
+
+    <!-- Node 2: Market Event (Earnings Beat) -->
+    <circle cx="390" cy="80" r="13" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+    <circle cx="390" cy="80" r="4.5" fill="#10b981"/>
+    <text x="390" y="60" fill="#6ee7b7" font-size="10" font-weight="700" text-anchor="middle">EVENT</text>
+    <text x="390" y="106" fill="#64748b" font-size="8.5" font-family="'SF Mono', Consolas, monospace" text-anchor="middle">Earnings (+82%)</text>
+
+    <!-- Node 3: Macro Sector (Energy & Oil) -->
+    <circle cx="330" cy="210" r="12" fill="#0f172a" stroke="#00ADB5" stroke-width="1.8"/>
+    <circle cx="330" cy="210" r="4" fill="#00ADB5"/>
+    <text x="330" y="234" fill="#a5f3fc" font-size="9.5" font-weight="600" text-anchor="middle">ENERGY &amp; COMM</text>
+
+    <!-- Node 4: Financial Sector (JPM) -->
+    <circle cx="160" cy="220" r="12" fill="#0f172a" stroke="#f59e0b" stroke-width="1.8"/>
+    <circle cx="160" cy="220" r="4" fill="#f59e0b"/>
+    <text x="160" y="244" fill="#fcd34d" font-size="9.5" font-weight="600" text-anchor="middle">FINANCIALS</text>
+    <text x="160" y="256" fill="#64748b" font-size="8" font-family="'SF Mono', Consolas, monospace" text-anchor="middle">JPM / BAC</text>
+
+    <!-- Node 5: Knowledge Edge Target -->
+    <circle cx="260" cy="250" r="7" fill="#0f172a" stroke="#b388ff" stroke-width="1.5"/>
+    <circle cx="260" cy="250" r="2.5" fill="#b388ff"/>
+    <text x="260" y="272" fill="#cbd5e1" font-size="8.5" font-family="'SF Mono', Consolas, monospace" text-anchor="middle">KG: 427K EDGES</text>
+
+    <!-- Live Propagation Callout Pill -->
+    <g transform="translate(305, 128)" class="badge-signal">
+      <rect x="0" y="0" width="105" height="20" rx="10" fill="#022c22" stroke="#10b981" stroke-width="0.8"/>
+      <circle cx="8" cy="10" r="3" fill="#10b981"/>
+      <text x="16" y="13" fill="#34d399" font-size="8.5" font-weight="700" font-family="'SF Mono', Consolas, monospace">SIGNAL: BULLISH</text>
+    </g>
+  </g>
+
+  <!-- BOTTOM STATUS & ARCHITECTURE TELEMETRY BAR -->
+  <g transform="translate(0, 285)">
+    <!-- Divider Line -->
+    <line x1="0" y1="0" x2="960" y2="0" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Bottom Metrics Strip -->
+    <g transform="translate(60, 18)" font-family="'SF Mono', Consolas, monospace" font-size="9.5" fill="#64748b">
+      <text x="0" y="0">
+        <tspan fill="#38bdf8" font-weight="700">PIPELINE:</tspan> BERTopic • Sentence-BERT • PyVis KG • FAISS • UMAP • HDBSCAN • FPDF2
+      </text>
+      <text x="640" y="0" fill="#00ADB5">
+        <tspan fill="#10b981">●</tspan> 17 DASHBOARD MODULES VERIFIED
+      </text>
+    </g>
+  </g>
+</svg>

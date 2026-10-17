@@ -1,0 +1,41 @@
+# FinSight AI - Docker Ignore Manifest
+# Exclude datasets and heavy files (downloaded lazily from Hugging Face Hub)
+data/
+deployment_data/
+models/
+
+# Exclude secrets and credential configurations
+.env
+*.env
+*.token
+*.key
+.streamlit/secrets.toml
+
+# Exclude Git and temporary metadata
+.git/
+.github/
+.gitignore
+.dockerignore
+.gcloudignore
+README.md.backup
+*.backup
+*.part
+
+# Exclude Python runtime artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Exclude cache and scratch data
+.cache/
+.pytest_cache/
+.ipynb_checkpoints/
+notebooks/
+scratch/
+docs/

@@ -1,0 +1,27 @@
+# FinSight AI - Google Cloud Ignore Manifest
+.gcloudignore
+.git/
+.gitignore
+.dockerignore
+
+# Never upload multi-gigabyte dataset folders or models to Cloud Build context
+data/
+deployment_data/
+models/
+
+# Never upload secrets or environment credentials
+.env
+*.token
+*.key
+.streamlit/secrets.toml
+
+# Never upload virtual environments or temporary files
+venv/
+.venv/
+__pycache__/
+*.pyc
+.cache/
+*.backup
+*.part
+notebooks/
+scratch/
