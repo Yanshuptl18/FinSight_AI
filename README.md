@@ -15,7 +15,7 @@
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python Version"></a>
   <a href="https://streamlit.io"><img src="https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit"></a>
   <a href="https://huggingface.co/datasets/Yanshuptl18/finsight-ai-data"><img src="https://img.shields.io/badge/Dataset-Hugging%20Face%20Hub-FFAA00?style=flat-square&logo=huggingface&logoColor=white" alt="Hugging Face Dataset"></a>
-  <a href="https://cloud.google.com/run"><img src="https://img.shields.io/badge/Deployment-Google%20Cloud%20Run%20Ready-4285F4?style=flat-square&logo=googlecloud&logoColor=white" alt="GCP Cloud Run"></a>
+  <a href="https://finsight-ai-442154825091.us-central1.run.app"><img src="https://img.shields.io/badge/Google%20Cloud%20Run-Live%20Production-4285F4?style=flat-square&logo=googlecloud&logoColor=white" alt="GCP Cloud Run Live"></a>
 </p>
 
 ---
@@ -30,7 +30,8 @@ The system processes a verified corpus of **3,215,296 financial news articles** 
 
 ## Live Application & Repository Coordinates
 
-- **Live Application**: [https://finshightai.streamlit.app](https://finshightai.streamlit.app/) *(Streamlit Community Cloud Deployment)*
+- **Google Cloud Run (Primary Production)**: [https://finsight-ai-442154825091.us-central1.run.app](https://finsight-ai-442154825091.us-central1.run.app)
+- **Streamlit Community Cloud (Mirror)**: [https://finshightai.streamlit.app](https://finshightai.streamlit.app/)
 - **Source Code Repository**: [https://github.com/Yanshuptl18/FinSight_AI](https://github.com/Yanshuptl18/FinSight_AI)
 - **Primary Data Repository**: [Yanshuptl18/finsight-ai-data](https://huggingface.co/datasets/Yanshuptl18/finsight-ai-data) on Hugging Face Hub (86 verified files, ~5.67 GB)
 - **Original Source Dataset**: [miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests](https://www.kaggle.com/datasets/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests) on Kaggle
@@ -652,26 +653,76 @@ To ensure that the 3.2M-record headline table runs reliably on low-cost memory i
 
 ## Google Cloud Deployment Architecture
 
-FinSight AI is structured for low-cost, production-grade deployment on **Google Cloud Run**.
+FinSight AI is deployed as a fully serverless, production-grade service on **Google Cloud Run** with high-efficiency scale-to-zero autoscaling and secure token management.
 
-### Key Architectural Highlights
+### Production Service Coordinates
+- **Service Name**: `finsight-ai`
+- **Active Revision**: `finsight-ai-00001-nf5`
+- **Region**: `us-central1`
+- **Live Endpoint**: [https://finsight-ai-442154825091.us-central1.run.app](https://finsight-ai-442154825091.us-central1.run.app)
+- **Direct Cloud Run Ingress**: [https://finsight-ai-2eyoizfkmq-uc.a.run.app](https://finsight-ai-2eyoizfkmq-uc.a.run.app)
+- **Container Registry**: Artifact Registry (`us-central1-docker.pkg.dev/project-1d029ac0-ec27-4c35-851/cloud-run-source-deploy/finsight-ai`)
 
-1. **Serverless Scale-to-Zero**: Cloud Run automatically scales instances to zero during idle periods, ensuring that you incur zero compute charges when no users are active.
-2. **Ephemeral Stateless Container**: The container packages the application code and dependencies without bundling heavy datasets or model weights inside the Docker image.
-3. **Secret Manager Integration**: `HF_TOKEN` is mounted securely into the container environment via Google Secret Manager.
-4. **Ephemeral Caching**: Downloaded parquet files reside in Cloud Run's `/tmp` in-memory tmpfs filesystem, automatically managed and cleared across revisions.
+### Resource & Scaling Specifications
+| Parameter | Setting | Rationale |
+| :--- | :--- | :--- |
+| **vCPU** | `1 vCPU` (with Startup CPU Boost) | Fast container initialization under 15 seconds |
+| **Memory** | `2 GiB` | Accommodates PyArrow streaming buffers and in-memory caches |
+| **Concurrency** | `80 requests/container` | Optimizes multi-user session density |
+| **Min Instances** | `0 (Scale to Zero)` | Minimizes operational costs to eligible free tier during idle times |
+| **Max Instances** | `2` | Conservative ceiling preventing accidental budget overruns |
+| **Ingress** | `All (Unauthenticated allowed)` | Public institutional research access |
+| **Secret Ingestion** | Google Secret Manager (`finsight-hf-token`) | `HF_TOKEN` injected at runtime; zero secrets in Git or container |
 
-### Standard Container Execution
+### Deployment & Operations Runbook
 
-The deployment utilizes a standard container listening on the dynamic Cloud Run port:
-
+#### 1. Automated Deployment via Script
+```powershell
+# Windows PowerShell
+.\deploy\deploy_cloud_run.ps1
+```
 ```bash
-# Example local container launch
-docker build -t finsight-ai .
-docker run -p 8080:8080 -e PORT=8080 -e HF_TOKEN="hf_your_token" finsight-ai
+# Linux / macOS / Cloud Shell
+chmod +x deploy/deploy_cloud_run.sh
+./deploy/deploy_cloud_run.sh
 ```
 
-*(Production Google Cloud deployment commands and service specifications will be verified and documented during Phase 4 of the deployment plan).*
+#### 2. Direct CLI Deployment Command
+```bash
+gcloud run deploy finsight-ai \
+    --source . \
+    --project project-1d029ac0-ec27-4c35-851 \
+    --region us-central1 \
+    --platform managed \
+    --allow-unauthenticated \
+    --port 8080 \
+    --cpu 1 \
+    --memory 2Gi \
+    --min-instances 0 \
+    --max-instances 2 \
+    --concurrency 80 \
+    --timeout 300 \
+    --set-env-vars="HF_REPO_ID=Yanshuptl18/finsight-ai-data" \
+    --set-secrets="HF_TOKEN=finsight-hf-token:latest"
+```
+
+#### 3. Monitoring & Health Checks
+```bash
+# Health check probe
+curl -I https://finsight-ai-442154825091.us-central1.run.app/_stcore/health
+
+# Real-time service logs
+gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=finsight-ai" --limit 50
+```
+
+#### 4. Service Lifecycle Management
+```bash
+# Temporarily disable traffic without deleting
+gcloud run services update finsight-ai --no-traffic --region us-central1
+
+# Delete service completely
+gcloud run services delete finsight-ai --region us-central1 --quiet
+```
 
 ---
 
