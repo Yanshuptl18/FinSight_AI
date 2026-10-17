@@ -24,7 +24,14 @@ Write-Host "CPU / Memory:   $Cpu vCPU / $Memory"
 Write-Host "Min/Max Pods:   $MinInstances (Scale to Zero) / $MaxInstances"
 Write-Host "=================================================================="
 
-# Check for gcloud CLI
+# Check for gcloud CLI and auto-resolve from LocalAppData if needed
+if (-not (Get-Command gcloud -ErrorAction SilentlyContinue)) {
+    $defaultSdkBin = [System.IO.Path]::Combine($env:LOCALAPPDATA, "Google\Cloud SDK\google-cloud-sdk\bin")
+    if (Test-Path $defaultSdkBin) {
+        $env:PATH = "$defaultSdkBin;$env:PATH"
+    }
+}
+
 if (-not (Get-Command gcloud -ErrorAction SilentlyContinue)) {
     Write-Host "ERROR: 'gcloud' CLI is not installed or not in PATH." -ForegroundColor Red
     Write-Host "Please install Google Cloud SDK: https://cloud.google.com/sdk/docs/install"
@@ -53,16 +60,24 @@ gcloud services enable `
 Write-Host "`n--> Step 2: Checking Secret Manager for $SecretName..." -ForegroundColor Yellow
 $secretExists = gcloud secrets describe $SecretName 2>$null
 if (-not $secretExists) {
-    Write-Host "Secret '$SecretName' does not exist yet."
-    $hfToken = Read-Host "Enter your Hugging Face Token (HF_TOKEN) [secure input]" -AsSecureString
-    $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($hfToken)
-    $plainToken = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
-    
-    if ($plainToken) {
-        $plainToken | gcloud secrets create $SecretName --data-file=- --replication-policy="automatic"
-        Write-Host "Created secret '$SecretName'." -ForegroundColor Green
+    Write-Host "Secret '$SecretName' does not exist yet in Secret Manager."
+    $localHfPath = [System.IO.Path]::Combine($env:USERPROFILE, ".cache\huggingface\token")
+    if (Test-Path $localHfPath) {
+        Write-Host "Found authenticated Hugging Face token in $localHfPath. Storing securely..." -ForegroundColor Green
+        gcloud secrets create $SecretName --data-file=$localHfPath --replication-policy="automatic"
+        $secretExists = $true
     } else {
-        Write-Host "WARNING: No token entered. Proceeding without HF_TOKEN secret." -ForegroundColor Yellow
+        $hfToken = Read-Host "Enter your Hugging Face Token (HF_TOKEN) [secure input]" -AsSecureString
+        $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($hfToken)
+        $plainToken = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+        
+        if ($plainToken) {
+            $plainToken | gcloud secrets create $SecretName --data-file=- --replication-policy="automatic"
+            Write-Host "Created secret '$SecretName'." -ForegroundColor Green
+            $secretExists = $true
+        } else {
+            Write-Host "WARNING: No token entered. Proceeding without HF_TOKEN secret." -ForegroundColor Yellow
+        }
     }
 } else {
     Write-Host "Secret '$SecretName' already exists in Secret Manager." -ForegroundColor Green
@@ -83,22 +98,26 @@ if ($secretExists) {
 Write-Host "`n--> Step 4: Deploying FinSight AI to Cloud Run from source..." -ForegroundColor Yellow
 Write-Host "Note: .gcloudignore ensures only code (~2MB) is uploaded. Datasets are lazily resolved."
 
-$secretParam = if ($secretExists) { "--set-secrets=HF_TOKEN=${SecretName}:latest" } else { "" }
+$deployArgs = @(
+    "run", "deploy", $ServiceName,
+    "--source", ".",
+    "--region", $Region,
+    "--platform", "managed",
+    "--allow-unauthenticated",
+    "--port", "$Port",
+    "--cpu", "$Cpu",
+    "--memory", "$Memory",
+    "--min-instances", "$MinInstances",
+    "--max-instances", "$MaxInstances",
+    "--concurrency", "80",
+    "--timeout", "300",
+    "--set-env-vars", "HF_REPO_ID=Yanshuptl18/finsight-ai-data"
+)
+if ($secretExists) {
+    $deployArgs += "--set-secrets=HF_TOKEN=${SecretName}:latest"
+}
 
-gcloud run deploy $ServiceName `
-    --source . `
-    --region $Region `
-    --platform managed `
-    --allow-unauthenticated `
-    --port $Port `
-    --cpu $Cpu `
-    --memory $Memory `
-    --min-instances $MinInstances `
-    --max-instances $MaxInstances `
-    --concurrency 80 `
-    --timeout 300 `
-    --set-env-vars="HF_REPO_ID=Yanshuptl18/finsight-ai-data" `
-    $secretParam
+& gcloud @deployArgs
 
 Write-Host "`n==================================================================" -ForegroundColor Green
 Write-Host "Deployment Complete!" -ForegroundColor Green

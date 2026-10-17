@@ -11,3 +11,4 @@ gdown>=5.1.0
 huggingface_hub>=0.20.0
 pyarrow>=14.0.1
 pytz>=2023.3
+psutil>=5.9.0

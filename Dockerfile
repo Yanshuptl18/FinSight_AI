@@ -52,10 +52,6 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
 # Expose default Cloud Run port
 EXPOSE 8080
 
-# Launch Streamlit with dynamic $PORT support
-CMD streamlit run DashBoard/app.py \
-    --server.port=${PORT} \
-    --server.address=0.0.0.0 \
-    --server.headless=true \
-    --server.enableCORS=false \
-    --server.enableXsrfProtection=false
+# Launch Streamlit with dynamic $PORT support and graceful SIGTERM handling
+CMD ["sh", "-c", "exec streamlit run DashBoard/app.py --server.port=${PORT} --server.address=0.0.0.0 --server.headless=true --server.enableCORS=false --server.enableXsrfProtection=false"]
+
