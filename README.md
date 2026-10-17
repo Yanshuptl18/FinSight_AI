@@ -14,7 +14,7 @@
   <a href="https://github.com/Yanshuptl18/FinSight_AI/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-10B981?style=flat-square" alt="License: MIT"></a>
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python Version"></a>
   <a href="https://streamlit.io"><img src="https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit"></a>
-  <a href="https://huggingface.co/datasets/Yanshuptl18/finsight-ai-data"><img src="https://img.shields.io/badge/Dataset-Hugging%20Face%20Hub-FFAA00?style=flat-square&logo=huggingface&logoColor=white" alt="Hugging Face Dataset"></a>
+  <a href="https://cloud.google.com/storage"><img src="https://img.shields.io/badge/Storage-Google%20Cloud%20Storage-4285F4?style=flat-square&logo=googlecloud&logoColor=white" alt="Google Cloud Storage"></a>
   <a href="https://finsight-ai-442154825091.us-central1.run.app"><img src="https://img.shields.io/badge/Google%20Cloud%20Run-Live%20Production-4285F4?style=flat-square&logo=googlecloud&logoColor=white" alt="GCP Cloud Run Live"></a>
 </p>
 
@@ -31,9 +31,10 @@ The system processes a verified corpus of **3,215,296 financial news articles** 
 ## Live Application & Repository Coordinates
 
 - **Google Cloud Run (Primary Production)**: [https://finsight-ai-442154825091.us-central1.run.app](https://finsight-ai-442154825091.us-central1.run.app)
+- **Primary Data Storage (Google Cloud)**: `gs://finsight-ai-dataset-442154825091/` *(Google Cloud Storage, `us-central1`, 4-Tier Verified Layout)*
 - **Streamlit Community Cloud (Mirror)**: [https://finshightai.streamlit.app](https://finshightai.streamlit.app/)
 - **Source Code Repository**: [https://github.com/Yanshuptl18/FinSight_AI](https://github.com/Yanshuptl18/FinSight_AI)
-- **Primary Data Repository**: [Yanshuptl18/finsight-ai-data](https://huggingface.co/datasets/Yanshuptl18/finsight-ai-data) on Hugging Face Hub (86 verified files, ~5.67 GB)
+- **Secondary Recovery Source**: [Yanshuptl18/finsight-ai-data](https://huggingface.co/datasets/Yanshuptl18/finsight-ai-data) on Hugging Face Hub (86 verified files)
 - **Original Source Dataset**: [miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests](https://www.kaggle.com/datasets/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests) on Kaggle
 
 ---
@@ -653,30 +654,53 @@ To ensure that the 3.2M-record headline table runs reliably on low-cost memory i
 
 ## Google Cloud Deployment Architecture
 
-FinSight AI is deployed as a fully serverless, production-grade service on **Google Cloud Run** with high-efficiency scale-to-zero autoscaling and secure token management.
+FinSight AI is deployed as a fully serverless, production-grade cloud intelligence platform combining **Google Cloud Run** for serverless container compute and **Google Cloud Storage (GCS)** for private, low-latency analytical dataset persistence.
 
 ### Production Service Coordinates
 - **Service Name**: `finsight-ai`
-- **Active Revision**: `finsight-ai-00001-nf5`
-- **Region**: `us-central1`
+- **Active Revision**: `finsight-ai-00002-2xk`
+- **Region**: `us-central1` (Council Bluffs, Iowa)
 - **Live Endpoint**: [https://finsight-ai-442154825091.us-central1.run.app](https://finsight-ai-442154825091.us-central1.run.app)
 - **Direct Cloud Run Ingress**: [https://finsight-ai-2eyoizfkmq-uc.a.run.app](https://finsight-ai-2eyoizfkmq-uc.a.run.app)
 - **Container Registry**: Artifact Registry (`us-central1-docker.pkg.dev/project-1d029ac0-ec27-4c35-851/cloud-run-source-deploy/finsight-ai`)
 
+### Google Cloud Storage (GCS) Data Architecture
+- **Dedicated Bucket**: `gs://finsight-ai-dataset-442154825091/`
+- **Region & Storage Class**: `us-central1` (Colocated with Cloud Run for sub-10ms latency & $0.00 egress) | `STANDARD`
+- **Security & Access**: Private bucket with Uniform Bucket-Level Access and Public Access Prevention enforced.
+- **Identity & Authentication**: Cloud Run service identity (`442154825091-compute@developer.gserviceaccount.com`) authenticated via Application Default Credentials (ADC) with least-privilege `roles/storage.objectViewer`.
+- **Zero External Calls**: Hugging Face Hub downloads are completely removed from the normal production path (retained only as a recovery fallback).
+
+#### 4-Tier Dataset Organization & Inventory
+| Storage Tier | GCS Prefix | File Count | Verified Volume | Contents & Purpose |
+| :--- | :--- | :---: | :---: | :--- |
+| **Original Datasets** | `original/` | 3 files | 886.2 MB | Preserved raw news CSVs from Kaggle (`raw_analyst_ratings.csv`, `raw_partner_headlines.csv`, `analyst_ratings_processed.csv`) |
+| **Processed Analytics** | `processed/` | 63 files | 2,251.4 MB | 52 verified Parquet files & analytics matrices (`financial_intelligence_dataset.parquet`, `company_analytics.parquet`, `sector_profile.parquet`, etc.) |
+| **Search & Lookup Indexes**| `indexes/` | 18 files | 247.5 MB | FAISS dense vector index (`faiss_index.bin`), company entity dictionaries, and event lookups |
+| **Machine Learning Models**| `models/` | 2 files | 76.3 MB | Pre-trained clustering weights (`kmeans_model.pkl`, `hdbscan_model.pkl`) |
+| **Integrity & Manifests** | `metadata/` | 3 files | 92.9 KB | Cryptographic checksum manifest (`manifest.json`), schema catalog (`schema_inventory.json`), and validation report (`integrity_report.json`) |
+| **Total Verified Data** | &mdash; | **89 files** | **3.46 GB** | **100% Cryptographically Verified Intact (3,215,296 records, 6,619 companies)** |
+
 ### Resource & Scaling Specifications
 | Parameter | Setting | Rationale |
 | :--- | :--- | :--- |
-| **vCPU** | `1 vCPU` (with Startup CPU Boost) | Fast container initialization under 15 seconds |
+| **vCPU** | `1 vCPU` (with Startup CPU Boost) | Rapid container cold-start under 15 seconds |
 | **Memory** | `2 GiB` | Accommodates PyArrow streaming buffers and in-memory caches |
 | **Concurrency** | `80 requests/container` | Optimizes multi-user session density |
 | **Min Instances** | `0 (Scale to Zero)` | Minimizes operational costs to eligible free tier during idle times |
 | **Max Instances** | `2` | Conservative ceiling preventing accidental budget overruns |
 | **Ingress** | `All (Unauthenticated allowed)` | Public institutional research access |
-| **Secret Ingestion** | Google Secret Manager (`finsight-hf-token`) | `HF_TOKEN` injected at runtime; zero secrets in Git or container |
+| **Secret Ingestion** | Google Secret Manager (`finsight-hf-token`) | Backup `HF_TOKEN` injected at runtime; zero secrets in Git or container |
 
 ### Deployment & Operations Runbook
 
-#### 1. Automated Deployment via Script
+#### 1. Automated Dataset Migration to GCS
+```powershell
+# Run the migration verification engine
+python deploy/verify_and_generate_manifest.py
+```
+
+#### 2. Automated Cloud Run Deployment
 ```powershell
 # Windows PowerShell
 .\deploy\deploy_cloud_run.ps1
@@ -687,7 +711,7 @@ chmod +x deploy/deploy_cloud_run.sh
 ./deploy/deploy_cloud_run.sh
 ```
 
-#### 2. Direct CLI Deployment Command
+#### 3. Direct CLI Deployment Command
 ```bash
 gcloud run deploy finsight-ai \
     --source . \
@@ -702,11 +726,11 @@ gcloud run deploy finsight-ai \
     --max-instances 2 \
     --concurrency 80 \
     --timeout 300 \
-    --set-env-vars="HF_REPO_ID=Yanshuptl18/finsight-ai-data" \
+    --set-env-vars="GCS_BUCKET_NAME=finsight-ai-dataset-442154825091,ENABLE_GCS=true,HF_REPO_ID=Yanshuptl18/finsight-ai-data" \
     --set-secrets="HF_TOKEN=finsight-hf-token:latest"
 ```
 
-#### 3. Monitoring & Health Checks
+#### 4. Monitoring & Health Checks
 ```bash
 # Health check probe
 curl -I https://finsight-ai-442154825091.us-central1.run.app/_stcore/health
@@ -715,7 +739,7 @@ curl -I https://finsight-ai-442154825091.us-central1.run.app/_stcore/health
 gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=finsight-ai" --limit 50
 ```
 
-#### 4. Service Lifecycle Management
+#### 5. Service Lifecycle Management
 ```bash
 # Temporarily disable traffic without deleting
 gcloud run services update finsight-ai --no-traffic --region us-central1
