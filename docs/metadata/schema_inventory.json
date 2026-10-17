@@ -1,0 +1,1801 @@
+{
+  "clustered_news.parquet": {
+    "num_rows": 3215296,
+    "columns": [
+      "news_id",
+      "cluster",
+      "confidence",
+      "distance_to_centroid",
+      "headline"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "cluster": "int32",
+      "confidence": "float",
+      "distance_to_centroid": "float",
+      "headline": "string"
+    }
+  },
+  "clustered_topics.parquet": {
+    "num_rows": 2913,
+    "columns": [
+      "cluster",
+      "topic_name",
+      "headline",
+      "keywords",
+      "headline_count",
+      "avg_confidence",
+      "avg_distance"
+    ],
+    "column_types": {
+      "cluster": "int32",
+      "topic_name": "string",
+      "headline": "string",
+      "keywords": "list<element: string>",
+      "headline_count": "int64",
+      "avg_confidence": "float",
+      "avg_distance": "float"
+    }
+  },
+  "company_analytics.parquet": {
+    "num_rows": 6619,
+    "columns": [
+      "ticker",
+      "total_news",
+      "first_news",
+      "latest_news",
+      "unique_publishers",
+      "avg_headline_length",
+      "avg_word_count",
+      "avg_confidence",
+      "median_confidence",
+      "min_confidence",
+      "max_confidence",
+      "confidence_std",
+      "top_publisher",
+      "top_publisher_news",
+      "active_years",
+      "active_months",
+      "active_weekdays",
+      "average_news_per_year",
+      "risk_score",
+      "intelligence_score",
+      "Bearish",
+      "Bullish",
+      "Mixed",
+      "Neutral",
+      "Bearish_pct",
+      "Bullish_pct",
+      "Mixed_pct",
+      "Neutral_pct",
+      "Analyst Rating",
+      "Bankruptcy",
+      "Commodity",
+      "Credit Rating",
+      "Cryptocurrency",
+      "Cybersecurity",
+      "Dividend",
+      "ESG",
+      "Earnings",
+      "Economic Data",
+      "Executive Change",
+      "Fraud",
+      "Funding",
+      "IPO",
+      "Insider Trading",
+      "Layoffs",
+      "Litigation",
+      "Market Movement",
+      "Merger & Acquisition",
+      "Monetary Policy",
+      "Options Activity",
+      "Other",
+      "Partnership",
+      "Product Launch",
+      "Regulatory Approval",
+      "Revenue Guidance",
+      "Share Buyback",
+      "Stock Split",
+      "Technical Analysis",
+      "Trading Halt",
+      "risk_rank",
+      "intelligence_rank",
+      "normalized_risk_score",
+      "risk_level",
+      "event_diversity",
+      "market_stability_score",
+      "activity_score",
+      "composite_score",
+      "overall_rank",
+      "cluster",
+      "company_fingerprint",
+      "risk_explanation"
+    ],
+    "column_types": {
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "total_news": "int64",
+      "first_news": "timestamp[ns, tz=UTC]",
+      "latest_news": "timestamp[ns, tz=UTC]",
+      "unique_publishers": "int64",
+      "avg_headline_length": "double",
+      "avg_word_count": "double",
+      "avg_confidence": "double",
+      "median_confidence": "double",
+      "min_confidence": "double",
+      "max_confidence": "double",
+      "confidence_std": "double",
+      "top_publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "top_publisher_news": "int64",
+      "active_years": "int64",
+      "active_months": "int64",
+      "active_weekdays": "int64",
+      "average_news_per_year": "double",
+      "risk_score": "int64",
+      "intelligence_score": "double",
+      "Bearish": "int64",
+      "Bullish": "int64",
+      "Mixed": "int64",
+      "Neutral": "int64",
+      "Bearish_pct": "double",
+      "Bullish_pct": "double",
+      "Mixed_pct": "double",
+      "Neutral_pct": "double",
+      "Analyst Rating": "int64",
+      "Bankruptcy": "int64",
+      "Commodity": "int64",
+      "Credit Rating": "int64",
+      "Cryptocurrency": "int64",
+      "Cybersecurity": "int64",
+      "Dividend": "int64",
+      "ESG": "int64",
+      "Earnings": "int64",
+      "Economic Data": "int64",
+      "Executive Change": "int64",
+      "Fraud": "int64",
+      "Funding": "int64",
+      "IPO": "int64",
+      "Insider Trading": "int64",
+      "Layoffs": "int64",
+      "Litigation": "int64",
+      "Market Movement": "int64",
+      "Merger & Acquisition": "int64",
+      "Monetary Policy": "int64",
+      "Options Activity": "int64",
+      "Other": "int64",
+      "Partnership": "int64",
+      "Product Launch": "int64",
+      "Regulatory Approval": "int64",
+      "Revenue Guidance": "int64",
+      "Share Buyback": "int64",
+      "Stock Split": "int64",
+      "Technical Analysis": "int64",
+      "Trading Halt": "int64",
+      "risk_rank": "int64",
+      "intelligence_rank": "int64",
+      "normalized_risk_score": "double",
+      "risk_level": "string",
+      "event_diversity": "int64",
+      "market_stability_score": "double",
+      "activity_score": "double",
+      "composite_score": "double",
+      "overall_rank": "int64",
+      "cluster": "int32",
+      "company_fingerprint": "string",
+      "risk_explanation": "string"
+    }
+  },
+  "company_entities_edges.parquet": {
+    "num_rows": 3457755,
+    "columns": [
+      "source",
+      "target",
+      "relation",
+      "mentions",
+      "entity_label"
+    ],
+    "column_types": {
+      "source": "string",
+      "target": "string",
+      "relation": "string",
+      "mentions": "int64",
+      "entity_label": "string"
+    }
+  },
+  "company_event_timeline.parquet": {
+    "num_rows": 3215296,
+    "columns": [
+      "news_id",
+      "ticker",
+      "published_date",
+      "headline",
+      "publisher",
+      "final_event",
+      "market_signal",
+      "final_confidence",
+      "event_number",
+      "previous_event_date",
+      "next_event_date",
+      "days_since_previous_event",
+      "days_until_next_event",
+      "events_so_far",
+      "risk_event",
+      "risk_events_so_far",
+      "bullish_event",
+      "bearish_event",
+      "bullish_events_so_far",
+      "bearish_events_so_far",
+      "event_importance",
+      "event_severity",
+      "event_date",
+      "daily_event_count",
+      "activity_level",
+      "is_latest_event"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "published_date": "timestamp[ns, tz=UTC]",
+      "headline": "string",
+      "publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "final_event": "string",
+      "market_signal": "string",
+      "final_confidence": "double",
+      "event_number": "int64",
+      "previous_event_date": "timestamp[ns, tz=UTC]",
+      "next_event_date": "timestamp[ns, tz=UTC]",
+      "days_since_previous_event": "double",
+      "days_until_next_event": "double",
+      "events_so_far": "int64",
+      "risk_event": "int64",
+      "risk_events_so_far": "int64",
+      "bullish_event": "int64",
+      "bearish_event": "int64",
+      "bullish_events_so_far": "int64",
+      "bearish_events_so_far": "int64",
+      "event_importance": "int64",
+      "event_severity": "string",
+      "event_date": "date32[day]",
+      "daily_event_count": "int64",
+      "activity_level": "string",
+      "is_latest_event": "bool"
+    }
+  },
+  "company_influence.parquet": {
+    "num_rows": 6619,
+    "columns": [
+      "ticker",
+      "total_news",
+      "event_types",
+      "publishers",
+      "avg_confidence",
+      "news_score",
+      "event_score",
+      "publisher_score",
+      "confidence_score",
+      "company_influence_score"
+    ],
+    "column_types": {
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "total_news": "int64",
+      "event_types": "int64",
+      "publishers": "int64",
+      "avg_confidence": "double",
+      "news_score": "double",
+      "event_score": "double",
+      "publisher_score": "double",
+      "confidence_score": "double",
+      "company_influence_score": "double"
+    }
+  },
+  "company_network_edges.parquet": {
+    "num_rows": 186039,
+    "columns": [
+      "ticker",
+      "entity",
+      "relation",
+      "weight"
+    ],
+    "column_types": {
+      "ticker": "string",
+      "entity": "string",
+      "relation": "string",
+      "weight": "int64"
+    }
+  },
+  "company_profiles.parquet": {
+    "num_rows": 6619,
+    "columns": [
+      "ticker",
+      "total_news",
+      "first_news",
+      "latest_news",
+      "unique_publishers",
+      "avg_headline_length",
+      "avg_word_count",
+      "avg_confidence",
+      "median_confidence",
+      "min_confidence",
+      "max_confidence",
+      "confidence_std",
+      "top_publisher",
+      "top_publisher_news",
+      "active_years",
+      "active_months",
+      "active_weekdays",
+      "average_news_per_year",
+      "risk_score",
+      "intelligence_score",
+      "Bearish",
+      "Bullish",
+      "Mixed",
+      "Neutral",
+      "Bearish_pct",
+      "Bullish_pct",
+      "Mixed_pct",
+      "Neutral_pct",
+      "Analyst Rating",
+      "Bankruptcy",
+      "Commodity",
+      "Credit Rating",
+      "Cryptocurrency",
+      "Cybersecurity",
+      "Dividend",
+      "ESG",
+      "Earnings",
+      "Economic Data",
+      "Executive Change",
+      "Fraud",
+      "Funding",
+      "IPO",
+      "Insider Trading",
+      "Layoffs",
+      "Litigation",
+      "Market Movement",
+      "Merger & Acquisition",
+      "Monetary Policy",
+      "Options Activity",
+      "Other",
+      "Partnership",
+      "Product Launch",
+      "Regulatory Approval",
+      "Revenue Guidance",
+      "Share Buyback",
+      "Stock Split",
+      "Technical Analysis",
+      "Trading Halt",
+      "risk_rank",
+      "intelligence_rank"
+    ],
+    "column_types": {
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "total_news": "int64",
+      "first_news": "timestamp[ns, tz=UTC]",
+      "latest_news": "timestamp[ns, tz=UTC]",
+      "unique_publishers": "int64",
+      "avg_headline_length": "double",
+      "avg_word_count": "double",
+      "avg_confidence": "double",
+      "median_confidence": "double",
+      "min_confidence": "double",
+      "max_confidence": "double",
+      "confidence_std": "double",
+      "top_publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "top_publisher_news": "int64",
+      "active_years": "int64",
+      "active_months": "int64",
+      "active_weekdays": "int64",
+      "average_news_per_year": "double",
+      "risk_score": "int64",
+      "intelligence_score": "double",
+      "Bearish": "int64",
+      "Bullish": "int64",
+      "Mixed": "int64",
+      "Neutral": "int64",
+      "Bearish_pct": "double",
+      "Bullish_pct": "double",
+      "Mixed_pct": "double",
+      "Neutral_pct": "double",
+      "Analyst Rating": "int64",
+      "Bankruptcy": "int64",
+      "Commodity": "int64",
+      "Credit Rating": "int64",
+      "Cryptocurrency": "int64",
+      "Cybersecurity": "int64",
+      "Dividend": "int64",
+      "ESG": "int64",
+      "Earnings": "int64",
+      "Economic Data": "int64",
+      "Executive Change": "int64",
+      "Fraud": "int64",
+      "Funding": "int64",
+      "IPO": "int64",
+      "Insider Trading": "int64",
+      "Layoffs": "int64",
+      "Litigation": "int64",
+      "Market Movement": "int64",
+      "Merger & Acquisition": "int64",
+      "Monetary Policy": "int64",
+      "Options Activity": "int64",
+      "Other": "int64",
+      "Partnership": "int64",
+      "Product Launch": "int64",
+      "Regulatory Approval": "int64",
+      "Revenue Guidance": "int64",
+      "Share Buyback": "int64",
+      "Stock Split": "int64",
+      "Technical Analysis": "int64",
+      "Trading Halt": "int64",
+      "risk_rank": "int64",
+      "intelligence_rank": "int64"
+    }
+  },
+  "company_similarity.parquet": {
+    "num_rows": 66190,
+    "columns": [
+      "ticker",
+      "similar_company",
+      "similarity_score"
+    ],
+    "column_types": {
+      "ticker": "string",
+      "similar_company": "string",
+      "similarity_score": "double"
+    }
+  },
+  "entity_cooccurrence.parquet": {
+    "num_rows": 7015613,
+    "columns": [
+      "entity_a",
+      "entity_b",
+      "weight"
+    ],
+    "column_types": {
+      "entity_a": "string",
+      "entity_b": "string",
+      "weight": "int64"
+    }
+  },
+  "entity_frequency.parquet": {
+    "num_rows": 911818,
+    "columns": [
+      "entity",
+      "entity_label",
+      "mentions"
+    ],
+    "column_types": {
+      "entity": "string",
+      "entity_label": "string",
+      "mentions": "int64"
+    }
+  },
+  "entity_popularity.parquet": {
+    "num_rows": 911818,
+    "columns": [
+      "entity",
+      "entity_label",
+      "mentions",
+      "publisher_diversity",
+      "popularity_score"
+    ],
+    "column_types": {
+      "entity": "string",
+      "entity_label": "string",
+      "mentions": "int64",
+      "publisher_diversity": "int64",
+      "popularity_score": "double"
+    }
+  },
+  "entity_timeline.parquet": {
+    "num_rows": 3100630,
+    "columns": [
+      "event_date",
+      "entity",
+      "entity_label",
+      "mentions"
+    ],
+    "column_types": {
+      "event_date": "date32[day]",
+      "entity": "string",
+      "entity_label": "string",
+      "mentions": "int64"
+    }
+  },
+  "event_centrality.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "degree_centrality",
+      "betweenness",
+      "closeness",
+      "eigenvector",
+      "degree_scaled",
+      "betweenness_scaled",
+      "closeness_scaled",
+      "eigenvector_scaled",
+      "graph_importance",
+      "connectivity_level"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "degree_centrality": "double",
+      "betweenness": "double",
+      "closeness": "double",
+      "eigenvector": "double",
+      "degree_scaled": "double",
+      "betweenness_scaled": "double",
+      "closeness_scaled": "double",
+      "eigenvector_scaled": "double",
+      "graph_importance": "double",
+      "connectivity_level": "dictionary<values=string, indices=int8, ordered=1>"
+    }
+  },
+  "event_communities.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "community_id",
+      "community_name_x",
+      "community_name_y"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "community_id": "int64",
+      "community_name_x": "string",
+      "community_name_y": "string"
+    }
+  },
+  "event_company_graph.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "community_id",
+      "community_name_x",
+      "community_name_y"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "community_id": "int64",
+      "community_name_x": "string",
+      "community_name_y": "string"
+    }
+  },
+  "event_entity_graph.parquet": {
+    "num_rows": 1198728,
+    "columns": [
+      "source",
+      "target",
+      "relation",
+      "mentions",
+      "entity_label"
+    ],
+    "column_types": {
+      "source": "string",
+      "target": "string",
+      "relation": "string",
+      "mentions": "int64",
+      "entity_label": "string"
+    }
+  },
+  "event_heatmap.parquet": {
+    "num_rows": 136,
+    "columns": [
+      "Analyst Rating",
+      "Bankruptcy",
+      "Commodity",
+      "Credit Rating",
+      "Cryptocurrency",
+      "Cybersecurity",
+      "Dividend",
+      "ESG",
+      "Earnings",
+      "Economic Data",
+      "Executive Change",
+      "Fraud",
+      "Funding",
+      "IPO",
+      "Insider Trading",
+      "Layoffs",
+      "Litigation",
+      "Market Movement",
+      "Merger & Acquisition",
+      "Monetary Policy",
+      "Options Activity",
+      "Other",
+      "Partnership",
+      "Product Launch",
+      "Regulatory Approval",
+      "Revenue Guidance",
+      "Share Buyback",
+      "Stock Split",
+      "Technical Analysis",
+      "Trading Halt",
+      "month"
+    ],
+    "column_types": {
+      "Analyst Rating": "int64",
+      "Bankruptcy": "int64",
+      "Commodity": "int64",
+      "Credit Rating": "int64",
+      "Cryptocurrency": "int64",
+      "Cybersecurity": "int64",
+      "Dividend": "int64",
+      "ESG": "int64",
+      "Earnings": "int64",
+      "Economic Data": "int64",
+      "Executive Change": "int64",
+      "Fraud": "int64",
+      "Funding": "int64",
+      "IPO": "int64",
+      "Insider Trading": "int64",
+      "Layoffs": "int64",
+      "Litigation": "int64",
+      "Market Movement": "int64",
+      "Merger & Acquisition": "int64",
+      "Monetary Policy": "int64",
+      "Options Activity": "int64",
+      "Other": "int64",
+      "Partnership": "int64",
+      "Product Launch": "int64",
+      "Regulatory Approval": "int64",
+      "Revenue Guidance": "int64",
+      "Share Buyback": "int64",
+      "Stock Split": "int64",
+      "Technical Analysis": "int64",
+      "Trading Halt": "int64",
+      "month": "string"
+    }
+  },
+  "event_influence.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "total_news",
+      "companies",
+      "publishers",
+      "avg_confidence",
+      "bullish",
+      "bearish",
+      "neutral",
+      "signals",
+      "timeline_days",
+      "companies_score",
+      "publishers_score",
+      "confidence_score",
+      "timeline_score",
+      "influence_score",
+      "impact_category"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "total_news": "int64",
+      "companies": "int64",
+      "publishers": "int64",
+      "avg_confidence": "double",
+      "bullish": "int64",
+      "bearish": "int64",
+      "neutral": "int64",
+      "signals": "int64",
+      "timeline_days": "int64",
+      "companies_score": "double",
+      "publishers_score": "double",
+      "confidence_score": "double",
+      "timeline_score": "double",
+      "influence_score": "double",
+      "impact_category": "dictionary<values=string, indices=int8, ordered=1>"
+    }
+  },
+  "event_knowledge_cards.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "total_news",
+      "companies",
+      "publishers",
+      "avg_confidence",
+      "bullish",
+      "bearish",
+      "neutral",
+      "signals",
+      "timeline_days",
+      "companies_score",
+      "publishers_score",
+      "confidence_score",
+      "timeline_score",
+      "influence_score",
+      "impact_category",
+      "event_fingerprint",
+      "explanation",
+      "graph_importance",
+      "first_year",
+      "last_year",
+      "peak_year",
+      "peak_news",
+      "summary"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "total_news": "int64",
+      "companies": "int64",
+      "publishers": "int64",
+      "avg_confidence": "double",
+      "bullish": "int64",
+      "bearish": "int64",
+      "neutral": "int64",
+      "signals": "int64",
+      "timeline_days": "int64",
+      "companies_score": "double",
+      "publishers_score": "double",
+      "confidence_score": "double",
+      "timeline_score": "double",
+      "influence_score": "double",
+      "impact_category": "dictionary<values=string, indices=int8, ordered=1>",
+      "event_fingerprint": "string",
+      "explanation": "string",
+      "graph_importance": "double",
+      "first_year": "int64",
+      "last_year": "int64",
+      "peak_year": "int32",
+      "peak_news": "int64",
+      "summary": "string"
+    }
+  },
+  "event_lifecycle.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "first_year",
+      "last_year",
+      "peak_year",
+      "peak_news"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "first_year": "int64",
+      "last_year": "int64",
+      "peak_year": "int32",
+      "peak_news": "int64"
+    }
+  },
+  "event_propagation_paths.parquet": {
+    "num_rows": 812,
+    "columns": [
+      "source_event",
+      "target_event",
+      "path_length",
+      "path"
+    ],
+    "column_types": {
+      "source_event": "string",
+      "target_event": "string",
+      "path_length": "int64",
+      "path": "string"
+    }
+  },
+  "event_publisher_graph.parquet": {
+    "num_rows": 7479,
+    "columns": [
+      "source",
+      "target",
+      "relation",
+      "news_count",
+      "avg_confidence"
+    ],
+    "column_types": {
+      "source": "string",
+      "target": "string",
+      "relation": "string",
+      "news_count": "int64",
+      "avg_confidence": "double"
+    }
+  },
+  "event_similarity.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "total_news",
+      "companies",
+      "publishers",
+      "avg_confidence",
+      "bullish",
+      "bearish",
+      "neutral",
+      "signals",
+      "timeline_days",
+      "companies_score",
+      "publishers_score",
+      "confidence_score",
+      "timeline_score",
+      "influence_score",
+      "impact_category",
+      "event_fingerprint",
+      "explanation",
+      "graph_importance"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "total_news": "int64",
+      "companies": "int64",
+      "publishers": "int64",
+      "avg_confidence": "double",
+      "bullish": "int64",
+      "bearish": "int64",
+      "neutral": "int64",
+      "signals": "int64",
+      "timeline_days": "int64",
+      "companies_score": "double",
+      "publishers_score": "double",
+      "confidence_score": "double",
+      "timeline_score": "double",
+      "influence_score": "double",
+      "impact_category": "dictionary<values=string, indices=int8, ordered=1>",
+      "event_fingerprint": "string",
+      "explanation": "string",
+      "graph_importance": "double"
+    }
+  },
+  "event_statistics.parquet": {
+    "num_rows": 84083,
+    "columns": [
+      "event_date",
+      "final_event",
+      "news_count"
+    ],
+    "column_types": {
+      "event_date": "date32[day]",
+      "final_event": "string",
+      "news_count": "int64"
+    }
+  },
+  "event_timeline.parquet": {
+    "num_rows": 435,
+    "columns": [
+      "event_1",
+      "event_2",
+      "similarity"
+    ],
+    "column_types": {
+      "event_1": "string",
+      "event_2": "string",
+      "similarity": "double"
+    }
+  },
+  "financial_intelligence_dataset.parquet": {
+    "num_rows": 3215296,
+    "columns": [
+      "news_id",
+      "headline",
+      "url",
+      "publisher",
+      "published_date",
+      "ticker",
+      "source",
+      "year",
+      "month",
+      "day",
+      "weekday",
+      "hour",
+      "headline_length",
+      "word_count",
+      "has_time",
+      "original_headline",
+      "clean_character_count",
+      "clean_word_count",
+      "final_event",
+      "market_signal",
+      "final_confidence",
+      "classification_source",
+      "topic_id",
+      "topic_name",
+      "topic_confidence"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "headline": "string",
+      "url": "string",
+      "publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "published_date": "timestamp[ns, tz=UTC]",
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "source": "dictionary<values=string, indices=int8, ordered=0>",
+      "year": "int32",
+      "month": "int32",
+      "day": "int32",
+      "weekday": "dictionary<values=string, indices=int8, ordered=0>",
+      "hour": "int32",
+      "headline_length": "int64",
+      "word_count": "int64",
+      "has_time": "bool",
+      "original_headline": "string",
+      "clean_character_count": "int64",
+      "clean_word_count": "int64",
+      "final_event": "string",
+      "market_signal": "string",
+      "final_confidence": "double",
+      "classification_source": "string",
+      "topic_id": "int64",
+      "topic_name": "string",
+      "topic_confidence": "double"
+    }
+  },
+  "financial_news_clean.parquet": {
+    "num_rows": 3215296,
+    "columns": [
+      "news_id",
+      "headline",
+      "url",
+      "publisher",
+      "published_date",
+      "ticker",
+      "source",
+      "year",
+      "month",
+      "day",
+      "weekday",
+      "hour",
+      "headline_length",
+      "word_count",
+      "has_time",
+      "original_headline",
+      "clean_character_count",
+      "clean_word_count"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "headline": "string",
+      "url": "string",
+      "publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "published_date": "timestamp[ns, tz=UTC]",
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "source": "dictionary<values=string, indices=int8, ordered=0>",
+      "year": "int32",
+      "month": "int32",
+      "day": "int32",
+      "weekday": "dictionary<values=string, indices=int8, ordered=0>",
+      "hour": "int32",
+      "headline_length": "int64",
+      "word_count": "int64",
+      "has_time": "bool",
+      "original_headline": "string",
+      "clean_character_count": "int64",
+      "clean_word_count": "int64"
+    }
+  },
+  "investment_theme_summary.parquet": {
+    "num_rows": 3,
+    "columns": [
+      "investment_theme",
+      "sectors",
+      "average_strength"
+    ],
+    "column_types": {
+      "investment_theme": "string",
+      "sectors": "int64",
+      "average_strength": "double"
+    }
+  },
+  "kg_edges.parquet": {
+    "num_rows": 427023,
+    "columns": [
+      "source",
+      "target",
+      "relation",
+      "weight",
+      "confidence"
+    ],
+    "column_types": {
+      "source": "string",
+      "target": "string",
+      "relation": "string",
+      "weight": "double",
+      "confidence": "double"
+    }
+  },
+  "kg_metrics.parquet": {
+    "num_rows": 8,
+    "columns": [
+      "Metric",
+      "Value"
+    ],
+    "column_types": {
+      "Metric": "string",
+      "Value": "int64"
+    }
+  },
+  "kg_neighbors.parquet": {
+    "num_rows": 6619,
+    "columns": [
+      "ticker",
+      "neighbors",
+      "neighbor_count"
+    ],
+    "column_types": {
+      "ticker": "string",
+      "neighbors": "list<element: string>",
+      "neighbor_count": "int64"
+    }
+  },
+  "kg_nodes.parquet": {
+    "num_rows": 7720,
+    "columns": [
+      "node_id",
+      "node_name",
+      "node_type",
+      "overall_rank",
+      "composite_score",
+      "normalized_risk_score",
+      "market_stability_score",
+      "activity_score",
+      "company_fingerprint",
+      "total_articles",
+      "companies",
+      "avg_confidence",
+      "headlines",
+      "avg_activity",
+      "avg_risk",
+      "avg_score",
+      "category",
+      "display_label"
+    ],
+    "column_types": {
+      "node_id": "string",
+      "node_name": "string",
+      "node_type": "string",
+      "overall_rank": "double",
+      "composite_score": "double",
+      "normalized_risk_score": "double",
+      "market_stability_score": "double",
+      "activity_score": "double",
+      "company_fingerprint": "string",
+      "total_articles": "double",
+      "companies": "double",
+      "avg_confidence": "double",
+      "headlines": "double",
+      "avg_activity": "double",
+      "avg_risk": "double",
+      "avg_score": "double",
+      "category": "string",
+      "display_label": "string"
+    }
+  },
+  "knowledge_summary.parquet": {
+    "num_rows": 28,
+    "columns": [
+      "sector",
+      "sector_rank",
+      "recommendation",
+      "recommendation_strength",
+      "sector_risk_level",
+      "lifecycle",
+      "investment_theme"
+    ],
+    "column_types": {
+      "sector": "string",
+      "sector_rank": "int64",
+      "recommendation": "string",
+      "recommendation_strength": "double",
+      "sector_risk_level": "string",
+      "lifecycle": "string",
+      "investment_theme": "string"
+    }
+  },
+  "master_news_datasets.parquet": {
+    "num_rows": 3215315,
+    "columns": [
+      "news_id",
+      "headline",
+      "url",
+      "publisher",
+      "published_date",
+      "ticker",
+      "source",
+      "year",
+      "month",
+      "day",
+      "weekday",
+      "hour",
+      "headline_length",
+      "word_count",
+      "has_time"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "headline": "string",
+      "url": "string",
+      "publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "published_date": "timestamp[ns, tz=UTC]",
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "source": "dictionary<values=string, indices=int8, ordered=0>",
+      "year": "int32",
+      "month": "int32",
+      "day": "int32",
+      "weekday": "dictionary<values=string, indices=int8, ordered=0>",
+      "hour": "int32",
+      "headline_length": "int64",
+      "word_count": "int64",
+      "has_time": "bool"
+    }
+  },
+  "news_entities.parquet": {
+    "num_rows": 7345743,
+    "columns": [
+      "news_id",
+      "ticker",
+      "published_date",
+      "publisher",
+      "headline",
+      "entity",
+      "entity_label",
+      "entity_source"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "published_date": "timestamp[ns, tz=UTC]",
+      "publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "headline": "string",
+      "entity": "string",
+      "entity_label": "string",
+      "entity_source": "string"
+    }
+  },
+  "news_topics.parquet": {
+    "num_rows": 1640793,
+    "columns": [
+      "news_id",
+      "headline",
+      "topic_id",
+      "topic_name",
+      "topic_confidence"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "headline": "string",
+      "topic_id": "int64",
+      "topic_name": "string",
+      "topic_confidence": "double"
+    }
+  },
+  "propagation_risk.parquet": {
+    "num_rows": 30,
+    "columns": [
+      "final_event",
+      "avg_company_risk",
+      "influence_score",
+      "propagation_risk"
+    ],
+    "column_types": {
+      "final_event": "string",
+      "avg_company_risk": "double",
+      "influence_score": "double",
+      "propagation_risk": "double"
+    }
+  },
+  "recommendation_summary.parquet": {
+    "num_rows": 3,
+    "columns": [
+      "recommendation",
+      "sectors",
+      "avg_strength",
+      "avg_confidence"
+    ],
+    "column_types": {
+      "recommendation": "string",
+      "sectors": "int64",
+      "avg_strength": "double",
+      "avg_confidence": "double"
+    }
+  },
+  "representative_headlines.parquet": {
+    "num_rows": 2913,
+    "columns": [
+      "cluster",
+      "news_id",
+      "headline",
+      "confidence",
+      "distance_to_centroid"
+    ],
+    "column_types": {
+      "cluster": "int32",
+      "news_id": "int64",
+      "headline": "string",
+      "confidence": "float",
+      "distance_to_centroid": "float"
+    }
+  },
+  "search_statistics.parquet": {
+    "num_rows": 3,
+    "columns": [
+      "Metric",
+      "Value"
+    ],
+    "column_types": {
+      "Metric": "string",
+      "Value": "int64"
+    }
+  },
+  "sector_clusters.parquet": {
+    "num_rows": 2,
+    "columns": [
+      "community",
+      "sectors",
+      "avg_intelligence",
+      "avg_risk",
+      "strongest_sector"
+    ],
+    "column_types": {
+      "community": "double",
+      "sectors": "int64",
+      "avg_intelligence": "double",
+      "avg_risk": "double",
+      "strongest_sector": "string"
+    }
+  },
+  "sector_keyword_index.parquet": {
+    "num_rows": 177,
+    "columns": [
+      "keyword",
+      "sectors"
+    ],
+    "column_types": {
+      "keyword": "string",
+      "sectors": "list<element: string>"
+    }
+  },
+  "sector_knowledge_base.parquet": {
+    "num_rows": 28,
+    "columns": [
+      "sector",
+      "sector_rank",
+      "sector_intelligence_score",
+      "sector_risk_level",
+      "company_strength",
+      "market_stability_category",
+      "lifecycle",
+      "temporal_fingerprint",
+      "sector_risk_fingerprint",
+      "knowledge_card",
+      "temporal_card",
+      "search_text",
+      "recommendation",
+      "recommendation_strength",
+      "investment_theme",
+      "top_similar_sector",
+      "network_rank",
+      "network_influence",
+      "community",
+      "community_size",
+      "complete_description"
+    ],
+    "column_types": {
+      "sector": "string",
+      "sector_rank": "int64",
+      "sector_intelligence_score": "double",
+      "sector_risk_level": "string",
+      "company_strength": "string",
+      "market_stability_category": "string",
+      "lifecycle": "string",
+      "temporal_fingerprint": "string",
+      "sector_risk_fingerprint": "string",
+      "knowledge_card": "string",
+      "temporal_card": "string",
+      "search_text": "string",
+      "recommendation": "string",
+      "recommendation_strength": "double",
+      "investment_theme": "string",
+      "top_similar_sector": "string",
+      "network_rank": "int64",
+      "network_influence": "double",
+      "community": "string",
+      "community_size": "int64",
+      "complete_description": "string"
+    }
+  },
+  "sector_master.parquet": {
+    "num_rows": 28,
+    "columns": [
+      "sector_rank",
+      "sector",
+      "community",
+      "community_size",
+      "network_rank",
+      "network_influence",
+      "sector_intelligence_score",
+      "sector_risk_level",
+      "company_strength",
+      "market_stability_category",
+      "sector_risk_fingerprint",
+      "knowledge_card"
+    ],
+    "column_types": {
+      "sector_rank": "int64",
+      "sector": "string",
+      "community": "string",
+      "community_size": "int64",
+      "network_rank": "int64",
+      "network_influence": "double",
+      "sector_intelligence_score": "double",
+      "sector_risk_level": "string",
+      "company_strength": "string",
+      "market_stability_category": "string",
+      "sector_risk_fingerprint": "string",
+      "knowledge_card": "string"
+    }
+  },
+  "sector_network_metrics.parquet": {
+    "num_rows": 8,
+    "columns": [
+      "sector",
+      "degree_centrality",
+      "betweenness",
+      "closeness",
+      "network_influence",
+      "network_rank"
+    ],
+    "column_types": {
+      "sector": "string",
+      "degree_centrality": "double",
+      "betweenness": "double",
+      "closeness": "double",
+      "network_influence": "double",
+      "network_rank": "int64"
+    }
+  },
+  "sector_profile.parquet": {
+    "num_rows": 28,
+    "columns": [
+      "sector",
+      "total_news",
+      "companies_x",
+      "publishers",
+      "avg_confidence",
+      "first_news",
+      "last_news",
+      "Bearish",
+      "Bullish",
+      "Mixed",
+      "Neutral",
+      "event_diversity",
+      "topic_diversity",
+      "unique_entities",
+      "coverage_score",
+      "activity_score",
+      "companies_y",
+      "weighted_company_risk",
+      "weighted_company_score",
+      "weighted_market_stability",
+      "sector_intelligence_score",
+      "sector_rank",
+      "sector_risk_level",
+      "market_stability_category",
+      "company_strength",
+      "sector_risk_fingerprint",
+      "risk_summary",
+      "community",
+      "community_size",
+      "network_rank",
+      "network_influence",
+      "knowledge_card",
+      "community_display",
+      "rank_display",
+      "influence_display",
+      "temporal_rank",
+      "temporal_score",
+      "lifecycle",
+      "seasonality_score",
+      "temporal_fingerprint",
+      "temporal_card"
+    ],
+    "column_types": {
+      "sector": "string",
+      "total_news": "int64",
+      "companies_x": "int64",
+      "publishers": "int64",
+      "avg_confidence": "double",
+      "first_news": "timestamp[ns, tz=UTC]",
+      "last_news": "timestamp[ns, tz=UTC]",
+      "Bearish": "int64",
+      "Bullish": "int64",
+      "Mixed": "int64",
+      "Neutral": "int64",
+      "event_diversity": "int64",
+      "topic_diversity": "int64",
+      "unique_entities": "int64",
+      "coverage_score": "double",
+      "activity_score": "double",
+      "companies_y": "int64",
+      "weighted_company_risk": "double",
+      "weighted_company_score": "double",
+      "weighted_market_stability": "double",
+      "sector_intelligence_score": "double",
+      "sector_rank": "int64",
+      "sector_risk_level": "string",
+      "market_stability_category": "string",
+      "company_strength": "string",
+      "sector_risk_fingerprint": "string",
+      "risk_summary": "string",
+      "community": "string",
+      "community_size": "int64",
+      "network_rank": "int64",
+      "network_influence": "double",
+      "knowledge_card": "string",
+      "community_display": "string",
+      "rank_display": "string",
+      "influence_display": "string",
+      "temporal_rank": "int64",
+      "temporal_score": "double",
+      "lifecycle": "string",
+      "seasonality_score": "double",
+      "temporal_fingerprint": "string",
+      "temporal_card": "string"
+    }
+  },
+  "sector_recommendations.parquet": {
+    "num_rows": 28,
+    "columns": [
+      "sector",
+      "final_rank",
+      "recommendation",
+      "recommendation_strength",
+      "recommendation_confidence",
+      "opportunity_score",
+      "sector_risk_level",
+      "confidence_level",
+      "investment_theme",
+      "top_similar_sector",
+      "recommendation_fingerprint",
+      "recommendation_card"
+    ],
+    "column_types": {
+      "sector": "string",
+      "final_rank": "int64",
+      "recommendation": "string",
+      "recommendation_strength": "double",
+      "recommendation_confidence": "double",
+      "opportunity_score": "double",
+      "sector_risk_level": "string",
+      "confidence_level": "string",
+      "investment_theme": "string",
+      "top_similar_sector": "string",
+      "recommendation_fingerprint": "string",
+      "recommendation_card": "string"
+    }
+  },
+  "sector_relationships.parquet": {
+    "num_rows": 10,
+    "columns": [
+      "sector_1",
+      "sector_2",
+      "similarity",
+      "shared_companies"
+    ],
+    "column_types": {
+      "sector_1": "string",
+      "sector_2": "string",
+      "similarity": "double",
+      "shared_companies": "int64"
+    }
+  },
+  "sector_search.parquet": {
+    "num_rows": 28,
+    "columns": [
+      "sector",
+      "sector_rank",
+      "sector_intelligence_score",
+      "sector_risk_level",
+      "company_strength",
+      "market_stability_category",
+      "lifecycle",
+      "temporal_fingerprint",
+      "sector_risk_fingerprint",
+      "knowledge_card",
+      "temporal_card",
+      "search_text",
+      "recommendation",
+      "recommendation_strength",
+      "investment_theme",
+      "top_similar_sector",
+      "network_rank",
+      "network_influence"
+    ],
+    "column_types": {
+      "sector": "string",
+      "sector_rank": "int64",
+      "sector_intelligence_score": "double",
+      "sector_risk_level": "string",
+      "company_strength": "string",
+      "market_stability_category": "string",
+      "lifecycle": "string",
+      "temporal_fingerprint": "string",
+      "sector_risk_fingerprint": "string",
+      "knowledge_card": "string",
+      "temporal_card": "string",
+      "search_text": "string",
+      "recommendation": "string",
+      "recommendation_strength": "double",
+      "investment_theme": "string",
+      "top_similar_sector": "string",
+      "network_rank": "int64",
+      "network_influence": "double"
+    }
+  },
+  "sector_temporal.parquet": {
+    "num_rows": 28,
+    "columns": [
+      "sector",
+      "first_month",
+      "latest_month",
+      "active_months",
+      "average_news",
+      "max_news",
+      "average_growth",
+      "average_momentum",
+      "peak_month",
+      "peak_news",
+      "lifecycle",
+      "trend_strength",
+      "temporal_score",
+      "temporal_rank",
+      "seasonality_score",
+      "temporal_fingerprint",
+      "temporal_card"
+    ],
+    "column_types": {
+      "sector": "string",
+      "first_month": "timestamp[ns]",
+      "latest_month": "timestamp[ns]",
+      "active_months": "int64",
+      "average_news": "double",
+      "max_news": "int64",
+      "average_growth": "double",
+      "average_momentum": "double",
+      "peak_month": "timestamp[ns]",
+      "peak_news": "int64",
+      "lifecycle": "string",
+      "trend_strength": "double",
+      "temporal_score": "double",
+      "temporal_rank": "int64",
+      "seasonality_score": "double",
+      "temporal_fingerprint": "string",
+      "temporal_card": "string"
+    }
+  },
+  "topic_cards.parquet": {
+    "num_rows": 20,
+    "columns": [
+      "topic_id",
+      "topic_name",
+      "summary",
+      "topic_fingerprint",
+      "keywords",
+      "articles",
+      "topic_confidence",
+      "growth_score",
+      "recommendation_score",
+      "impact_category",
+      "lifecycle",
+      "diversity_category",
+      "community",
+      "overall_rank",
+      "recommendation"
+    ],
+    "column_types": {
+      "topic_id": "int64",
+      "topic_name": "string",
+      "summary": "string",
+      "topic_fingerprint": "string",
+      "keywords": "string",
+      "articles": "int64",
+      "topic_confidence": "double",
+      "growth_score": "double",
+      "recommendation_score": "double",
+      "impact_category": "string",
+      "lifecycle": "string",
+      "diversity_category": "string",
+      "community": "int64",
+      "overall_rank": "int64",
+      "recommendation": "string"
+    }
+  },
+  "topic_communities.parquet": {
+    "num_rows": 13,
+    "columns": [
+      "topic_name",
+      "community"
+    ],
+    "column_types": {
+      "topic_name": "string",
+      "community": "int64"
+    }
+  },
+  "topic_diversity.parquet": {
+    "num_rows": 20,
+    "columns": [
+      "topic_id",
+      "topic_name",
+      "company_diversity",
+      "publisher_diversity",
+      "event_diversity",
+      "company_score",
+      "publisher_score",
+      "event_score",
+      "diversity_score",
+      "diversity_category"
+    ],
+    "column_types": {
+      "topic_id": "int64",
+      "topic_name": "string",
+      "company_diversity": "int64",
+      "publisher_diversity": "int64",
+      "event_diversity": "int64",
+      "company_score": "double",
+      "publisher_score": "double",
+      "event_score": "double",
+      "diversity_score": "double",
+      "diversity_category": "string"
+    }
+  },
+  "topic_fingerprints.parquet": {
+    "num_rows": 8,
+    "columns": [
+      "topic_fingerprint",
+      "topics"
+    ],
+    "column_types": {
+      "topic_fingerprint": "string",
+      "topics": "int64"
+    }
+  },
+  "topic_growth.parquet": {
+    "num_rows": 20,
+    "columns": [
+      "topic_id",
+      "topic_name",
+      "avg_growth",
+      "max_growth",
+      "min_growth",
+      "growth_score",
+      "lifecycle"
+    ],
+    "column_types": {
+      "topic_id": "int64",
+      "topic_name": "string",
+      "avg_growth": "double",
+      "max_growth": "double",
+      "min_growth": "double",
+      "growth_score": "double",
+      "lifecycle": "string"
+    }
+  },
+  "topic_popularity.parquet": {
+    "num_rows": 20,
+    "columns": [
+      "topic_id",
+      "topic_name",
+      "articles",
+      "companies",
+      "publishers",
+      "events",
+      "avg_confidence",
+      "article_score",
+      "company_score",
+      "publisher_score",
+      "event_score",
+      "confidence_score",
+      "popularity_score"
+    ],
+    "column_types": {
+      "topic_id": "int64",
+      "topic_name": "string",
+      "articles": "int64",
+      "companies": "int64",
+      "publishers": "int64",
+      "events": "int64",
+      "avg_confidence": "double",
+      "article_score": "double",
+      "company_score": "double",
+      "publisher_score": "double",
+      "event_score": "double",
+      "confidence_score": "double",
+      "popularity_score": "double"
+    }
+  },
+  "topic_preprocessed.parquet": {
+    "num_rows": 1640793,
+    "columns": [
+      "news_id",
+      "headline",
+      "ticker",
+      "publisher",
+      "published_date",
+      "final_event",
+      "market_signal",
+      "final_confidence",
+      "clean_headline",
+      "word_count"
+    ],
+    "column_types": {
+      "news_id": "int64",
+      "headline": "string",
+      "ticker": "dictionary<values=string, indices=int16, ordered=0>",
+      "publisher": "dictionary<values=string, indices=int16, ordered=0>",
+      "published_date": "timestamp[ns, tz=UTC]",
+      "final_event": "string",
+      "market_signal": "string",
+      "final_confidence": "double",
+      "clean_headline": "string",
+      "word_count": "int64"
+    }
+  },
+  "topic_profiles.parquet": {
+    "num_rows": 20,
+    "columns": [
+      "topic_id",
+      "topic_name",
+      "articles",
+      "topic_confidence",
+      "keywords",
+      "growth_score",
+      "lifecycle",
+      "diversity_score",
+      "diversity_category",
+      "community",
+      "popularity_score",
+      "impact_category",
+      "confidence_category",
+      "topic_fingerprint",
+      "summary",
+      "search_keywords",
+      "recommendation_score"
+    ],
+    "column_types": {
+      "topic_id": "int64",
+      "topic_name": "string",
+      "articles": "int64",
+      "topic_confidence": "double",
+      "keywords": "string",
+      "growth_score": "double",
+      "lifecycle": "string",
+      "diversity_score": "double",
+      "diversity_category": "string",
+      "community": "int64",
+      "popularity_score": "double",
+      "impact_category": "string",
+      "confidence_category": "string",
+      "topic_fingerprint": "string",
+      "summary": "string",
+      "search_keywords": "string",
+      "recommendation_score": "double"
+    }
+  },
+  "topic_similarity.parquet": {
+    "num_rows": 41,
+    "columns": [
+      "topic_1",
+      "topic_2",
+      "similarity"
+    ],
+    "column_types": {
+      "topic_1": "string",
+      "topic_2": "string",
+      "similarity": "double"
+    }
+  },
+  "topic_timeline.parquet": {
+    "num_rows": 2652,
+    "columns": [
+      "topic_id",
+      "topic_name",
+      "month",
+      "articles",
+      "previous_articles",
+      "growth_rate"
+    ],
+    "column_types": {
+      "topic_id": "int64",
+      "topic_name": "string",
+      "month": "string",
+      "articles": "int64",
+      "previous_articles": "double",
+      "growth_rate": "double"
+    }
+  }
+}

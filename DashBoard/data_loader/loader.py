@@ -43,6 +43,76 @@ def get_hf_token():
         return str(token).strip()
     return None
 
+GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "finsight-ai-dataset-442154825091")
+ENABLE_GCS = os.getenv("ENABLE_GCS", "true").lower() in ("true", "1", "yes")
+
+try:
+    from google.cloud import storage
+    HAS_GCS = True
+except ImportError:
+    HAS_GCS = False
+
+_GCS_CLIENT = None
+
+def get_gcs_client():
+    global _GCS_CLIENT
+    if _GCS_CLIENT is None and HAS_GCS:
+        try:
+            _GCS_CLIENT = storage.Client()
+        except Exception as e:
+            print(f"GCS client init note: {e}")
+    return _GCS_CLIENT
+
+def get_gcs_blob_key(filename, is_model=False):
+    if is_model or filename in ["hdbscan_model.pkl", "kmeans_model.pkl", "umap_model.pkl"]:
+        return f"models/{filename}"
+    if filename.endswith(".pkl") or filename.endswith(".bin"):
+        return f"indexes/{filename}"
+    return f"processed/{filename}"
+
+def download_from_gcs(filename, is_model=False):
+    """
+    Downloads dataset file from Google Cloud Storage (GCS) using Application Default Credentials
+    or Cloud Run Service Identity (roles/storage.objectViewer).
+    Zero Hugging Face calls on the production path.
+    """
+    if not HAS_GCS or not ENABLE_GCS or not GCS_BUCKET_NAME:
+        return False
+        
+    client = get_gcs_client()
+    if not client:
+        return False
+
+    target_dir = MODEL_PATH if is_model else DATA_PATH
+    target_path = os.path.join(target_dir, filename)
+    if os.path.exists(target_path):
+        return True
+
+    os.makedirs(target_dir, exist_ok=True)
+    gcs_key = get_gcs_blob_key(filename, is_model=is_model)
+
+    try:
+        bucket = client.bucket(GCS_BUCKET_NAME)
+        blob = bucket.blob(gcs_key)
+
+        if not blob.exists():
+            # Check alternative path (root or data/)
+            alt_blob = bucket.blob(filename)
+            if alt_blob.exists():
+                blob = alt_blob
+            else:
+                return False
+
+        log_memory(f"Downloading from GCS gs://{GCS_BUCKET_NAME}/{blob.name}", filename)
+        temp_path = f"{target_path}.part"
+        blob.download_to_filename(temp_path)
+        os.replace(temp_path, target_path)
+        log_memory("Downloaded from GCS", filename)
+        return os.path.exists(target_path)
+    except Exception as e:
+        print(f"GCS download failed for {filename}: {e}")
+        return False
+
 try:
     from huggingface_hub import hf_hub_download
     HAS_HF = True
@@ -51,14 +121,20 @@ except ImportError:
 
 def download_file(filename, drive_id=None, is_model=False):
     """
-    Lazy-loads individual dataset or model files on-demand from the private 
-    Hugging Face repository (Yanshuptl18/finsight-ai-data) using hf_hub_download().
+    Primary: Downloads from Google Cloud Storage (gs://finsight-ai-dataset-442154825091/).
+    Secondary (Recovery Fallback): Private Hugging Face repository (Yanshuptl18/finsight-ai-data).
+    Tertiary: Google Drive fallback.
     """
     target_dir = MODEL_PATH if is_model else DATA_PATH
     target_path = os.path.join(target_dir, filename)
     if os.path.exists(target_path):
         return True
 
+    # 1. Primary: Google Cloud Storage (High performance, zero external dependency)
+    if download_from_gcs(filename, is_model=is_model):
+        return True
+
+    # 2. Secondary Recovery: Hugging Face Hub (only if GCS object is missing or unconfigured)
     os.makedirs(target_dir, exist_ok=True)
     base_dir = os.path.dirname(DATA_PATH)
     subfolder = "models" if is_model else "data"
@@ -66,9 +142,9 @@ def download_file(filename, drive_id=None, is_model=False):
 
     hf_token = get_hf_token()
 
-    if HAS_HF and HF_REPO_ID:
+    if HAS_HF and HF_REPO_ID and hf_token:
         try:
-            log_memory("Downloading on-demand", filename)
+            log_memory("Downloading on-demand (HF fallback)", filename)
             try:
                 hf_hub_download(
                     repo_id=HF_REPO_ID,
@@ -85,18 +161,13 @@ def download_file(filename, drive_id=None, is_model=False):
                     token=hf_token,
                     local_dir=target_dir
                 )
-            log_memory("Downloaded on-demand", filename)
+            log_memory("Downloaded on-demand (HF fallback)", filename)
             if os.path.exists(target_path):
                 return True
         except Exception as e:
-            print(f"Hugging Face download failed for {filename}: {e}")
-            if not hf_token:
-                try:
-                    st.warning(f"HF_TOKEN is missing. Please set HF_TOKEN in Streamlit Secrets or environment variables to download {filename} from private dataset {HF_REPO_ID}.")
-                except Exception:
-                    pass
+            print(f"Hugging Face download fallback failed for {filename}: {e}")
 
-    # Secondary: Fallback to Google Drive
+    # 3. Tertiary: Fallback to Google Drive
     if drive_id:
         try:
             print(f"Downloading {filename} from Google Drive fallback...")

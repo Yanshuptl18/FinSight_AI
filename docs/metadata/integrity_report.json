@@ -1,0 +1,34 @@
+{
+  "timestamp_utc": "2026-10-17T14:30:36.996081+00:00",
+  "bucket_name": "finsight-ai-dataset-442154825091",
+  "migration_status": "SUCCESS",
+  "total_files_migrated": 86,
+  "total_files_verified": 86,
+  "total_bytes_verified": 3461496422,
+  "total_bytes_gb": 3.224,
+  "tiers": {
+    "original": {
+      "count": 3,
+      "bytes": 886206152
+    },
+    "processed": {
+      "count": 63,
+      "bytes": 2251412077
+    },
+    "indexes": {
+      "count": 18,
+      "bytes": 247530902
+    },
+    "models": {
+      "count": 2,
+      "bytes": 76347291
+    }
+  },
+  "core_dataset_verification": {
+    "master_dataset": "processed/financial_intelligence_dataset.parquet",
+    "verified_rows": 3215296,
+    "verified_columns": 25,
+    "company_analytics_rows": 6619,
+    "timeline_rows": 3215296
+  }
+}

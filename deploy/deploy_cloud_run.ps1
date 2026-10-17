@@ -83,10 +83,17 @@ if (-not $secretExists) {
     Write-Host "Secret '$SecretName' already exists in Secret Manager." -ForegroundColor Green
 }
 
-# 3. Grant Secret Manager Access to Cloud Run Service Account
-Write-Host "`n--> Step 3: Configuring least-privilege IAM permissions for Secret Manager..." -ForegroundColor Yellow
+# 3. Grant Storage and Secret Manager Access to Cloud Run Service Account
+Write-Host "`n--> Step 3: Configuring least-privilege IAM permissions..." -ForegroundColor Yellow
 $projectNumber = gcloud projects describe $projectId --format="value(projectNumber)"
 $cloudRunSa = "${projectNumber}-compute@developer.gserviceaccount.com"
+$bucketName = "finsight-ai-dataset-${projectNumber}"
+
+# Grant GCS Object Viewer
+Write-Host "Granting roles/storage.objectViewer on gs://${bucketName} to ${cloudRunSa}..."
+gcloud storage buckets add-iam-policy-binding "gs://${bucketName}" `
+    --member="serviceAccount:${cloudRunSa}" `
+    --role="roles/storage.objectViewer" 2>$null | Out-Null
 
 if ($secretExists) {
     gcloud secrets add-iam-policy-binding $SecretName `
@@ -96,7 +103,7 @@ if ($secretExists) {
 
 # 4. Build and Deploy container directly from source to Cloud Run
 Write-Host "`n--> Step 4: Deploying FinSight AI to Cloud Run from source..." -ForegroundColor Yellow
-Write-Host "Note: .gcloudignore ensures only code (~2MB) is uploaded. Datasets are lazily resolved."
+Write-Host "Note: .gcloudignore ensures only code (~2MB) is uploaded. Datasets stream from private GCS bucket."
 
 $deployArgs = @(
     "run", "deploy", $ServiceName,
@@ -111,7 +118,7 @@ $deployArgs = @(
     "--max-instances", "$MaxInstances",
     "--concurrency", "80",
     "--timeout", "300",
-    "--set-env-vars", "HF_REPO_ID=Yanshuptl18/finsight-ai-data"
+    "--set-env-vars", "GCS_BUCKET_NAME=${bucketName},ENABLE_GCS=true,HF_REPO_ID=Yanshuptl18/finsight-ai-data"
 )
 if ($secretExists) {
     $deployArgs += "--set-secrets=HF_TOKEN=${SecretName}:latest"

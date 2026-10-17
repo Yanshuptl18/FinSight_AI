@@ -68,9 +68,16 @@ fi
 
 # 3. Grant Secret Manager Access to Cloud Run Service Account
 echo ""
-echo "--> Step 3: Configuring least-privilege IAM permissions for Secret Manager..."
+echo "--> Step 3: Configuring least-privilege IAM permissions for GCS and Secret Manager..."
 PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
 CLOUD_RUN_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+BUCKET_NAME="finsight-ai-dataset-${PROJECT_NUMBER}"
+
+# Grant GCS Object Viewer
+echo "Granting roles/storage.objectViewer on gs://${BUCKET_NAME} to ${CLOUD_RUN_SA}..."
+gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
+    --member="serviceAccount:${CLOUD_RUN_SA}" \
+    --role="roles/storage.objectViewer" &>/dev/null || true
 
 if gcloud secrets describe "$SECRET_NAME" &>/dev/null; then
     gcloud secrets add-iam-policy-binding "$SECRET_NAME" \
@@ -81,7 +88,7 @@ fi
 # 4. Build and Deploy container directly from source to Cloud Run
 echo ""
 echo "--> Step 4: Deploying FinSight AI to Cloud Run from source..."
-echo "Note: .gcloudignore ensures only code (~2MB) is uploaded. Datasets are lazily resolved."
+echo "Note: .gcloudignore ensures only code (~2MB) is uploaded. Datasets stream from private GCS bucket."
 
 SECRET_FLAG=""
 if gcloud secrets describe "$SECRET_NAME" &>/dev/null; then
@@ -100,7 +107,7 @@ gcloud run deploy "$SERVICE_NAME" \
     --max-instances "$MAX_INSTANCES" \
     --concurrency 80 \
     --timeout 300 \
-    --set-env-vars="HF_REPO_ID=Yanshuptl18/finsight-ai-data" \
+    --set-env-vars="GCS_BUCKET_NAME=${BUCKET_NAME},ENABLE_GCS=true,HF_REPO_ID=Yanshuptl18/finsight-ai-data" \
     $SECRET_FLAG
 
 echo ""
