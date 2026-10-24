@@ -14,7 +14,7 @@
   <a href="https://github.com/Yanshuptl18/FinSight_AI/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-10B981?style=flat-square" alt="License: MIT"></a>
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python Version"></a>
   <a href="https://streamlit.io"><img src="https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit"></a>
-  <a href="https://finsight-ai-442154825091.us-central1.run.app"><img src="https://img.shields.io/badge/Live%20Demo-Try%20FinSight%20AI-00ADB5?style=flat-square&logo=googlecloud&logoColor=white" alt="Live Demo"></a>
+  <a href="https://finshightai.streamlit.app"><img src="https://img.shields.io/badge/Live%20Demo-Streamlit%20App-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Live Demo"></a>
 </p>
 
 ---
@@ -38,8 +38,7 @@ Everything is brought together in **17 interactive dashboard modules** built wit
 
 ## Quick Links
 
-- **Live Web Application**: [https://finsight-ai-442154825091.us-central1.run.app](https://finsight-ai-442154825091.us-central1.run.app)
-- **Streamlit Community Mirror**: [https://finshightai.streamlit.app](https://finshightai.streamlit.app/)
+- **Live Web Application**: [https://finshightai.streamlit.app](https://finshightai.streamlit.app/)
 - **GitHub Repository**: [https://github.com/Yanshuptl18/FinSight_AI](https://github.com/Yanshuptl18/FinSight_AI)
 - **Processed Dataset on Hugging Face**: [Yanshuptl18/finsight-ai-data](https://huggingface.co/datasets/Yanshuptl18/finsight-ai-data)
 - **Original Source Dataset on Kaggle**: [Massive Stock News DB for NLP Backtests](https://www.kaggle.com/datasets/miguelaenlle/massive-stock-news-analysis-db-for-nlpbacktests)
@@ -567,4 +566,4 @@ Indian Institute of Information Technology (IIIT) Vadodara &ndash; ICD
 - **GitHub**: [@Yanshuptl18](https://github.com/Yanshuptl18)
 - **LinkedIn**: [Yanshu Patel](https://www.linkedin.com/in/yanshu-patel-165b2b297)
 - **Repository**: [https://github.com/Yanshuptl18/FinSight_AI](https://github.com/Yanshuptl18/FinSight_AI)
-- **Live Demo**: [https://finsight-ai-442154825091.us-central1.run.app](https://finsight-ai-442154825091.us-central1.run.app)
+- **Live Demo**: [https://finshightai.streamlit.app](https://finshightai.streamlit.app/)

@@ -44,7 +44,7 @@ def get_hf_token():
     return None
 
 GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "finsight-ai-dataset-442154825091")
-ENABLE_GCS = os.getenv("ENABLE_GCS", "true").lower() in ("true", "1", "yes")
+ENABLE_GCS = os.getenv("ENABLE_GCS", "false").lower() in ("true", "1", "yes")
 
 try:
     from google.cloud import storage
@@ -56,12 +56,13 @@ _GCS_CLIENT = None
 
 def get_gcs_client():
     global _GCS_CLIENT
-    if _GCS_CLIENT is None and HAS_GCS:
+    if _GCS_CLIENT is None and HAS_GCS and ENABLE_GCS:
         try:
             _GCS_CLIENT = storage.Client()
         except Exception as e:
             print(f"GCS client init note: {e}")
-    return _GCS_CLIENT
+            _GCS_CLIENT = False
+    return _GCS_CLIENT if _GCS_CLIENT is not False else None
 
 def get_gcs_blob_key(filename, is_model=False):
     if is_model or filename in ["hdbscan_model.pkl", "kmeans_model.pkl", "umap_model.pkl"]:
@@ -142,24 +143,25 @@ def download_file(filename, drive_id=None, is_model=False):
 
     hf_token = get_hf_token()
 
-    if HAS_HF and HF_REPO_ID and hf_token:
+    if HAS_HF and HF_REPO_ID:
         try:
             log_memory("Downloading on-demand (HF fallback)", filename)
+            kwargs = {"token": hf_token} if hf_token else {}
             try:
                 hf_hub_download(
                     repo_id=HF_REPO_ID,
                     filename=hf_rel_path,
                     repo_type="dataset",
-                    token=hf_token,
-                    local_dir=base_dir
+                    local_dir=base_dir,
+                    **kwargs
                 )
             except Exception:
                 hf_hub_download(
                     repo_id=HF_REPO_ID,
                     filename=filename,
                     repo_type="dataset",
-                    token=hf_token,
-                    local_dir=target_dir
+                    local_dir=target_dir,
+                    **kwargs
                 )
             log_memory("Downloaded on-demand (HF fallback)", filename)
             if os.path.exists(target_path):
