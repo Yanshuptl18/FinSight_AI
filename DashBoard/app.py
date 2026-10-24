@@ -30,28 +30,32 @@ st.sidebar.markdown(
 )
 
 
-# Define the navigation structure internally so Streamlit handles routing
+# Define the navigation structure internally with robust path resolution
+import os
+BASE_VIEWS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "views")
 
-# Using a flat list removes all plain text section headers, leaving ONLY the styled buttons
+def view_path(filename):
+    return os.path.join(BASE_VIEWS_DIR, filename)
+
 pages = [
-    st.Page("views/0_Command_Center.py", title="Command Center", icon=":material/dashboard:"),
-    st.Page("views/1_Executive_Dashboard.py", title="Executive Dashboard", icon=":material/insert_chart:"),
-    st.Page("views/2_News_Explorer.py", title="News Explorer", icon=":material/article:"),
-    st.Page("views/3_Company_Explorer.py", title="Company Explorer", icon=":material/domain:"),
-    st.Page("views/4_Topic_Intelligence.py", title="Topic Intelligence", icon=":material/lightbulb:"),
-    st.Page("views/5_Event_Intelligence.py", title="Event Intelligence", icon=":material/event:"),
-    st.Page("views/6_Sector_Intelligence.py", title="Sector Intelligence", icon=":material/pie_chart:"),
-    st.Page("views/7_Knowledge_Graph.py", title="Entity Network", icon=":material/hub:"),
-    st.Page("views/8_Event_Propagation.py", title="Event Propagation", icon=":material/share:"),
-    st.Page("views/9_Sector_Network.py", title="Sector Network", icon=":material/lan:"),
-    st.Page("views/10_Company_Network.py", title="Company Network", icon=":material/account_tree:"),
-    st.Page("views/11_Timeline_Explorer.py", title="Timeline Explorer", icon=":material/timeline:"),
-    st.Page("views/12_Semantic_Search.py", title="Intelligence Search", icon=":material/manage_search:"),
-    st.Page("views/13_Recommendation_Center.py", title="Market Signals", icon=":material/recommend:"),
+    st.Page(view_path("0_Command_Center.py"), title="Command Center", icon=":material/dashboard:"),
+    st.Page(view_path("1_Executive_Dashboard.py"), title="Executive Dashboard", icon=":material/insert_chart:"),
+    st.Page(view_path("2_News_Explorer.py"), title="News Explorer", icon=":material/article:"),
+    st.Page(view_path("3_Company_Explorer.py"), title="Company Explorer", icon=":material/domain:"),
+    st.Page(view_path("4_Topic_Intelligence.py"), title="Topic Intelligence", icon=":material/lightbulb:"),
+    st.Page(view_path("5_Event_Intelligence.py"), title="Event Intelligence", icon=":material/event:"),
+    st.Page(view_path("6_Sector_Intelligence.py"), title="Sector Intelligence", icon=":material/pie_chart:"),
+    st.Page(view_path("7_Knowledge_Graph.py"), title="Entity Network", icon=":material/hub:"),
+    st.Page(view_path("8_Event_Propagation.py"), title="Event Propagation", icon=":material/share:"),
+    st.Page(view_path("9_Sector_Network.py"), title="Sector Network", icon=":material/lan:"),
+    st.Page(view_path("10_Company_Network.py"), title="Company Network", icon=":material/account_tree:"),
+    st.Page(view_path("11_Timeline_Explorer.py"), title="Timeline Explorer", icon=":material/timeline:"),
+    st.Page(view_path("12_Semantic_Search.py"), title="Intelligence Search", icon=":material/manage_search:"),
+    st.Page(view_path("13_Recommendation_Center.py"), title="Market Signals", icon=":material/recommend:"),
 
-    st.Page("views/15_Download_Center.py", title="Download Center", icon=":material/download:"),
-    st.Page("views/16_Settings.py", title="Settings", icon=":material/settings:"),
-    st.Page("views/17_About.py", title="About", icon=":material/info:"),
+    st.Page(view_path("15_Download_Center.py"), title="Download Center", icon=":material/download:"),
+    st.Page(view_path("16_Settings.py"), title="Settings", icon=":material/settings:"),
+    st.Page(view_path("17_About.py"), title="About", icon=":material/info:"),
 ]
 
 # Initialize the navigation

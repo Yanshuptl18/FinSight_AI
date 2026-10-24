@@ -441,8 +441,12 @@ def get_timeline_slice(start_date=None, end_date=None, event=None, signal=None, 
         
     return df
 
+DEFAULT_ROW_LIMIT = int(os.getenv("DEFAULT_ROW_LIMIT", "50000"))
+
 @st.cache_data(ttl=600, max_entries=1)
 def load_news_data(limit=None):
+    if limit is None:
+        limit = DEFAULT_ROW_LIMIT
     import gc
     gc.collect()
     log_memory("load_news_data start")
@@ -726,6 +730,8 @@ def get_real_models():
 
 @st.cache_data(ttl=600, max_entries=1)
 def load_timeline_data(limit=None):
+    if limit is None:
+        limit = DEFAULT_ROW_LIMIT
     import gc
     gc.collect()
     log_memory("load_timeline_data start")

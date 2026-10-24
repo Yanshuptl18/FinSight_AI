@@ -41,7 +41,7 @@ with st.container(border=True):
         min_confidence = st.slider("Min AI Confidence", 0.0, 1.0, 0.70, 0.05)
 
 # --- Apply Filters ---
-filtered_df = news_df.copy()
+filtered_df = news_df
 
 if search_query:
     filtered_df = filtered_df[filtered_df["Headline"].str.contains(search_query, case=False, na=False)]
